@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 10 — Quality &amp; Maintenance Economics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Ten · 12 June 2026</div>
+        <div class="cover-volume">10<span class="small">Lecture Ten</span></div>
+        <h1 class="cover-title">Quality &amp;<br>Maintenance<br><span class="accent">Economics</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">Where 70% of the lifetime cost lives — and how to make the case for spending earlier to spend less overall.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 10 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">12 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">SY109</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Workshop</div></div>
+        </div>
+        <div class="footnote">Today: the economic case for testing, reviews, refactors, and rewrites.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture X</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 18</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Quality, debt, and the rewrite question.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>The defect-cost curve</td><td class="num">15</td></tr>
+        <tr><td class="num">II.</td><td>The ROI of quality investment</td><td class="num">20</td></tr>
+        <tr><td class="num">III.</td><td>Maintenance share of TCO</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Technical debt — financial model</td><td class="num">20</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: debt audit</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Maintain / re-engineer / rewrite</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW10, questions</em></td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">The defect-cost curve —<br>shifting bugs left<br>has a price tag.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Defect-cost curve</span></span><span class="right">04 / 18</span></div>
+    <span class="label-tag">Boehm, 1981 — and confirmed many times since</span>
+    <h1>The cost to fix grows exponentially by phase.</h1>
+    <table class="compact">
+      <thead><tr><th>Phase introduced ↓ &nbsp; · &nbsp; Phase fixed →</th><th class="num" style="text-align:right">Requirements</th><th class="num" style="text-align:right">Design</th><th class="num" style="text-align:right">Code</th><th class="num" style="text-align:right">Test</th><th class="num" style="text-align:right">Production</th></tr></thead>
+      <tbody>
+        <tr><td>Requirements</td><td class="num" style="text-align:right">1×</td><td class="num" style="text-align:right">3×</td><td class="num" style="text-align:right">5–10×</td><td class="num" style="text-align:right">10–20×</td><td class="num" style="text-align:right"><strong>50–200×</strong></td></tr>
+        <tr><td>Design</td><td></td><td class="num" style="text-align:right">1×</td><td class="num" style="text-align:right">2–5×</td><td class="num" style="text-align:right">5–10×</td><td class="num" style="text-align:right">25–100×</td></tr>
+        <tr><td>Code</td><td></td><td></td><td class="num" style="text-align:right">1×</td><td class="num" style="text-align:right">2–4×</td><td class="num" style="text-align:right">10–25×</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">A requirements bug found in production costs 50–200× what it would have cost to fix at requirements time. This curve is the single strongest argument for review, prototyping, and continuous validation.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">The ROI of quality —<br>spend a dollar early,<br>save many later.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Quality ROI</span></span><span class="right">06 / 18</span></div>
+    <span class="label-tag">A simple shift-left calculation</span>
+    <h1>What does a code review actually save?</h1>
+    <p style="font-size: 0.92em;">A team finds 50 defects/quarter. Average production-fix cost: $1,500. Adding 20 hours of structured review/week at $80/hr = $6,400/quarter, deflecting ~40% of defects.</p>
+    <table class="compact">
+      <thead><tr><th>Item</th><th class="num" style="text-align:right">Per quarter</th></tr></thead>
+      <tbody>
+        <tr><td>Review cost added</td><td class="num" style="text-align:right">−$6,400</td></tr>
+        <tr><td>Defects shifted left (20 × ~$1,400 saved each)</td><td class="num" style="text-align:right">+$28,000</td></tr>
+        <tr><td><strong>Net saving</strong></td><td class="num" style="text-align:right"><strong>+$21,600</strong></td></tr>
+        <tr><td>ROI</td><td class="num" style="text-align:right"><strong>337%</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">An ROI of 337% on review is not unusual. Yet review is among the first practices cut under schedule pressure — a familiar economic mistake.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Maintenance —<br>the silent majority<br>of the budget.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Maintenance share</span></span><span class="right">08 / 18</span></div>
+    <span class="label-tag">Lientz &amp; Swanson, 1980 — and many since</span>
+    <h1>60–80% of TCO sits after 1.0 ships.</h1>
+    <p style="font-size: 0.93em;">Software maintenance breaks into four flavours (Lientz &amp; Swanson):</p>
+    <table class="compact">
+      <thead><tr><th>Type</th><th>What it is</th><th class="num" style="text-align:right">Share of maintenance</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Corrective</td><td>Fixing defects discovered post-launch</td><td class="num" style="text-align:right">~21%</td></tr>
+        <tr><td class="label">Adaptive</td><td>Adapting to changes in environment (OS, deps)</td><td class="num" style="text-align:right">~25%</td></tr>
+        <tr><td class="label">Perfective</td><td>Enhancements driven by user feedback</td><td class="num" style="text-align:right">~50%</td></tr>
+        <tr><td class="label">Preventive</td><td>Refactoring, modernisation, testing additions</td><td class="num" style="text-align:right">~4%</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Perfective is the majority — most maintenance dollars buy <em>features</em>, not fixes. If you measure your maintenance budget by defect count alone, you are measuring 21% of it.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Technical debt —<br>finance, but for code.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Debt model</span></span><span class="right">10 / 18</span></div>
+    <span class="label-tag">Cunningham, 1992</span>
+    <h1>Principal &amp; interest.</h1>
+    <p style="font-size: 0.95em;">Treat a shortcut as a <strong>loan</strong>: you ship faster (principal), but pay <em>interest</em> every period you live with the shortcut.</p>
+    <div class="two-col" style="margin-top: 10px;">
+      <div class="card"><h3>Principal</h3><p>Effort to fix the shortcut now — the "loan amount." Estimate it like a small refactor project.</p></div>
+      <div class="card"><h3>Interest rate</h3><p>Extra effort per period that the shortcut imposes (slower changes, more bugs, harder onboarding).</p></div>
+    </div>
+    <p style="font-size: 0.92em; margin-top: 12px;"><em>Example:</em> a tangled module costs 8 PD/year of extra effort (interest). Refactoring it would take 30 PD (principal). Refactor "pays back" in 30 ÷ 8 = <strong>3.75 years</strong>.</p>
+    <p class="callout">Refactor when discounted interest savings exceed principal. Don't refactor sleeping debt — only debt that's actively earning interest.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Debt taxonomy</span></span><span class="right">11 / 18</span></div>
+    <span class="label-tag">Fowler, 2009</span>
+    <h1>Four kinds of debt.</h1>
+    <table class="compact">
+      <thead><tr><th>Type</th><th>Description</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Reckless / deliberate</td><td>"We don't have time for design"</td><td>Stop, regroup</td></tr>
+        <tr><td class="label">Reckless / inadvertent</td><td>"What's layering?"</td><td>Train, mentor</td></tr>
+        <tr><td class="label">Prudent / deliberate</td><td>"We must ship now and refactor later"</td><td>Calendar the refactor</td></tr>
+        <tr><td class="label">Prudent / inadvertent</td><td>"Now we know how we should have designed it"</td><td>Refactor in next iteration</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">"Prudent / deliberate" debt is the only one with positive expected value. The other three are technical or organisational failures wearing financial clothes.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">12 / 18</span></div>
+    <span class="label-tag">A debt audit on your codebase</span>
+    <div class="discussion-icon">▲</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.95em; margin-top: -6px; line-height: 1.1;">What is the largest piece of <em>active</em> technical debt in your codebase?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 minutes), estimate one piece each: principal, annual interest, payback period.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Is it reckless or prudent? deliberate or inadvertent?</li>
+      <li>What single experiment would tell you the interest rate more precisely?</li>
+      <li>If you proposed the refactor today, what would the org's response be?</li>
+    </ul>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Maintain · re-engineer · rewrite —<br>three financial<br>choices.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Rewrite decision</span></span><span class="right">14 / 18</span></div>
+    <span class="label-tag">When is rewriting economical?</span>
+    <h1>The rewrite calculus.</h1>
+    <p style="font-size: 0.95em;">Three alternatives, all sharing the same horizon and discount rate:</p>
+    <table class="compact">
+      <thead><tr><th>Option</th><th>One-time cost</th><th>Annual cost</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Maintain</td><td>None</td><td>High &amp; rising</td><td>Low — known</td></tr>
+        <tr><td class="label">Re-engineer (refactor in place)</td><td>Medium</td><td>Falling</td><td>Medium — partial</td></tr>
+        <tr><td class="label">Rewrite from scratch</td><td>Very high</td><td>Low (initially)</td><td>High — unknown</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.93em;">Rewrites have a famously high failure rate (Joel Spolsky's "Things You Should Never Do" warning). Compute NPV of all three; apply a <em>risk multiplier</em> to the rewrite case (e.g., 50% probability of completing on plan).</p>
+    <p class="callout">If a rewrite still wins after a sober risk-adjusted NPV, do it. If it only wins on a hopeful base-case, don't.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Strangler fig</span></span><span class="right">15 / 18</span></div>
+    <span class="label-tag">A middle path</span>
+    <h1>The strangler fig pattern.</h1>
+    <p style="font-size: 0.95em;">Replace the system <em>incrementally</em>: build new functionality alongside the old, redirect traffic gradually, retire pieces of the legacy as they become unused.</p>
+    <p style="font-size: 0.95em; margin-top: 8px;">Economic appeal: lower upfront cost than a rewrite, lower risk than maintenance-forever, optionality at every step (you can stop at any time and still be ahead).</p>
+    <p class="callout">In NPV terms, the strangler captures most of the rewrite's benefit at a fraction of the rewrite's risk-adjusted cost. It's why it's the default in modern legacy modernisation.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 12</span></span><span class="right">16 / 18</span></div>
+    <span class="label-tag">Homework 10 — due Sunday 14 June</span>
+    <h1>Audit and decide.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Pick one module of your group project (or current workplace codebase). Build a technical-debt ledger: list at least five debts with principal, annual interest, and payback period.</li>
+      <li>For the largest debt, write a one-page memo arguing for or against immediate refactor. Use NPV — not feelings.</li>
+      <li>If your project would benefit from a partial rewrite, propose a strangler-fig plan with milestones and revenue impact at each step.</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">17 / 18</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>Cost of fixing</strong> grows exponentially with phase. Shift-left is an economic argument, not just a craft argument.</li>
+      <li><strong>Maintenance</strong> is half feature-work, half everything else. Budget for it explicitly.</li>
+      <li><strong>Technical debt</strong> behaves like a loan. Refactor only when discounted interest savings exceed principal.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Ten</span></span><span class="right">18 / 18</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~6 min. Tomorrow: Build / Buy / Reuse and VBSE.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

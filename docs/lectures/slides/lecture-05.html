@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 5 — Investment Decisions &amp; Alternative Selection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Five · 7 June 2026</div>
+        <div class="cover-volume">05<span class="small">Lecture Five</span></div>
+        <h1 class="cover-title">Investment<br>Decisions &amp;<br><span class="accent">Alternative Selection</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">From PV to a yes/no answer — NPV, IRR, payback, PI, and the moment of truth on Lecture 1's build-vs-buy puzzle.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 05 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">7 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">SY109</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Worked example</div></div>
+        </div>
+        <div class="footnote">Today closes Week One. Tomorrow opens decision methods &amp; estimation.</div>
+      </div>
+    </div>
+    <aside class="notes">
+      Last day of Week 1. Acknowledge the cumulative load — students should
+      feel like the puzzle pieces are clicking together today. ~2 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture V</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 24</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Four decision rules, one verdict.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Net Present Value (NPV) &amp; the discount-rate question</td><td class="num">20</td></tr>
+        <tr><td class="num">II.</td><td>Internal Rate of Return (IRR) &amp; MARR</td><td class="num">20</td></tr>
+        <tr><td class="num">III.</td><td>Payback period &amp; Profitability Index (PI)</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Comparing mutually-exclusive alternatives</td><td class="num">15</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: a real decision from your team</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Verdict on Lecture 1's Elasticsearch vs SaaS</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW 5, Week 1 recap, questions</em></td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Net Present Value —<br>the one number<br>that says yes or no.</h2>
+    </div>
+    <aside class="notes">~20 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>NPV definition</span></span><span class="right">04 / 24</span></div>
+    <span class="label-tag">Sum every cash flow at PV</span>
+    <h1>Net Present Value.</h1>
+    <div class="formula" style="font-size: 0.92em;">NPV &nbsp;=&nbsp; Σ<sub><em>t</em>=0..<em>n</em></sub> &nbsp; CF<sub><em>t</em></sub> &nbsp;÷&nbsp; (1+<em>i</em>)<sup><em>t</em></sup></div>
+    <p style="font-size: 0.95em;">The sum of every cash flow, each discounted to present value at the firm's cost of capital <em>i</em>.</p>
+    <div class="two-col" style="margin-top: 14px;">
+      <div class="card accent">
+        <h3>Decision rule</h3>
+        <p>Accept the project iff <strong>NPV &gt; 0</strong>. The positive NPV is the project's surplus over the firm's required return.</p>
+      </div>
+      <div class="card">
+        <h3>Strengths</h3>
+        <p>Uses all cash flows · respects time value · directly measures value created · scales additively across a portfolio.</p>
+      </div>
+    </div>
+    <p class="callout">Of all the rules we will discuss today, NPV is the only one finance professors will defend without a "but." Every other rule earns a footnote.</p>
+    <aside class="notes">
+      NPV is the gold standard. Why do other rules exist? Because NPV doesn't
+      tell you the rate of return, doesn't tell you when you break even, and
+      doesn't tell you bang-for-buck. Each of the next rules answers one of
+      those follow-up questions. ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Worked example</span></span><span class="right">05 / 24</span></div>
+    <span class="label-tag">A real NPV calculation</span>
+    <h1>NPV of an internal AI tool.</h1>
+    <table class="compact">
+      <thead><tr><th>Year</th><th class="num" style="text-align:right">Cash flow</th><th class="num" style="text-align:right">DF @ 10%</th><th class="num" style="text-align:right">PV</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td class="num" style="text-align:right">−$200,000</td><td class="num" style="text-align:right">1.0000</td><td class="num" style="text-align:right">−$200,000</td></tr>
+        <tr><td>1</td><td class="num" style="text-align:right">+$60,000</td><td class="num" style="text-align:right">0.9091</td><td class="num" style="text-align:right">+$54,545</td></tr>
+        <tr><td>2</td><td class="num" style="text-align:right">+$80,000</td><td class="num" style="text-align:right">0.8264</td><td class="num" style="text-align:right">+$66,116</td></tr>
+        <tr><td>3</td><td class="num" style="text-align:right">+$80,000</td><td class="num" style="text-align:right">0.7513</td><td class="num" style="text-align:right">+$60,105</td></tr>
+        <tr><td>4</td><td class="num" style="text-align:right">+$80,000</td><td class="num" style="text-align:right">0.6830</td><td class="num" style="text-align:right">+$54,641</td></tr>
+        <tr><td><strong>NPV</strong></td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right"><strong>+$35,407</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">NPV &gt; 0 → the project creates value over the firm's cost of capital. Accept.</p>
+    <aside class="notes">~5 minutes. Live calculation. Have students verify with their spreadsheets.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Internal Rate of Return —<br>the rate <em>implied</em><br>by the cash flows.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>IRR definition</span></span><span class="right">07 / 24</span></div>
+    <span class="label-tag">The rate that makes NPV = 0</span>
+    <h1>Internal Rate of Return (IRR).</h1>
+    <div class="formula" style="font-size: 0.9em;">find <em>i</em>* such that &nbsp; Σ<sub>t</sub> &nbsp; CF<sub>t</sub> ÷ (1+<em>i</em>*)<sup>t</sup> &nbsp;=&nbsp; 0</div>
+    <p style="font-size: 0.95em;">The IRR is the discount rate at which the project is exactly break-even. It is the project's <em>implied return</em>.</p>
+    <div class="two-col" style="margin-top: 10px;">
+      <div class="card accent">
+        <h3>Decision rule</h3>
+        <p>Accept iff <strong>IRR &gt; MARR</strong> (the firm's Minimum Attractive Rate of Return).</p>
+      </div>
+      <div class="card">
+        <h3>Limitations</h3>
+        <p>Multiple IRRs possible with sign changes · misleads when comparing differently-sized projects · ignores reinvestment-rate assumption.</p>
+      </div>
+    </div>
+    <p style="margin-top: 14px; font-size: 0.92em;">For the previous example, the IRR is <strong>≈ 17.5%</strong> — well above the 10% MARR. Decision: accept (consistent with NPV).</p>
+    <aside class="notes">
+      IRR can be solved analytically only for 1–2 period cases; otherwise
+      iterate (Newton's method, spreadsheet IRR(), bisection). Mention that
+      when NPV and IRR disagree, NPV wins. ~6 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>MARR</span></span><span class="right">08 / 24</span></div>
+    <span class="label-tag">The hurdle the firm sets</span>
+    <h1>The Minimum Attractive Rate of Return.</h1>
+    <p style="font-size: 0.95em;"><strong>MARR</strong> is the lowest return the firm requires for an investment of similar risk. It is set by leadership, not by the engineer.</p>
+    <table class="compact">
+      <thead><tr><th>Setting</th><th>Typical MARR</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td>Cash-rich enterprise</td><td class="num">8 – 12%</td><td>Cost of capital + small risk premium</td></tr>
+        <tr><td>Venture-backed startup</td><td class="num">25 – 40%</td><td>Equity investors demand high return</td></tr>
+        <tr><td>Government / non-profit</td><td class="num">3 – 5%</td><td>Treasury-rate floor</td></tr>
+        <tr><td>AI / experimental product</td><td class="num">20 – 30%</td><td>Outcome uncertainty bumps the floor</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">When the engineer is presented with a discount rate, that is the firm's MARR. Never quietly substitute your own.</p>
+    <aside class="notes">
+      Most students will not have known they could ask finance what the MARR
+      is. Now they can. ~4 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Payback &amp; PI —<br>the rough-and-ready<br>decision rules.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Payback period</span></span><span class="right">10 / 24</span></div>
+    <span class="label-tag">When do we get our money back?</span>
+    <h1>Payback period.</h1>
+    <p style="font-size: 0.95em;">The number of periods until the cumulative cash flow turns positive. <strong>Decision rule:</strong> accept iff payback &lt; some firm-set ceiling (often 2–3 years).</p>
+    <div class="two-col" style="margin-top: 6px;">
+      <div class="card">
+        <h3>Strengths</h3>
+        <p>Easy to compute · easy to communicate · prioritises liquidity · reasonable proxy for risk in unstable environments.</p>
+      </div>
+      <div class="card">
+        <h3>Weaknesses</h3>
+        <p>Ignores cash flows after payback · ignores time value of money (use <em>discounted payback</em> instead) · biases toward short-horizon projects.</p>
+      </div>
+    </div>
+    <p class="callout">Treat payback as a <strong>secondary screen</strong>, never the sole decision rule. A high-NPV project with a 4-year payback is still a high-NPV project.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Profitability Index</span></span><span class="right">11 / 24</span></div>
+    <span class="label-tag">Bang for the buck</span>
+    <h1>Profitability Index (PI).</h1>
+    <div class="formula">PI &nbsp;=&nbsp; PV(future cash flows) &nbsp;÷&nbsp; |initial investment|</div>
+    <p style="font-size: 0.95em;">PI &gt; 1 ⇔ NPV &gt; 0. The strength of PI is in <strong>capital rationing</strong> — when you can pick only a subset of projects under a fixed budget, rank by PI rather than NPV.</p>
+    <p style="font-size: 0.95em; margin-top: 8px;"><em>Example portfolio:</em> Five projects, each profitable. Budget caps total investment. Rank by PI to maximise total NPV inside the budget.</p>
+    <p class="callout">A "PI of 1.30" means $1.30 of present-value benefit per $1 of capital deployed.</p>
+    <aside class="notes">
+      Engineering managers face budget-constrained decisions all the time
+      (which features to build this quarter?). PI is the right ranking. ~4 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Mutually-exclusive alternatives —<br>when "accept all positives"<br>is the wrong rule.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Mutually exclusive</span></span><span class="right">13 / 24</span></div>
+    <span class="label-tag">Choosing one of several</span>
+    <h1>Pick the highest NPV — not the highest IRR.</h1>
+    <p style="font-size: 0.95em;">When two projects are mutually exclusive (e.g., two ways of solving the same problem) and have different sizes or lives, NPV and IRR can disagree:</p>
+    <table class="compact">
+      <thead><tr><th>Project</th><th class="num" style="text-align:right">Investment</th><th class="num" style="text-align:right">NPV @ 10%</th><th class="num" style="text-align:right">IRR</th></tr></thead>
+      <tbody>
+        <tr><td>A (small)</td><td class="num" style="text-align:right">$10,000</td><td class="num" style="text-align:right">$3,500</td><td class="num" style="text-align:right"><strong>30%</strong></td></tr>
+        <tr><td>B (large)</td><td class="num" style="text-align:right">$80,000</td><td class="num" style="text-align:right"><strong>$15,000</strong></td><td class="num" style="text-align:right">16%</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">A has the higher IRR; B has the higher NPV. <strong>Pick B</strong>. NPV measures absolute value creation; IRR measures rate, not scale.</p>
+    <p class="callout">A 30% return on $10K is less wealth than a 16% return on $80K. The firm is in business to maximise wealth, not return rate.</p>
+    <aside class="notes">
+      Land that A's "extra" capital ($70K not invested) can presumably earn
+      something else at the MARR — but no more than that, so B still wins.
+      ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Incremental IRR</span></span><span class="right">14 / 24</span></div>
+    <span class="label-tag">When you still want a rate</span>
+    <h1>Incremental analysis.</h1>
+    <p style="font-size: 0.95em;">To compare two mutually-exclusive projects using IRR, compute the IRR of the <strong>incremental cash flow</strong> (B − A). If incremental IRR &gt; MARR, the larger project is preferred.</p>
+    <p style="font-size: 0.95em; margin-top: 6px;">In our example: increment is invest $70K more to gain $11,500 more NPV → incremental IRR ≈ 13.7%. Since 13.7% &gt; 10% MARR, choose B. Consistent with the NPV verdict.</p>
+    <p class="callout">Whenever NPV and IRR seem to disagree, incremental IRR analysis reconciles them. NPV is still simpler — but some boards prefer the rate language.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">15 / 24</span></div>
+    <span class="label-tag">Real-world stress test</span>
+    <div class="discussion-icon">$</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.95em; margin-top: -6px; line-height: 1.1;">Bring me a decision your team made — and tell me whether it would survive an NPV check.</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 minutes), each describe one real decision (e.g., a tooling switch, a hire, a contract). Estimate the cash flows. Compute a rough NPV.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>What was the assumed discount rate? (If none, use 10%.)</li>
+      <li>How sensitive is your NPV to the largest assumption?</li>
+      <li>Did the decision look smart in NPV terms — or only with hindsight?</li>
+    </ul>
+    <p class="footnote">We will surface the best two stories for the whole room.</p>
+    <aside class="notes">
+      4-minute pair timer. Walk the room. Choose 2 stories — one where NPV
+      would have endorsed the decision, one where it would have rejected it.
+      ~10 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Verdict —<br>Elasticsearch vs SaaS,<br>the answer at last.</h2>
+      <p class="divider-quote">From the Lecture-1 poll. You voted on instinct. Now we vote on numbers.</p>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>The setup, recalled</span></span><span class="right">17 / 24</span></div>
+    <span class="label-tag">The puzzle from day one</span>
+    <h1>The two alternatives.</h1>
+    <table>
+      <thead><tr><th>Alternative</th><th class="num" style="text-align:right">Year 0 cost</th><th class="num" style="text-align:right">Annual op</th><th class="num" style="text-align:right">Life</th></tr></thead>
+      <tbody>
+        <tr><td class="label">A. Build in-house (Elasticsearch)</td><td class="num" style="text-align:right">$120,000</td><td class="num" style="text-align:right">$30,000</td><td class="num" style="text-align:right">5 years</td></tr>
+        <tr><td class="label">B. Subscribe to SaaS search</td><td class="num" style="text-align:right">$20,000</td><td class="num" style="text-align:right">$80,000</td><td class="num" style="text-align:right">5 years</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">Same functionality, same horizon. Discount rate: 10%. Which alternative is economically preferred?</p>
+    <p class="callout">The simple totals say A wins ($270K vs $420K). PV will sharpen that picture.</p>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>The math</span></span><span class="right">18 / 24</span></div>
+    <span class="label-tag">Both alternatives, both PVs</span>
+    <h1>PV of total cost — both alternatives.</h1>
+    <table>
+      <thead><tr><th>Alt.</th><th>Build / Sub.</th><th>Year 0</th><th>Yrs 1-5 stream</th><th class="num" style="text-align:right">PV total</th></tr></thead>
+      <tbody>
+        <tr><td class="label">A</td><td>Elasticsearch</td><td class="num">$120K</td><td class="num">$30K/yr · P/A@10%,5 = 3.7908</td><td class="num" style="text-align:right"><strong>$233,723</strong></td></tr>
+        <tr><td class="label">B</td><td>SaaS</td><td class="num">$20K</td><td class="num">$80K/yr · P/A@10%,5 = 3.7908</td><td class="num" style="text-align:right"><strong>$323,261</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;"><strong>Verdict:</strong> at a 10% discount rate, building in-house has a PV of total cost $89,538 lower. <strong>Pick A.</strong></p>
+    <p class="callout">Same conclusion as the simple total — but now with discipline. The math protects us when the gap is narrower.</p>
+    <aside class="notes">
+      Walk this live. Reveal the result one cell at a time. ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>What changes the answer?</span></span><span class="right">19 / 24</span></div>
+    <span class="label-tag">Sensitivity preview</span>
+    <h1>How robust is this verdict?</h1>
+    <table class="compact">
+      <thead><tr><th>Assumption</th><th>Change</th><th class="num" style="text-align:right">New verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Discount rate</td><td>Up to 25%</td><td class="num" style="text-align:right">A still wins, by $43K</td></tr>
+        <tr><td>SaaS price falls 30%</td><td>Annual $80K → $56K</td><td class="num" style="text-align:right">B wins by $13K</td></tr>
+        <tr><td>Build cost overruns 50%</td><td>$120K → $180K</td><td class="num" style="text-align:right">A still wins by $30K</td></tr>
+        <tr><td>Useful life shrinks to 3 years</td><td>5 → 3 years</td><td class="num" style="text-align:right">B wins by $25K</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">The verdict depends on <em>useful life</em> and <em>SaaS pricing trajectory</em> — not on the discount rate. <strong>Now you know what to investigate before signing the deal.</strong></p>
+    <p class="callout">This is sensitivity analysis. Lecture 6 makes it formal.</p>
+    <aside class="notes">
+      Live this. Land the meta-point: NPV gives an answer, sensitivity tells
+      you which assumptions matter. ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 6</span></span><span class="right">20 / 24</span></div>
+    <span class="label-tag">Where this is going</span>
+    <h1>From "the answer" to "the questions that change it."</h1>
+    <p class="lede">Tomorrow: break-even and sensitivity analysis. Today you computed an NPV; tomorrow you'll learn how to stress-test it, find the assumptions that matter, and present a confidence range — not a single number.</p>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 7</span></span><span class="right">21 / 24</span></div>
+    <span class="label-tag">Homework 05 — due Tuesday 9 June</span>
+    <h1>Six problems, one mini-case.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Six problems on NPV, IRR, payback, PI (course site).</li>
+      <li><strong>Mini-case:</strong> propose two implementation alternatives for a real product (yours or hypothetical). Build a 5-year cash flow for each. Compute NPV, IRR, payback, and PI for both. Pick a winner and defend it in one page.</li>
+      <li>One paragraph reflection: would you have made the same recommendation <em>before</em> running the numbers? Why or why not?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>Week One</span></span><span class="right">22 / 24</span></div>
+    <span class="label-tag">What this week bought you</span>
+    <h1>Week One in five lines.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li>Engineers make economic decisions whether they admit it or not.</li>
+      <li>Every cost lives in a <em>fixed/variable × direct/indirect × non-recurring/recurring</em> cell, across five lifecycle phases.</li>
+      <li>Money has time value — opportunity, risk, inflation.</li>
+      <li>Cash-flow streams have closed-form factors: <strong>P/A, F/A, P/G, geometric</strong>.</li>
+      <li>The decision is <strong>NPV &gt; 0</strong>. Everything else is a footnote — useful, never sufficient.</li>
+    </ol>
+    <p class="callout">From here forward, every lecture is built on these five lines.</p>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Reading</span><span class="dot"></span><span>Further</span></span><span class="right">23 / 24</span></div>
+    <h1>Reading.</h1>
+    <ul>
+      <li>Park, <em>Contemporary Engineering Economics</em>, chapter on NPV / IRR / payback.</li>
+      <li>Boehm (1981), Chapter 5 — incremental analysis.</li>
+      <li>Brealey, Myers &amp; Allen, <em>Principles of Corporate Finance</em>, capital budgeting chapters.</li>
+    </ul>
+    <aside class="notes">~1 minute.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Five · End of Week 1</span></span><span class="right">24 / 24</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">
+      End of Week 1. Q&amp;A 10 minutes. Next class: Monday — start of Week 2.
+    </aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

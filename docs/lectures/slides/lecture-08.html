@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 8 — Cost Estimation I: Size Metrics &amp; Function Points</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Eight · 10 June 2026</div>
+        <div class="cover-volume">08<span class="small">Lecture Eight</span></div>
+        <h1 class="cover-title">Cost Estimation I —<br><span class="accent">Size Metrics &amp;</span><br>Function Points</h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">"How big is this project?" — the question every estimation method tries, and often fails, to answer.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 08 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">10 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF302</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Counting workshop</div></div>
+        </div>
+        <div class="footnote">Group project briefs released at the end of today's class.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes. Flag the group-project brief release.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture VIII</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 20</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Count something, then justify the count.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Why estimate? Why is it hard?</td><td class="num">10</td></tr>
+        <tr><td class="num">II.</td><td>LOC — uses and abuses</td><td class="num">10</td></tr>
+        <tr><td class="num">III.</td><td>IFPUG Function Points</td><td class="num">30</td></tr>
+        <tr><td class="num">IV.</td><td>Value Adjustment Factor (VAF)</td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Use-Case Points &amp; modern variants</td><td class="num">10</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: estimate a famous product</em></td><td class="num">10</td></tr>
+        <tr><td class="num">VI.</td><td>Estimation biases — and the group project</td><td class="num">25</td></tr>
+        <tr><td></td><td><em>HW8, questions</em></td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Why estimate —<br>and why we're so bad at it.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Why estimate</span></span><span class="right">04 / 20</span></div>
+    <span class="label-tag">The need is unavoidable</span>
+    <h1>Estimates feed every economic model.</h1>
+    <p style="font-size: 0.95em;">Every NPV starts with someone writing a cost number. Without estimation, there is no economics.</p>
+    <ul style="margin-top: 6px; font-size: 0.93em;">
+      <li><strong>Plan the work.</strong> Schedule, staffing, dependencies.</li>
+      <li><strong>Budget the work.</strong> Funding requests, capital allocation.</li>
+      <li><strong>Price the work.</strong> Fixed-price contracts, internal chargeback.</li>
+      <li><strong>Manage the work.</strong> Track progress vs plan; signal when to escalate.</li>
+    </ul>
+    <p class="callout">Estimation accuracy varies wildly — by factors of 2× to 4× in industry studies. Yet estimating is still better than not estimating.</p>
+    <aside class="notes">
+      Fred Brooks: "More software projects have gone awry for lack of calendar
+      time than for all other causes combined." That was 1975 — and still true.
+      ~3 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">LOC —<br>the original sin<br>of software estimation.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Lines of Code</span></span><span class="right">06 / 20</span></div>
+    <span class="label-tag">When it works and when it doesn't</span>
+    <h1>LOC: a measure that punishes good code.</h1>
+    <div class="two-col">
+      <div>
+        <h3>Strengths</h3>
+        <ul>
+          <li>Trivial to count after the fact.</li>
+          <li>Has decades of calibration data.</li>
+          <li>Useful for COCOMO II (Lec 9).</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Weaknesses</h3>
+        <ul>
+          <li>Rewards verbosity. A concise solution scores worse.</li>
+          <li>Language-dependent: 100 lines of Rust ≠ 100 lines of Python.</li>
+          <li>Says nothing about feature value or complexity.</li>
+          <li><em>In 2026:</em> AI-assisted code-gen breaks the LOC ↔ effort link.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="callout">Use LOC as a downstream output (the COCOMO input), not an upstream estimate. Estimating in LOC before any code is written is guessing.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Function Points —<br>size from the<br><em>specification</em>, not the code.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>FP definition</span></span><span class="right">08 / 20</span></div>
+    <span class="label-tag">IFPUG, 1979</span>
+    <h1>Function Points (FP).</h1>
+    <p style="font-size: 0.95em;">A language-neutral measure of software size, computed from <em>what the system does</em> rather than how it's implemented. Counted from a specification — usable before any code is written.</p>
+    <p style="font-size: 0.95em; margin-top: 8px;">Five "function types" are counted, then weighted by complexity:</p>
+    <table class="compact">
+      <thead><tr><th>Type</th><th>What it is</th><th>Weight range</th></tr></thead>
+      <tbody>
+        <tr><td class="label">EI — external input</td><td>User or system data entering the boundary</td><td class="num">3 / 4 / 6</td></tr>
+        <tr><td class="label">EO — external output</td><td>Data sent out of the system (report, response)</td><td class="num">4 / 5 / 7</td></tr>
+        <tr><td class="label">EQ — external inquiry</td><td>A direct read with no derivation</td><td class="num">3 / 4 / 6</td></tr>
+        <tr><td class="label">ILF — internal logical file</td><td>Data the system maintains internally</td><td class="num">7 / 10 / 15</td></tr>
+        <tr><td class="label">EIF — external interface file</td><td>Data referenced, maintained elsewhere</td><td class="num">5 / 7 / 10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Worked count</span></span><span class="right">09 / 20</span></div>
+    <span class="label-tag">A small library-management module</span>
+    <h1>UFP — a worked example.</h1>
+    <table class="compact">
+      <thead><tr><th>Function</th><th>Type</th><th>Complexity</th><th class="num" style="text-align:right">Weight</th><th class="num" style="text-align:right">UFP</th></tr></thead>
+      <tbody>
+        <tr><td>Add book</td><td>EI</td><td>average</td><td class="num" style="text-align:right">4</td><td class="num" style="text-align:right">4</td></tr>
+        <tr><td>Search catalogue</td><td>EQ</td><td>average</td><td class="num" style="text-align:right">4</td><td class="num" style="text-align:right">4</td></tr>
+        <tr><td>Borrow book</td><td>EI</td><td>average</td><td class="num" style="text-align:right">4</td><td class="num" style="text-align:right">4</td></tr>
+        <tr><td>Generate monthly report</td><td>EO</td><td>high</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">7</td></tr>
+        <tr><td>Catalogue (book master)</td><td>ILF</td><td>average</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">10</td></tr>
+        <tr><td>Member roster</td><td>ILF</td><td>low</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">7</td></tr>
+        <tr><td>Borrowing log</td><td>ILF</td><td>average</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">10</td></tr>
+        <tr><td>External vendor catalogue feed</td><td>EIF</td><td>average</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">7</td></tr>
+        <tr><td><strong>Total UFP</strong></td><td></td><td></td><td></td><td class="num" style="text-align:right"><strong>53</strong></td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~6 minutes. Walk every row.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">VAF —<br>the adjustment<br>for context.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Value Adjustment Factor</span></span><span class="right">11 / 20</span></div>
+    <span class="label-tag">Fourteen General System Characteristics</span>
+    <h1>VAF — adjusting UFP for system context.</h1>
+    <div class="formula" style="font-size: 0.9em;">VAF &nbsp;=&nbsp; 0.65 + 0.01 &nbsp;×&nbsp; Σ GSC<sub><em>i</em></sub> &nbsp;·&nbsp; AFP &nbsp;=&nbsp; UFP × VAF</div>
+    <p style="font-size: 0.92em;">14 General System Characteristics, each rated 0 (no influence) through 5 (essential):</p>
+    <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--ink-soft); line-height: 1.6;">
+      data communications · distributed data processing · performance · heavily used configuration · transaction rate · online data entry · end-user efficiency · online update · complex processing · reusability · installation ease · operational ease · multiple sites · facilitate change
+    </p>
+    <p style="font-size: 0.93em; margin-top: 8px;">For our library module, sum the GSC ratings = 35 → VAF = 0.65 + 0.35 = <strong>1.00</strong> → AFP = 53 × 1.00 = <strong>53 AFP</strong>.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Use-Case Points —<br>FP for the<br>OOP-shaped projects.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>UCP</span></span><span class="right">13 / 20</span></div>
+    <span class="label-tag">Karner, 1993</span>
+    <h1>Use-Case Points (UCP).</h1>
+    <p style="font-size: 0.95em;">Counts <em>actors</em> (weighted by interaction complexity) and <em>use-cases</em> (weighted by number of steps), then adjusts for technical and environmental factors. Designed for projects whose specification lives in UML or modern equivalents.</p>
+    <p style="font-size: 0.95em; margin-top: 8px;">FP and UCP usually correlate well within a domain. Use whichever fits your team's specification style; pick one and stick to it across the term.</p>
+    <p class="callout">For your group project, choose FP <em>or</em> UCP — not both. Consistency across alternatives matters more than which method you pick.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">14 / 20</span></div>
+    <span class="label-tag">Estimate a household product</span>
+    <div class="discussion-icon">#</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.95em; margin-top: -6px; line-height: 1.1;">How many Function Points is <em>WeChat</em>?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 minutes), enumerate the function types of WeChat as you understand them. Don't try to be exhaustive — pick 15 representative functions. Compute UFP.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Where did your two estimates differ most? Which functions were missed?</li>
+      <li>Compare the two teams' totals. Are they within 30% of each other? If not, why?</li>
+    </ul>
+    <p class="footnote">The exact number doesn't matter. The exercise of negotiating it is what calibrates a team's estimating instincts.</p>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Six</div>
+      <div class="divider-number">VI</div>
+      <h2 class="divider-title">Biases —<br>and your group project.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>Three biases</span></span><span class="right">16 / 20</span></div>
+    <span class="label-tag">What goes wrong every time</span>
+    <h1>Three biases your estimate will fight.</h1>
+    <div class="three-col" style="margin-top: 6px;">
+      <div class="card"><h3>Optimism</h3><p>You imagine the happy path. Reality is a sum of small disasters. <strong>Counter:</strong> reference-class forecasting.</p></div>
+      <div class="card"><h3>Anchoring</h3><p>The first number set the budget; later analysis only nudges it. <strong>Counter:</strong> estimate before discussing.</p></div>
+      <div class="card"><h3>Planning fallacy</h3><p>"This time will be different." It rarely is. <strong>Counter:</strong> add a 25%–50% buffer; refuse the smaller number.</p></div>
+    </div>
+    <p class="callout">An estimate WITH bias-correction is an honest estimate. Without it, you are agreeing to a number you do not believe.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>Group project brief</span></span><span class="right">17 / 20</span></div>
+    <span class="label-tag">Released today — presented in Lectures 14–15</span>
+    <h1>Group project — what we are asking for.</h1>
+    <p style="font-size: 0.92em;">In teams of 3–4, choose a software product (real or hypothetical). Produce a complete economic analysis containing:</p>
+    <ol style="margin-top: 4px; font-size: 0.9em;">
+      <li>Project description &amp; scope.</li>
+      <li>Cost estimate using FP or COCOMO II (your choice).</li>
+      <li>Cash-flow forecast for ≥ 2 alternatives.</li>
+      <li>NPV, IRR, payback, PI for each alternative.</li>
+      <li>Sensitivity or risk analysis (Tornado, decision tree, or Monte Carlo).</li>
+      <li><em>Bonus:</em> AI cost dimension — tokens, productivity impact.</li>
+      <li>Final recommendation with stakeholder justification.</li>
+    </ol>
+    <p class="callout">Brief, rubric, and team-formation form on the course site. Teams must be registered by Lecture 11.</p>
+    <aside class="notes">~5 minutes. Hand out brief.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 10</span></span><span class="right">18 / 20</span></div>
+    <span class="label-tag">Homework 08 — due Friday 12 June</span>
+    <h1>Count your project.</h1>
+    <ol style="margin-top: 4px;">
+      <li>Convert your group-project description into an FP (or UCP) estimate. Show every function and weight.</li>
+      <li>Apply VAF — describe the GSC ratings you chose.</li>
+      <li>Bring your AFP count to Lecture 9. We will convert it to KSLOC and effort using COCOMO II.</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">19 / 20</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>LOC is a lagging measure.</strong> Use it as COCOMO input, not as a forward-looking estimate.</li>
+      <li><strong>Function Points</strong> let you size a system from its specification — before any code is written.</li>
+      <li><strong>Bias is the dominant error.</strong> A correct method applied through an optimism filter is still wrong.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Eight</span></span><span class="right">20 / 20</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~5 min. Tomorrow: COCOMO II.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

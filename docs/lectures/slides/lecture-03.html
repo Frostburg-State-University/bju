@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 3 — Time Value of Money</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Three · 5 June 2026</div>
+        <div class="cover-volume">03<span class="small">Lecture Three</span></div>
+        <h1 class="cover-title">Time Value<br>of <span class="accent">Money</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">Why $1 today is not the same as $1 tomorrow — the single most important quantitative idea in this course.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 03 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">5 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">SY109</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Computation</div></div>
+        </div>
+        <div class="footnote">Bring a calculator (or your phone). Today every slide has a number on it.</div>
+      </div>
+    </div>
+    <aside class="notes">
+      Welcome. Yesterday was vocabulary; today is calculus. Acknowledge that
+      some students may find the math anxious — promise: there are only 4
+      formulas, and we will derive each one, not memorise it.
+      ~2 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture III</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 24</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Four formulas. One question.</h1>
+    <p class="lede">Why is $1 today worth more than $1 in five years — and how much more, exactly?</p>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Why money has time value</td><td class="num">15</td></tr>
+        <tr><td class="num">II.</td><td>Future value &amp; present value (single sum)</td><td class="num">25</td></tr>
+        <tr><td class="num">III.</td><td>Simple vs compound interest</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Nominal, effective &amp; continuous rates</td><td class="num">20</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: what's <em>your</em> personal discount rate?</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Worked problems — software examples</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW3 brief, questions</em></td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">
+      Highlight that today the discussion is personal — they will be asked
+      to introspect about their own time preference. ~2 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Why money has time value —<br>and why this matters<br>for every software decision.</h2>
+      <p class="divider-quote">"A bird in the hand is worth two in the bush." — Aesop, ~600 BC.</p>
+    </div>
+    <aside class="notes">~30 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Why</span></span><span class="right">04 / 24</span></div>
+    <span class="label-tag">Three reasons a future dollar is worth less</span>
+    <h1>Three forces, one conclusion.</h1>
+    <table>
+      <thead><tr><th style="width:18%">Force</th><th>Why it makes future money worth less today</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Opportunity</td><td>Money today can be invested and grow. $1 invested at 8% becomes $1.47 in 5 years.</td></tr>
+        <tr><td class="label">Risk</td><td>Future money is uncertain. The promised dollar in 5 years may not arrive at all.</td></tr>
+        <tr><td class="label">Inflation</td><td>The future dollar buys less. 3% inflation cuts purchasing power by ~14% over 5 years.</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 18px; font-size: 0.95em;">All three sum into a single rate — the <strong>discount rate</strong> — that we will use to translate any future cash flow into today's terms.</p>
+    <p class="callout">In software, the same logic applies to engineering effort: an hour today is more valuable than an hour next quarter, because it can be invested into work that compounds.</p>
+    <aside class="notes">
+      Three forces. The discount rate is the SUM, not the SELECTION, of these.
+      Tell them: when finance hands them a 10% discount rate, that's the
+      blended cost of these three forces for this firm. ~5 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Future value &amp; present value —<br>the two core formulas<br>of engineering economics.</h2>
+    </div>
+    <aside class="notes">~20 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Future value</span></span><span class="right">06 / 24</span></div>
+    <span class="label-tag">Single sum, compound interest</span>
+    <h1>Future Value (FV).</h1>
+    <div class="formula" style="font-size: 1.1em;">FV &nbsp;=&nbsp; PV &nbsp;×&nbsp; (1 + <em>i</em>)<sup><em>n</em></sup></div>
+    <p style="font-size: 0.95em;">Where:
+      <strong>PV</strong> = present value (today's dollar amount) &nbsp;·&nbsp;
+      <strong>i</strong> = interest rate per period &nbsp;·&nbsp;
+      <strong>n</strong> = number of periods.
+    </p>
+    <p style="font-size: 0.95em; margin-top: 6px;"><em>Example:</em> $100 today, invested at 8% annually, for 5 years:</p>
+    <div class="formula">FV = 100 × (1.08)<sup>5</sup> = 100 × 1.4693 = <strong>$146.93</strong></div>
+    <p class="callout">Future value is what you have <em>at the end</em>. Compounding is the engine: each year's interest itself earns interest.</p>
+    <aside class="notes">
+      Do this calculation live. Have a volunteer call out the multiplication.
+      Land the compounding intuition: at 8%, money doubles every 9 years
+      (Rule of 72). ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Present value</span></span><span class="right">07 / 24</span></div>
+    <span class="label-tag">The reverse direction</span>
+    <h1>Present Value (PV).</h1>
+    <div class="formula" style="font-size: 1.1em;">PV &nbsp;=&nbsp; FV ÷ (1 + <em>i</em>)<sup><em>n</em></sup></div>
+    <p style="font-size: 0.95em;"><em>Example:</em> a vendor will pay you $100,000 in 5 years. At a 10% opportunity cost of capital, what is that worth to you today?</p>
+    <div class="formula">PV = 100,000 ÷ (1.10)<sup>5</sup> = 100,000 ÷ 1.6105 = <strong>$62,092</strong></div>
+    <p style="font-size: 0.95em; margin-top: 12px;">Translation: a guaranteed $100K in five years is economically equivalent to $62,092 today — at this firm's cost of capital.</p>
+    <p class="callout">PV is the lens that lets us compare cash flows at <em>different points in time</em> on a common ruler. It is the foundation of NPV, which arrives in Lecture 5.</p>
+    <aside class="notes">
+      The same machinery, run backward. Emphasise: PV and FV are the SAME
+      relationship, just rearranged. Make sure every student can do this on
+      a calculator before moving on. ~6 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Software example</span></span><span class="right">08 / 24</span></div>
+    <span class="label-tag">A real software-decision example</span>
+    <h1>License now, or license later?</h1>
+    <p style="font-size: 0.95em;">A vendor offers two pricing terms for the same software:</p>
+    <table>
+      <thead><tr><th>Option</th><th class="num" style="text-align:right">Pay now</th><th class="num" style="text-align:right">Pay in 3 years</th><th class="num" style="text-align:right">PV @ 8%</th></tr></thead>
+      <tbody>
+        <tr><td class="label">A. Upfront</td><td class="num" style="text-align:right">$50,000</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right"><strong>$50,000</strong></td></tr>
+        <tr><td class="label">B. Deferred</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">$60,000</td><td class="num" style="text-align:right"><strong>$47,629</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">B has the higher nominal price but the lower present value. Provided you're confident in the firm's solvency three years out, B is the better deal — at 8%.</p>
+    <p class="callout">Notice how much the discount rate matters. At 4%, B's PV becomes $53,340 and A wins instead. The discount rate is a <em>policy choice</em> — and decisions hinge on it.</p>
+    <aside class="notes">
+      Walk the math live. Then ask: "At what discount rate would you be
+      indifferent?" — the answer is the IRR of the difference, ~6.27%.
+      Foreshadow IRR for Lecture 5. ~6 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Simple vs Compound —<br>and why nobody<br>uses simple any more.</h2>
+    </div>
+    <aside class="notes">~20 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Simple vs Compound</span></span><span class="right">10 / 24</span></div>
+    <span class="label-tag">A small choice, a large difference</span>
+    <h1>Two ways to earn interest.</h1>
+    <div class="two-col">
+      <div>
+        <h3>Simple interest</h3>
+        <div class="formula">FV = PV × (1 + <em>i</em> × <em>n</em>)</div>
+        <p style="font-size: 0.9em;">Interest is only on the original principal. The principal stays the same; interest is constant per period.</p>
+        <p style="font-size: 0.88em; margin-top: 4px;"><em>Example:</em> $1,000 at 8%, 20 years → <strong>$2,600</strong>.</p>
+      </div>
+      <div>
+        <h3>Compound interest</h3>
+        <div class="formula">FV = PV × (1 + <em>i</em>)<sup><em>n</em></sup></div>
+        <p style="font-size: 0.9em;">Interest itself earns interest. The base grows each period.</p>
+        <p style="font-size: 0.88em; margin-top: 4px;"><em>Example:</em> $1,000 at 8%, 20 years → <strong>$4,661</strong>.</p>
+      </div>
+    </div>
+    <p class="callout">Almost every real financial product uses compounding. Engineering-economics formulas assume compounding unless stated otherwise.</p>
+    <aside class="notes">
+      Land the "miracle of compound interest" idea. $1,000 doubled in 9 years
+      (Rule of 72), so 20 years at 8% is about 4.66× — without using a
+      calculator. Mental-math tricks like this earn engineer credibility. ~4 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Nominal · Effective · Continuous —<br>three names for the<br>same idea, calibrated differently.</h2>
+    </div>
+    <aside class="notes">~20 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Rate conventions</span></span><span class="right">12 / 24</span></div>
+    <span class="label-tag">Read the quote carefully</span>
+    <h1>The 18% APR that wasn't.</h1>
+    <table>
+      <thead><tr><th>Convention</th><th>Formula</th><th>At 18% nominal, 12 periods</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Nominal annual rate (<em>r</em>)</td><td>quoted "headline" rate, ignores compounding frequency</td><td class="num">18.00%</td></tr>
+        <tr><td class="label">Effective annual rate (<em>i</em>)</td><td>(1 + <em>r</em>/<em>m</em>)<sup><em>m</em></sup> − 1</td><td class="num">(1+0.015)<sup>12</sup>−1 = <strong>19.56%</strong></td></tr>
+        <tr><td class="label">Continuous compounding</td><td>e<sup><em>r</em></sup> − 1</td><td class="num">e<sup>0.18</sup>−1 = <strong>19.72%</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">The same "18%" hides three different actual rates — credit cards, mortgages, and bonds use different conventions and the differences <em>compound</em>.</p>
+    <p class="callout">When reading a contract or financial model, always identify which rate convention is being used. The wrong assumption silently inflates or deflates every NPV calculation that follows.</p>
+    <aside class="notes">
+      Story: junior analyst at a bank confused APR with effective rate on a
+      $500M deal — was off by ~$8M. This stuff matters. ~6 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Continuous compounding</span></span><span class="right">13 / 24</span></div>
+    <span class="label-tag">When periods → 0</span>
+    <h1>Continuous compounding.</h1>
+    <div class="formula" style="font-size: 1.05em;">FV &nbsp;=&nbsp; PV × e<sup><em>r·n</em></sup> &nbsp;·&nbsp; PV &nbsp;=&nbsp; FV × e<sup>−<em>r·n</em></sup></div>
+    <p style="font-size: 0.95em;">Used widely in derivatives pricing, treasury bond math, and academic finance. For engineering economics decisions we usually stay with annual or monthly compounding — but you should be able to translate.</p>
+    <p style="font-size: 0.92em; margin-top: 8px;"><em>Example:</em> $1 at 10% continuously compounded for 1 year:</p>
+    <div class="formula">FV = 1 × e<sup>0.10</sup> = $1.1052 &nbsp; (vs $1.10 simple annual)</div>
+    <p class="callout">The "spread" between annual and continuous compounding feels small per period but matters for long horizons and high rates. We will revisit when we discuss risk and option-style decisions.</p>
+    <aside class="notes">
+      Optional content for the math-curious. If time is tight, you can skip
+      half this slide. Foreshadow real-options thinking in Lecture 7. ~3 minutes.
+    </aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">14 / 24</span></div>
+    <span class="label-tag">Introspection in pairs</span>
+    <div class="discussion-icon">%</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 2em; margin-top: -6px; line-height: 1.1;">What is <em>your</em> personal discount rate?</h2>
+    <p class="lede" style="margin-top: 14px;">I will offer you $100 today, or $X in one year. What value of X just barely tips you to wait?</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Solve for your implied annual discount rate: <em>r</em> = X/100 − 1.</li>
+      <li>Now repeat for $1,000 today vs $X in one year. Does your rate change? Why?</li>
+      <li>Compare with your partner. Are you more or less patient than the firm's discount rate (typically 8–15%)?</li>
+    </ul>
+    <p class="footnote">Patient people are economically valuable. So are impatient ones — they tend to act faster on opportunity.</p>
+    <aside class="notes">
+      Set a 4-minute pair timer. Most students will reveal personal discount
+      rates of 20-50% — much higher than firm rates. Surface this: it explains
+      why engineers undervalue future maintenance pain (high personal rate)
+      and overvalue immediate gratification.
+      Discuss "framing effects" — the rate changes with stakes. ~10 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Worked problems —<br>software-decision examples<br>using PV and FV.</h2>
+    </div>
+    <aside class="notes">~20 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Example 1</span></span><span class="right">16 / 24</span></div>
+    <span class="label-tag">Discounting a TCO worksheet</span>
+    <h1>Yesterday's worksheet — discounted.</h1>
+    <p style="font-size: 0.95em;">A team estimates the following annual TCO cash outflows for an internal AI tool. Find the PV of total cost at a 10% discount rate.</p>
+    <table>
+      <thead><tr><th>Year</th><th class="num" style="text-align:right">Cash outflow</th><th class="num" style="text-align:right">Discount factor</th><th class="num" style="text-align:right">PV</th></tr></thead>
+      <tbody>
+        <tr><td>0 (build)</td><td class="num" style="text-align:right">$80,000</td><td class="num" style="text-align:right">1.0000</td><td class="num" style="text-align:right">$80,000</td></tr>
+        <tr><td>1</td><td class="num" style="text-align:right">$30,000</td><td class="num" style="text-align:right">0.9091</td><td class="num" style="text-align:right">$27,273</td></tr>
+        <tr><td>2</td><td class="num" style="text-align:right">$30,000</td><td class="num" style="text-align:right">0.8264</td><td class="num" style="text-align:right">$24,793</td></tr>
+        <tr><td>3</td><td class="num" style="text-align:right">$30,000</td><td class="num" style="text-align:right">0.7513</td><td class="num" style="text-align:right">$22,539</td></tr>
+        <tr><td>4</td><td class="num" style="text-align:right">$30,000</td><td class="num" style="text-align:right">0.6830</td><td class="num" style="text-align:right">$20,490</td></tr>
+        <tr><td><strong>Total PV</strong></td><td class="num" style="text-align:right"><strong>$200,000</strong></td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right"><strong>$175,095</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Without discounting, total cost is $200K. With it, the same stream is worth $175K — a 12% reduction. The cost arrives later, so it costs less.</p>
+    <aside class="notes">
+      Do this calculation live with the class. Have them compute one of the
+      discount factors themselves. Land that "the same project costs less"
+      ONLY because of when the dollars arrive. ~8 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Example 2</span></span><span class="right">17 / 24</span></div>
+    <span class="label-tag">Solving for unknown rate (IRR preview)</span>
+    <h1>What rate makes them equal?</h1>
+    <p style="font-size: 0.95em;">$50,000 today, or $80,000 in 5 years. At what discount rate are these two equivalent in PV?</p>
+    <div class="formula">50,000 = 80,000 ÷ (1 + <em>i</em>)<sup>5</sup> &nbsp; ⇒ &nbsp; (1 + <em>i</em>)<sup>5</sup> = 1.6 &nbsp; ⇒ &nbsp; <em>i</em> = 1.6<sup>0.2</sup> − 1 = <strong>9.86%</strong></div>
+    <p style="margin-top: 12px; font-size: 0.95em;">This <em>break-even discount rate</em> is the precursor of the <strong>Internal Rate of Return (IRR)</strong> we will see in Lecture 5. It is the rate that makes alternatives equivalent.</p>
+    <p class="callout">If your firm's discount rate is <em>below</em> 9.86%, take the $80K in 5 years. If <em>above</em>, take $50K now. Knowing your discount rate is half the decision.</p>
+    <aside class="notes">
+      Do the math live with the calculator. Land the IRR preview — this is
+      what we'll formalise in Lecture 5. ~4 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Example 3</span></span><span class="right">18 / 24</span></div>
+    <span class="label-tag">Compounded short periods</span>
+    <h1>Quarterly billing vs annual billing.</h1>
+    <p style="font-size: 0.95em;">A SaaS vendor offers $1,200 / year billed annually upfront, or $300 / quarter billed in advance. If your discount rate is 8% annual:</p>
+    <table class="compact">
+      <thead><tr><th>Plan</th><th>Cash flow (yr 1)</th><th class="num" style="text-align:right">Effective PV</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Annual</td><td>$1,200 at <em>t</em>=0</td><td class="num" style="text-align:right">$1,200.00</td></tr>
+        <tr><td class="label">Quarterly</td><td>$300 at <em>t</em>=0,&nbsp;¼,&nbsp;½,&nbsp;¾</td><td class="num" style="text-align:right">$1,165.93</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">Quarterly billing saves the customer ≈ <strong>$34</strong> per year in PV terms. Modest, but the principle scales: any time you can defer a payment, you reduce its PV.</p>
+    <p class="callout">This is exactly why every SaaS vendor offers a 10–20% discount for annual upfront payment — they are pricing the customer's option to defer.</p>
+    <aside class="notes">
+      A practical, everyday example. Tell them they can now negotiate annual
+      vs monthly contracts knowing the implied rate. ~5 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 4</span></span><span class="right">19 / 24</span></div>
+    <span class="label-tag">Where this is going</span>
+    <h1>Tomorrow we string cash flows together.</h1>
+    <p class="lede">Single sums are the unit. But software projects produce <em>streams</em> — uniform, growing, irregular. Tomorrow we learn the closed-form formulas that make these streams tractable.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Uniform series (equal payments) — the <em>P / A</em> factor.</li>
+      <li>Arithmetic gradient (linearly growing payments).</li>
+      <li>Geometric gradient (exponentially growing payments — e.g., 10% / year SaaS price hikes).</li>
+    </ul>
+    <p class="callout">Bring tomorrow: today's PV / FV intuition and your TCO worksheet. We will combine them.</p>
+    <aside class="notes">
+      Tell them: Lecture 4 is the calculus's second helping. After tomorrow,
+      they will have everything they need for NPV. ~2 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 5</span></span><span class="right">20 / 24</span></div>
+    <span class="label-tag">Homework 03 — due Sunday 7 June, before class</span>
+    <h1>Make the formulas yours.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Six PV / FV exercises (see course site). Show the formula and the substitution; not just the final answer.</li>
+      <li>Convert a quoted 24% APR (monthly compounding) into the effective annual rate. Convert it again into continuous-compounding equivalent.</li>
+      <li>Take your TCO worksheet from Lecture 2 and apply a 10% discount rate. Compute the PV of total cost. Compare with the undiscounted total. One paragraph: what changed about your reading of the project?</li>
+    </ol>
+    <aside class="notes">
+      The reflection in part 3 is where they internalise it. ~3 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Reading</span><span class="dot"></span><span>Further</span></span><span class="right">21 / 24</span></div>
+    <span class="label-tag">If you want to go deeper</span>
+    <h1>To read this week.</h1>
+    <ul>
+      <li>Park, <em>Contemporary Engineering Economics</em>, chapter on time value of money.</li>
+      <li>Boehm (1981), <em>Software Engineering Economics</em>, Chapter 4 — present-worth analysis.</li>
+      <li>Brealey, Myers &amp; Allen, <em>Principles of Corporate Finance</em>, Chapters 2–3 — for the finance perspective.</li>
+    </ul>
+    <aside class="notes">~1 minute.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">22 / 24</span></div>
+    <span class="label-tag">Three take-aways</span>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>$1 today ≠ $1 tomorrow.</strong> Opportunity, risk, and inflation set the gap. The gap is the discount rate.</li>
+      <li>Two formulas: <strong>FV = PV(1+i)<sup>n</sup></strong> and its inverse <strong>PV = FV/(1+i)<sup>n</sup></strong>. Almost everything else in this course is a recombination of these two.</li>
+      <li>Always read the rate convention. 18% nominal monthly ≠ 18% effective annual. The difference compounds — literally.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Three</span></span><span class="right">23 / 24</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">
+      Thank class. Remind: Lecture 4 tomorrow, SY109. Bring calculators again.
+      ~8 minutes Q&amp;A.
+    </aside>
+  </section>
+
+  <section class="pullquote">
+    <span class="label-tag">Closing thought</span>
+    <blockquote>Compound interest is the eighth wonder of the world. He who understands it, earns it; he who doesn't, pays it.</blockquote>
+    <cite>— attributed to Albert Einstein</cite>
+    <aside class="notes">
+      Hold the quote. Final 30 seconds — silence, then dismiss.
+    </aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

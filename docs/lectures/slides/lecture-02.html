@@ -5,1825 +5,597 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Dr. Zhijiang Chen">
   <title>Lecture 2 — Software Cost Concepts &amp; Lifecycle Cost</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-
-  <style>
-    :root {
-      --ink:        #1A1A2E;
-      --ink-soft:   #4A4A5E;
-      --ink-mute:   #7A7A8A;
-      --paper:      #FAF8F4;
-      --paper-warm: #F3EFE6;
-      --rule:       #D4CFC3;
-      --rule-soft:  #E8E3D5;
-      --indigo:     #3F51B5;
-      --indigo-dk:  #283593;
-      --indigo-lt:  #E8EAF6;
-      --crimson:    #B73239;
-      --crimson-lt: #F5E6E7;
-      --moss:       #4A6B4E;
-      --moss-lt:    #E8EFE6;
-    }
-
-    html, body { background: var(--paper); }
-
-    .reveal {
-      font-family: 'Crimson Pro', 'Georgia', serif;
-      font-size: 30px;
-      color: var(--ink);
-      font-feature-settings: "kern", "liga", "calt", "onum";
-    }
-
-    .reveal .slides { text-align: left; }
-
-    .reveal .slides > section {
-      padding: 70px 80px 60px;
-      box-sizing: border-box;
-      height: 100%;
-    }
-
-    /* ---------- Global header / footer banner (every slide) ---------- */
-    .reveal .slides > section::before {
-      content: "Beijing Jiaotong University  ·  Summer 2026";
-      position: absolute;
-      top: 16px; left: 80px; right: 80px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      text-align: center;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--rule-soft);
-      pointer-events: none;
-    }
-    .reveal .slides > section::after {
-      content: "Dr. Zhijiang Chen";
-      position: absolute;
-      bottom: 14px; left: 80px; right: 80px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      text-align: center;
-      padding-top: 8px;
-      border-top: 1px solid var(--rule-soft);
-      pointer-events: none;
-    }
-    .reveal .slides > section.divider::before,
-    .reveal .slides > section.divider::after {
-      color: rgba(250,248,244,0.6);
-      border-color: rgba(250,248,244,0.22);
-    }
-
-    /* ---------- Typography ---------- */
-    .reveal h1, .reveal h2, .reveal h3 {
-      font-family: 'Fraunces', 'Crimson Pro', serif;
-      font-weight: 500;
-      color: var(--ink);
-      letter-spacing: -0.02em;
-      text-transform: none;
-      margin: 0 0 0.55em;
-      line-height: 1.1;
-    }
-    .reveal h1 { font-size: 2.4em; font-weight: 400; font-variation-settings: "SOFT" 30; }
-    .reveal h2 { font-size: 1.65em; font-weight: 450; }
-    .reveal h3 { font-size: 1.15em; font-weight: 500; color: var(--ink-soft); }
-
-    .reveal p, .reveal li { line-height: 1.5; }
-    .reveal p { margin: 0 0 0.7em; }
-    .reveal ul, .reveal ol { margin: 0.2em 0 0.6em 1.2em; }
-    .reveal ul li { list-style: none; position: relative; padding-left: 1.3em; margin-bottom: 0.35em; }
-    .reveal ul li::before {
-      content: ""; position: absolute; left: 0; top: 0.62em;
-      width: 0.85em; height: 1px; background: var(--indigo);
-    }
-    .reveal ol { list-style-type: none; counter-reset: ord; padding-left: 0; }
-    .reveal ol li {
-      counter-increment: ord;
-      padding-left: 2.3em;
-      margin-bottom: 0.45em;
-      position: relative;
-    }
-    .reveal ol li::before {
-      content: counter(ord, decimal-leading-zero);
-      position: absolute; left: 0; top: 0.05em;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6em; color: var(--indigo); font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-
-    .reveal em { color: var(--indigo-dk); font-style: italic; }
-    .reveal strong { font-weight: 600; color: var(--ink); }
-
-    code, .mono {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8em;
-    }
-
-    /* ---------- Editorial frame ---------- */
-    .slide-meta {
-      position: absolute; top: 48px; left: 80px; right: 80px;
-      display: flex; justify-content: space-between;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      pointer-events: none;
-    }
-    .slide-meta .left  { display: flex; gap: 24px; align-items: center; }
-    .slide-meta .right { display: flex; gap: 24px; align-items: center; }
-    .slide-meta .dot   {
-      display: inline-block; width: 6px; height: 6px;
-      border-radius: 50%; background: var(--indigo);
-      vertical-align: middle; margin: 0 2px 3px;
-    }
-
-    .slide-foot {
-      position: absolute; bottom: 44px; left: 80px; right: 80px;
-      display: flex; justify-content: space-between; align-items: baseline;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--ink-mute);
-      padding-top: 6px;
-      pointer-events: none;
-    }
-    .slide-foot .course { color: var(--ink-soft); font-weight: 500; }
-
-    /* ---------- Title slide ---------- */
-    .cover {
-      background:
-        radial-gradient(circle at 80% 10%, rgba(63,81,181,0.07), transparent 40%),
-        linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
-    }
-    .cover-grid {
-      display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px;
-      height: 100%;
-      align-items: stretch;
-      padding: 0;
-    }
-    .cover-left { align-self: center; }
-    .cover-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--indigo); margin-bottom: 18px;
-    }
-    .cover-title {
-      font-family: 'Fraunces', serif;
-      font-weight: 350;
-      font-size: 2.7em;
-      font-variation-settings: "SOFT" 40;
-      line-height: 1.02;
-      letter-spacing: -0.025em;
-      color: var(--ink);
-      margin: 0 0 0.3em;
-    }
-    .cover-title .accent { color: var(--indigo); font-style: italic; font-weight: 400; }
-    .cover-rule {
-      width: 68px; height: 2px; background: var(--indigo); margin: 22px 0 18px;
-    }
-    .cover-sub {
-      font-family: 'Crimson Pro', serif; font-style: italic;
-      font-size: 1.02em; color: var(--ink-soft); max-width: 22em; line-height: 1.42;
-    }
-    .cover-right {
-      align-self: center;
-      border-left: 1px solid var(--rule);
-      padding-left: 38px;
-    }
-    .cover-meta-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
-      margin-bottom: 18px;
-    }
-    .cover-meta-row .label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--ink-mute); margin-bottom: 3px;
-    }
-    .cover-meta-row .value {
-      font-family: 'Fraunces', serif; font-weight: 400;
-      font-size: 0.95em; color: var(--ink);
-    }
-    .cover-volume {
-      font-family: 'Fraunces', serif;
-      font-size: 4.4em; font-weight: 200;
-      font-variation-settings: "SOFT" 80, "opsz" 144;
-      color: var(--indigo);
-      line-height: 0.9;
-      letter-spacing: -0.05em;
-      margin-bottom: 10px;
-    }
-    .cover-volume .small {
-      font-size: 0.2em; vertical-align: top;
-      letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--ink-mute); margin-left: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      display: inline-block; padding-top: 10px;
-    }
-
-    /* ---------- Section divider ---------- */
-    .divider {
-      background:
-        linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dk) 100%);
-      color: var(--paper);
-    }
-    .divider .slide-meta,
-    .divider .slide-foot { color: rgba(250,248,244,0.55); border-color: rgba(250,248,244,0.2); }
-    .divider .slide-meta .dot { background: var(--paper); }
-    .divider-content {
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: flex-start;
-      height: 100%;
-    }
-    .divider-roman {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; letter-spacing: 0.4em;
-      color: rgba(250,248,244,0.6);
-      margin-bottom: 30px;
-      text-transform: uppercase;
-    }
-    .divider-number {
-      font-family: 'Fraunces', serif;
-      font-weight: 200;
-      font-variation-settings: "SOFT" 60, "opsz" 144;
-      font-size: 11em;
-      line-height: 0.85;
-      letter-spacing: -0.06em;
-      color: var(--paper);
-      margin-bottom: 0;
-    }
-    .divider-title {
-      font-family: 'Fraunces', serif;
-      font-weight: 350;
-      font-size: 2.4em;
-      letter-spacing: -0.02em;
-      color: var(--paper);
-      margin: 8px 0 22px;
-      max-width: 18em;
-    }
-    .divider-title em { color: rgba(255,255,255,0.85); font-style: italic; }
-    .divider-quote {
-      font-family: 'Crimson Pro', serif;
-      font-style: italic;
-      font-size: 1.05em;
-      color: rgba(250,248,244,0.7);
-      max-width: 26em;
-      border-left: 2px solid rgba(250,248,244,0.4);
-      padding-left: 18px;
-    }
-
-    /* ---------- Pull quote slide ---------- */
-    .pullquote {
-      display: flex; flex-direction: column;
-      justify-content: center;
-      height: 100%;
-      padding: 80px 140px;
-    }
-    .pullquote blockquote {
-      font-family: 'Fraunces', serif;
-      font-style: italic;
-      font-weight: 350;
-      font-size: 2.3em;
-      line-height: 1.18;
-      letter-spacing: -0.015em;
-      color: var(--ink);
-      border: none; margin: 0 0 30px;
-      padding: 0;
-    }
-    .pullquote blockquote::before {
-      content: "“";
-      font-family: 'Fraunces', serif;
-      font-size: 3em; line-height: 0.6;
-      color: var(--indigo);
-      display: block;
-      margin-bottom: 0.1em;
-    }
-    .pullquote cite {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--ink-mute);
-      font-style: normal;
-    }
-
-    /* ---------- Tables ---------- */
-    .reveal table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 18px 0 14px;
-      font-feature-settings: "tnum", "lnum";
-    }
-    .reveal table thead th {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      font-weight: 500;
-      text-align: left;
-      padding: 10px 18px 10px 0;
-      border-bottom: 1.5px solid var(--ink);
-      vertical-align: bottom;
-    }
-    .reveal table tbody td {
-      padding: 12px 18px 12px 0;
-      border-bottom: 1px solid var(--rule-soft);
-      vertical-align: top;
-      color: var(--ink);
-      font-size: 0.8em;
-      line-height: 1.42;
-    }
-    .reveal table tbody td.num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72em;
-      color: var(--ink-soft);
-    }
-    .reveal table tbody td.label {
-      font-weight: 600; white-space: nowrap;
-    }
-    .reveal table.compact tbody td { padding: 8px 14px 8px 0; font-size: 0.75em; }
-
-    /* ---------- Layout helpers ---------- */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr; gap: 50px;
-      align-items: start;
-    }
-    .three-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr; gap: 36px;
-      align-items: start;
-    }
-    .four-col {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr); gap: 28px;
-      align-items: start;
-    }
-
-    .label-tag {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--indigo);
-      margin-bottom: 14px;
-    }
-
-    .lede {
-      font-family: 'Crimson Pro', serif;
-      font-style: italic;
-      font-size: 1.18em;
-      color: var(--ink-soft);
-      line-height: 1.45;
-      max-width: 28em;
-      margin: 0 0 1.2em;
-    }
-
-    .footnote {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--ink-mute);
-      letter-spacing: 0.05em;
-      margin-top: 16px;
-    }
-
-    /* ---------- Card / box ---------- */
-    .card {
-      background: var(--paper-warm);
-      border: 1px solid var(--rule-soft);
-      padding: 22px 26px;
-      border-radius: 2px;
-    }
-    .card h3 { margin-bottom: 12px; font-size: 1em; color: var(--indigo-dk); }
-    .card p, .card ul li { font-size: 0.85em; line-height: 1.42; }
-
-    .callout {
-      border-left: 3px solid var(--indigo);
-      padding: 4px 0 4px 24px;
-      margin: 12px 0;
-      color: var(--ink-soft);
-      font-style: italic;
-      font-size: 0.92em;
-    }
-
-    .callout.crimson {
-      border-left-color: var(--crimson);
-      color: var(--crimson);
-    }
-
-    /* ---------- Stat / number callout ---------- */
-    .big-stat {
-      font-family: 'Fraunces', serif;
-      font-variation-settings: "SOFT" 70;
-      font-weight: 250;
-      font-size: 5.5em;
-      line-height: 1;
-      color: var(--indigo);
-      letter-spacing: -0.04em;
-    }
-    .big-stat .unit {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.16em; color: var(--ink-mute);
-      letter-spacing: 0.2em; text-transform: uppercase;
-      vertical-align: top; margin-left: 8px;
-      padding-top: 1.6em; display: inline-block;
-    }
-
-    /* ---------- Final / Q&A slide ---------- */
-    .end {
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      height: 100%; text-align: center;
-    }
-    .end .ampersand {
-      font-family: 'Fraunces', serif; font-weight: 200;
-      font-style: italic;
-      font-variation-settings: "SOFT" 90;
-      font-size: 16em; line-height: 1;
-      color: var(--indigo);
-      letter-spacing: -0.08em;
-    }
-    .end h2 {
-      font-family: 'Fraunces', serif; font-weight: 400;
-      font-size: 2em; margin-top: -20px;
-    }
-    .end .sig {
-      font-family: 'Crimson Pro', serif; font-style: italic;
-      font-size: 1em; color: var(--ink-mute);
-      margin-top: 24px; letter-spacing: 0.02em;
-    }
-
-    /* ---------- Progress bar ---------- */
-    .reveal .progress {
-      background: var(--rule-soft);
-      height: 3px;
-      color: var(--indigo);
-    }
-    .reveal .progress span { background: var(--indigo); }
-
-    /* ---------- Slide number ---------- */
-    .reveal .slide-number {
-      background: transparent;
-      color: var(--ink-mute);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      bottom: 12px; right: 16px;
-    }
-
-    /* ---------- MathJax / formulas ---------- */
-    mjx-container { font-size: 0.95em !important; color: var(--indigo-dk) !important; }
-
-    /* ============================================================ */
-    /*  LECTURE 2 — additional components                            */
-    /* ============================================================ */
-
-    /* ---------- Cost matrix (2x2 / 3x3 conceptual grids) ---------- */
-    .matrix-2 {
-      display: grid;
-      grid-template-columns: 100px 1fr 1fr;
-      grid-auto-rows: minmax(110px, auto);
-      border-top: 2px solid var(--ink);
-      border-left: 1px solid var(--rule-soft);
-      margin-top: 12px;
-    }
-    .matrix-2 > div {
-      padding: 14px 18px;
-      border-right: 1px solid var(--rule-soft);
-      border-bottom: 1px solid var(--rule-soft);
-      font-size: 0.82em;
-      line-height: 1.4;
-      color: var(--ink-soft);
-    }
-    .matrix-2 .col-head, .matrix-2 .row-head {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--ink-mute);
-      font-weight: 500;
-      background: var(--paper-warm);
-      display: flex; align-items: center;
-    }
-    .matrix-2 .col-head { border-bottom: 1px solid var(--ink); }
-    .matrix-2 .cell-head { font-weight: 600; color: var(--indigo-dk); margin-bottom: 6px; font-size: 0.95em; display: block; font-family: 'Fraunces', serif; letter-spacing: 0; text-transform: none; }
-    .matrix-2 .cell-eg { font-style: italic; color: var(--ink-mute); font-size: 0.92em; margin-top: 4px; display: block; }
-
-    /* ---------- Cost-curve SVG container ---------- */
-    .chart {
-      width: 100%; height: auto;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-    }
-    .chart .axis-line { stroke: var(--ink); stroke-width: 1.2; fill: none; }
-    .chart .grid-line { stroke: var(--rule-soft); stroke-width: 0.6; fill: none; }
-    .chart .curve-fixed { stroke: var(--ink-soft); stroke-width: 2; fill: none; stroke-dasharray: 4 3; }
-    .chart .curve-variable { stroke: var(--indigo); stroke-width: 2.2; fill: none; }
-    .chart .curve-total { stroke: var(--crimson); stroke-width: 2.4; fill: none; }
-    .chart .curve-avg { stroke: var(--ink-soft); stroke-width: 1.8; fill: none; stroke-dasharray: 2 3; }
-    .chart .curve-marg { stroke: var(--indigo); stroke-width: 2.2; fill: none; }
-    .chart .axis-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.18em;
-      text-transform: uppercase; fill: var(--ink-mute);
-    }
-    .chart .curve-label {
-      font-family: 'Fraunces', serif; font-style: italic;
-      font-size: 13px; fill: var(--ink);
-    }
-    .chart .curve-label.fixed { fill: var(--ink-soft); }
-    .chart .curve-label.variable { fill: var(--indigo-dk); }
-    .chart .curve-label.total { fill: var(--crimson); }
-    .chart .anno-dot { fill: var(--crimson); }
-
-    /* ---------- Lifecycle timeline ---------- */
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0;
-      margin: 20px 0 14px;
-      position: relative;
-    }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      top: 38px; left: 6%; right: 6%;
-      height: 2px; background: var(--indigo);
-    }
-    .timeline .phase {
-      text-align: center;
-      padding: 0 8px;
-      position: relative;
-    }
-    .timeline .phase .dot {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--paper);
-      border: 2px solid var(--indigo);
-      margin: 32px auto 14px;
-      position: relative; z-index: 2;
-    }
-    .timeline .phase .roman {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--indigo);
-      margin-bottom: 4px;
-    }
-    .timeline .phase .name {
-      font-family: 'Fraunces', serif;
-      font-weight: 500;
-      font-size: 1em;
-      color: var(--ink);
-      line-height: 1.15;
-      margin-bottom: 6px;
-    }
-    .timeline .phase .blurb {
-      font-size: 0.7em;
-      color: var(--ink-soft);
-      line-height: 1.35;
-      font-family: 'Crimson Pro', serif;
-    }
-
-    /* ---------- Cost iceberg ---------- */
-    .iceberg {
-      position: relative;
-      height: 320px;
-      margin: 6px auto;
-      max-width: 460px;
-    }
-    .iceberg .waterline {
-      position: absolute;
-      top: 92px; left: -20px; right: -20px;
-      height: 1px;
-      border-top: 1px dashed var(--indigo);
-    }
-    .iceberg .waterline-label {
-      position: absolute;
-      top: 78px; right: -18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; letter-spacing: 0.2em;
-      color: var(--indigo); text-transform: uppercase;
-    }
-    .iceberg .ice-top {
-      position: absolute;
-      top: 18px; left: 50%;
-      transform: translateX(-50%);
-      width: 130px; height: 80px;
-      background: linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
-      border: 1.5px solid var(--ink-soft);
-      clip-path: polygon(35% 0, 65% 0, 100% 100%, 0 100%);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .iceberg .ice-bottom {
-      position: absolute;
-      top: 92px; left: 50%;
-      transform: translateX(-50%);
-      width: 320px; height: 220px;
-      background: linear-gradient(180deg, var(--indigo-lt) 0%, rgba(63,81,181,0.12) 100%);
-      border: 1.5px solid var(--indigo);
-      border-top: none;
-      clip-path: polygon(15% 0, 85% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-    }
-    .iceberg .top-label,
-    .iceberg .bot-label {
-      position: absolute;
-      font-family: 'Fraunces', serif;
-      text-align: center;
-      width: 100%;
-      pointer-events: none;
-    }
-    .iceberg .top-label {
-      top: 46px;
-      font-size: 0.82em;
-      color: var(--ink);
-    }
-    .iceberg .top-label .pct {
-      display: block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78em; color: var(--indigo);
-      letter-spacing: 0.06em; font-weight: 600;
-      margin-top: 2px;
-    }
-    .iceberg .bot-label {
-      top: 168px;
-      font-size: 1.05em;
-      color: var(--indigo-dk);
-      font-weight: 500;
-    }
-    .iceberg .bot-label .big-pct {
-      display: block;
-      font-family: 'Fraunces', serif;
-      font-weight: 250;
-      font-variation-settings: "SOFT" 60;
-      font-size: 2.2em;
-      color: var(--indigo);
-      letter-spacing: -0.05em;
-      line-height: 1.1;
-      margin-top: 4px;
-    }
-    .iceberg .bot-sub {
-      position: absolute;
-      top: 286px;
-      width: 100%;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.18em;
-      color: var(--indigo);
-      text-transform: uppercase;
-    }
-
-    /* ---------- TCO stacked bar ---------- */
-    .tco-bars {
-      display: grid;
-      grid-template-columns: 70px 1fr 80px;
-      gap: 14px;
-      align-items: center;
-      margin: 8px 0;
-      font-size: 0.78em;
-    }
-    .tco-bars .yr {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.18em;
-      color: var(--ink-mute); text-transform: uppercase;
-    }
-    .tco-bars .bar {
-      display: flex; height: 26px;
-      border: 1px solid var(--rule-soft);
-      background: var(--paper-warm);
-      overflow: hidden;
-    }
-    .tco-bars .seg {
-      height: 100%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7em;
-      color: var(--paper);
-      letter-spacing: 0.05em;
-    }
-    .tco-bars .seg.s1 { background: var(--indigo-dk); }
-    .tco-bars .seg.s2 { background: var(--indigo); }
-    .tco-bars .seg.s3 { background: #6573C3; }
-    .tco-bars .seg.s4 { background: #9FA8DA; color: var(--ink); }
-    .tco-bars .seg.s5 { background: var(--crimson); }
-    .tco-bars .seg.s6 { background: #E08087; color: var(--paper); }
-    .tco-bars .total {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--ink);
-      text-align: right;
-    }
-    .tco-legend {
-      display: flex; flex-wrap: wrap;
-      gap: 8px 18px;
-      margin-top: 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.1em;
-      color: var(--ink-soft);
-      text-transform: uppercase;
-    }
-    .tco-legend .lg {
-      display: inline-flex; align-items: center; gap: 6px;
-    }
-    .tco-legend .sw {
-      display: inline-block; width: 10px; height: 10px;
-    }
-
-    /* ---------- AI cost ledger ---------- */
-    .ledger {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-    }
-    .ledger thead th {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--ink-mute);
-      font-weight: 500;
-      text-align: left;
-      padding: 9px 14px 9px 0;
-      border-bottom: 1.5px solid var(--ink);
-    }
-    .ledger thead th.r { text-align: right; }
-    .ledger tbody td {
-      padding: 9px 14px 9px 0;
-      border-bottom: 1px solid var(--rule-soft);
-      font-size: 0.78em; line-height: 1.42;
-      vertical-align: top;
-    }
-    .ledger tbody td.r { text-align: right; }
-    .ledger tbody td.label {
-      font-family: 'Fraunces', serif; font-weight: 500;
-      color: var(--ink); white-space: nowrap;
-      font-size: 0.82em;
-    }
-    .ledger tbody td.num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72em; color: var(--indigo-dk);
-    }
-    .ledger tbody tr.new td { background: rgba(63,81,181,0.04); }
-    .ledger .tag {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px; letter-spacing: 0.18em;
-      color: var(--indigo);
-      border: 1px solid var(--indigo);
-      border-radius: 2px;
-      padding: 1px 5px;
-      text-transform: uppercase;
-      vertical-align: middle;
-      margin-left: 6px;
-    }
-
-    /* ---------- Decision-relevance rule (rule card) ---------- */
-    .rule-card {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--rule);
-      margin-top: 16px;
-    }
-    .rule-card > div { padding: 22px 26px; }
-    .rule-card .yes { background: var(--moss-lt); }
-    .rule-card .no  { background: var(--crimson-lt); }
-    .rule-card .heading {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.22em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .rule-card .yes .heading { color: var(--moss); }
-    .rule-card .no  .heading { color: var(--crimson); }
-    .rule-card ul { margin: 0; }
-    .rule-card li { font-size: 0.88em; margin-bottom: 6px; padding-left: 1.1em; }
-    .rule-card .yes li::before { background: var(--moss); }
-    .rule-card .no  li::before { background: var(--crimson); }
-
-    /* ---------- TCO worksheet (exercise slide) ---------- */
-    .worksheet {
-      border: 1px solid var(--ink);
-      padding: 22px 28px;
-      background: var(--paper-warm);
-      margin-top: 12px;
-    }
-    .worksheet h3 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--indigo); margin-bottom: 14px;
-    }
-    .worksheet .ws-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px 24px;
-      font-size: 0.78em;
-    }
-    .worksheet .ws-col h4 {
-      font-family: 'Fraunces', serif;
-      font-weight: 500;
-      font-size: 1.05em;
-      color: var(--ink);
-      margin: 0 0 6px;
-    }
-    .worksheet .ws-col ul li {
-      font-size: 0.95em;
-      margin-bottom: 4px;
-      color: var(--ink-soft);
-    }
-  </style>
+  <link rel="stylesheet" href="_shared.css">
 </head>
-
 <body>
-<div class="reveal">
-  <div class="slides">
+<div class="reveal"><div class="slides">
 
-    <!-- =====================  01 · COVER  ===================== -->
-    <section class="cover" data-background="#FAF8F4">
-      <div class="cover-grid">
-        <div class="cover-left">
-          <div class="cover-eyebrow">Lecture Two · 4 June 2026</div>
-          <div class="cover-volume">02<span class="small">Lecture Two</span></div>
-          <h1 class="cover-title">Software<br>Cost Concepts<br>&amp; <span class="accent">Lifecycle Cost</span></h1>
-          <div class="cover-rule"></div>
-          <p class="cover-sub">A vocabulary for talking about money in software — and a quiet warning that the bill you can see is almost never the bill you will pay.</p>
+  <!-- ============= COVER ============= -->
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Two · 4 June 2026</div>
+        <div class="cover-volume">02<span class="small">Lecture Two</span></div>
+        <h1 class="cover-title">Software<br>Cost Concepts &amp;<br><span class="accent">Lifecycle Cost</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">Before we can value a software decision, we must learn to <em>name</em> every dollar it touches — and notice the ones that never appear on a budget line.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 02 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">4 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF302</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture &amp; Discussion</div></div>
         </div>
-        <div class="cover-right">
-          <div class="cover-meta-row">
-            <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
-            <div><div class="label">Session</div><div class="value">No. 02 of 16</div></div>
-            <div><div class="label">Date</div><div class="value">4 June 2026</div></div>
-            <div><div class="label">Room</div><div class="value">YF302</div></div>
-            <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
-            <div><div class="label">Format</div><div class="value">Lecture &amp; Exercise</div></div>
-          </div>
-          <div class="footnote">Reading · Boehm (1981) Ch. 3 · Park, <em>Contemporary Engineering Economics</em>.</div>
-        </div>
+        <div class="footnote">Builds directly on Lecture 1. The vocabulary introduced today appears in <em>every</em> remaining lecture.</div>
       </div>
-      <aside class="notes">
-        Welcome the class back. One sentence on where we left off: yesterday we
-        named the discipline; today we learn its vocabulary. Set the tempo —
-        this lecture is the *grammar* of the course. The next eight weeks will
-        constantly refer back to terms we define today.
-        Ask a warm-up question: "Without looking — what does your cloud bill
-        actually contain?" Most students cannot name five line items. That's
-        the gap this lecture closes.
-        ~3 minutes.
-      </aside>
-    </section>
+    </div>
+    <aside class="notes">
+      Welcome back. Quick attendance check (visual). Open with a one-sentence
+      reminder of yesterday's conclusion: "software engineering economics is
+      the study of how to make good decisions with scarce resources."
+      Today is the vocabulary lecture — but make it lively with anecdotes.
+      ~2 minutes.
+    </aside>
+  </section>
 
-    <!-- =====================  02 · AGENDA  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>Lecture II</span><span class="dot"></span><span>Agenda</span></span>
-        <span class="right">02 / 25</span>
+  <!-- ============= AGENDA ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture II</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 26</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Vocabulary,<br>then a worksheet.</h1>
+    <p class="lede">By the end you will be able to put any software cost into a defensible box, and you will know the three classical and three behavioural concepts every NPV calculation depends on.</p>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Classical cost taxonomies</td><td class="num">20</td></tr>
+        <tr><td class="num">II.</td><td>Behavioural cost concepts</td><td class="num">25</td></tr>
+        <tr><td class="num">—</td><td><em>Class discussion (sunk-cost stories)</em></td><td class="num">10</td></tr>
+        <tr><td class="num">III.</td><td>Software lifecycle cost &amp; TCO</td><td class="num">25</td></tr>
+        <tr><td class="num">IV.</td><td>The 2026 cost stack (cloud, API, tokens)</td><td class="num">15</td></tr>
+        <tr><td class="num">V.</td><td>Hands-on: a 5-year TCO worksheet</td><td class="num">10</td></tr>
+        <tr><td></td><td><em>Homework brief, questions</em></td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">
+      Walk the agenda in 90 seconds. Flag the discussion in §II — they should
+      come ready with a personal sunk-cost story. Stress that the worksheet
+      at the end is the deliverable shape of Homework 2.
+      ~2 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= § I DIVIDER ============= -->
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Classical cost taxonomies —<br>how the <em>accountant</em> sees<br>a software project.</h2>
+      <p class="divider-quote">Three independent splits. Every line item lives in one cell of each.</p>
+    </div>
+    <aside class="notes">
+      Brief transition. Tell them: the next four slides are deliberately
+      classical — these come from cost accounting, not software. But every
+      one will show up in their group project. ~30 seconds.
+    </aside>
+  </section>
+
+  <!-- ============= TAXONOMIES OVERVIEW ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Taxonomies</span></span><span class="right">04 / 26</span></div>
+    <span class="label-tag">Three independent splits</span>
+    <h1>Every software cost lives in a 2 × 2 × 2 box.</h1>
+    <table>
+      <thead><tr><th style="width:22%">Split</th><th>One side</th><th>The other side</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Behaviour with volume</td><td><strong>Fixed</strong> — doesn't change with usage</td><td><strong>Variable</strong> — scales with usage</td></tr>
+        <tr><td class="label">Traceability</td><td><strong>Direct</strong> — tied to a specific product</td><td><strong>Indirect</strong> — overhead shared across many</td></tr>
+        <tr><td class="label">Timing</td><td><strong>Non-recurring</strong> — one-time</td><td><strong>Recurring</strong> — every period</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">A line item like "annual Datadog subscription" is <em>Fixed × Indirect × Recurring</em>. Saying so out loud already reveals what raising it or moving it would mean.</p>
+    <aside class="notes">
+      Walk the three rows. Then take a single line item and run it through
+      all three splits aloud. Useful one: "the GPU we bought for inference."
+      Fixed or variable? (Fixed — paid for it.) Direct or indirect? (Direct
+      to the ML product.) Non-recurring or recurring? (Non-recurring — once,
+      though depreciation makes it recurring on paper.)
+      Make the point that the categories aren't pedantic — they decide which
+      decisions the cost can inform. ~5 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= FIXED VS VARIABLE ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Fixed vs Variable</span></span><span class="right">05 / 26</span></div>
+    <span class="label-tag">Behaviour with volume</span>
+    <h1>The cost question that scales —<br>and the one that doesn't.</h1>
+
+    <div class="two-col" style="margin-top: 8px;">
+      <div class="card">
+        <h3>Fixed</h3>
+        <p>Constant within a relevant range, regardless of usage.</p>
+        <p style="margin-top: 8px;"><em>Examples:</em> dev-team salaries, an on-prem licence, a leased GPU box.</p>
       </div>
-      <span class="label-tag">Today's Plan</span>
-      <h1 style="font-size: 1.9em; margin-bottom: 0.35em;">Six movements, one ledger.</h1>
-      <p class="lede" style="font-size: 1em; margin-bottom: 0.9em;">By the end of today you should be able to name every line in a software cost ledger — classical or modern — and tell which lines belong in a <em>decision</em>.</p>
-
-      <table class="compact">
-        <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
-        <tbody>
-          <tr><td class="num">I.</td><td>Why cost concepts are a decision lens, not bookkeeping</td><td class="num">10</td></tr>
-          <tr><td class="num">II.</td><td>The taxonomy: fixed, variable, direct, indirect, capex, opex</td><td class="num">20</td></tr>
-          <tr><td class="num">III.</td><td>Behavioural costs: opportunity, sunk, marginal, average</td><td class="num">20</td></tr>
-          <tr><td class="num">IV.</td><td>Lifecycle cost — and Boehm's iceberg</td><td class="num">15</td></tr>
-          <tr><td class="num">V.</td><td>Total Cost of Ownership — a worked TCO &amp; in-class exercise</td><td class="num">25</td></tr>
-          <tr><td class="num">VI.</td><td>The modern ledger: cloud, API, tokens, GPUs, evaluation</td><td class="num">10</td></tr>
-          <tr><td></td><td><em>Discussion, homework, questions</em></td><td class="num">10</td></tr>
-        </tbody>
-      </table>
-      <aside class="notes">
-        Walk the agenda in 90 seconds. Flag two things:
-        (1) Part V has the in-class exercise — you will work in pairs for ten
-        minutes, so do NOT take a break until after § V.
-        (2) Part VI is the lecture's "AI tax" — the cost lines that did not
-        exist when Boehm wrote the canon. Lectures 12 and 13 will quantify
-        them; today we just name them.
-        Tell them the homework is a TCO spreadsheet for a product of their
-        choice — they should start thinking now about which product.
-        ~2 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  03 · § I DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part One</span><span class="dot"></span><span>Why cost?</span></span>
-        <span class="right">03</span>
+      <div class="card">
+        <h3>Variable</h3>
+        <p>Scales (roughly) linearly with usage.</p>
+        <p style="margin-top: 8px;"><em>Examples:</em> cloud egress, LLM tokens, per-request infrastructure.</p>
       </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — One</div>
-        <div class="divider-number">I</div>
-        <h2 class="divider-title">A cost concept is a <em>lens</em>,<br>not a line in a spreadsheet.</h2>
-        <p class="divider-quote">"The same dollar can be relevant or irrelevant to a decision — depending only on which way you look at it."</p>
+    </div>
+    <p style="margin-top: 18px; font-size: 0.95em;">In modern SaaS, the trend is unmistakable: <strong>variable costs grow as a share of total cost</strong>. A 2010 software product was 80% fixed cost. A 2026 AI product can be 70% variable — token spend dominates the P&amp;L.</p>
+    <p class="callout">If your costs are mostly fixed, every additional user is nearly free. If they are mostly variable, every additional user has a price tag — and your business model must reflect it.</p>
+    <aside class="notes">
+      The strategic point: business model follows cost structure. SaaS at
+      flat per-seat pricing only worked when costs were mostly fixed. Now
+      that AI features are variable-cost-heavy, "pay per use" pricing is
+      coming back. Foreshadow Lecture 11 (pricing). ~5 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= DIRECT VS INDIRECT ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Direct vs Indirect</span></span><span class="right">06 / 26</span></div>
+    <span class="label-tag">Traceability</span>
+    <h1>The cost you can blame on a product —<br>and the cost that everyone pays.</h1>
+    <div class="two-col" style="margin-top: 8px;">
+      <div>
+        <h3>Direct costs</h3>
+        <ul>
+          <li>Engineers dedicated to the product.</li>
+          <li>A licence bought specifically for it.</li>
+          <li>Cloud spend in the product's account.</li>
+        </ul>
       </div>
-      <div class="slide-foot"><span class="course">§ I · Cost as lens</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        Tell the class the central claim of the lecture: a cost concept is
-        not bookkeeping; it is a question you ask money about. The same $100
-        cloud bill can be a "fixed cost", a "sunk cost", an "opportunity cost",
-        or an "opex line" — depending on the decision in front of you.
-        Engineers who don't know the vocabulary make decisions on the wrong
-        cost. That's the entire pedagogical motivation.
-        ~1 minute.
-      </aside>
-    </section>
-
-    <!-- =====================  04 · SAME DOLLAR  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ I</span><span class="dot"></span><span>Same dollar, four lenses</span></span>
-        <span class="right">04</span>
+      <div>
+        <h3>Indirect costs (overhead)</h3>
+        <ul>
+          <li>Shared platform team and tooling.</li>
+          <li>IT support, security, compliance.</li>
+          <li>The office itself — rent, electricity.</li>
+        </ul>
       </div>
-      <span class="label-tag">A motivating puzzle</span>
-      <h1 style="font-size: 1.85em; margin-bottom: 0.4em;">One $100 line — four different stories.</h1>
-      <p class="lede" style="font-size: 0.98em;">Your team pays $100/month for a code-search SaaS. Depending on the question, that single line item changes character.</p>
+    </div>
+    <p class="footnote">Allocation is half art, half politics. The same dollar can be made direct or indirect by where it sits on the org chart, and that changes which manager has the incentive to control it.</p>
+    <aside class="notes">
+      Direct vs indirect drives <em>accountability</em>. When a cost moves
+      from indirect to direct (e.g., the platform team is broken up and its
+      engineers report into product lines), behaviour changes overnight.
+      Story: an engineering organisation that "rediscovered" $2M of indirect
+      cost by simply moving the security audit budget into product P&amp;Ls.
+      ~4 minutes.
+    </aside>
+  </section>
 
-      <table>
-        <thead><tr><th style="width:30%">The question we're asking</th><th>What kind of cost is the $100?</th><th>Decision consequence</th></tr></thead>
-        <tbody>
-          <tr><td class="label">Should we keep using it?</td><td>A <em>recurring</em>, <em>variable-with-headcount</em> cost.</td><td>Compare to value delivered each month.</td></tr>
-          <tr><td class="label">Should we cancel because we paid annually?</td><td>The pre-paid year is a <em>sunk</em> cost.</td><td>Ignore it — decide on remaining months only.</td></tr>
-          <tr><td class="label">Should we hire a contractor to replace it?</td><td>The $100 is the <em>opportunity</em> cost of replacement.</td><td>Build alternative only if it beats $100 + risk.</td></tr>
-          <tr><td class="label">How should accounting record it?</td><td>An <em>operating expense</em> (opex), not capex.</td><td>Affects margin in the quarter it is paid.</td></tr>
-        </tbody>
-      </table>
+  <!-- ============= RECURRING + CAPEX/OPEX ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Timing</span></span><span class="right">07 / 26</span></div>
+    <span class="label-tag">Non-recurring · Recurring · CapEx · OpEx</span>
+    <h1>One-time vs ongoing —<br>and the great migration of the 2010s.</h1>
+    <table class="compact">
+      <thead><tr><th>Term</th><th>Definition</th><th>Software example</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Non-recurring</td><td>Paid once for an asset or activity.</td><td>Initial migration project · perpetual licence purchase.</td></tr>
+        <tr><td class="label">Recurring</td><td>Paid every period for use.</td><td>SaaS subscription · cloud invoice · token spend.</td></tr>
+        <tr><td class="label">CapEx (capital)</td><td>Investment in a long-lived asset.</td><td>Buying a GPU rack · acquiring software outright.</td></tr>
+        <tr><td class="label">OpEx (operating)</td><td>Ongoing operating expense.</td><td>Renting that GPU on AWS · paying for Anthropic API.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.92em; margin-top: 10px;">The cloud era was, in accounting terms, a giant <strong>CapEx → OpEx migration</strong>. The AI era now extends it down to the <em>request</em>: you no longer rent a server by the hour, you rent a forward-pass by the token.</p>
+    <aside class="notes">
+      Why finance cares: CapEx hits the balance sheet and is depreciated;
+      OpEx is expensed immediately. That has tax and reporting implications
+      and explains why CFOs love and hate the cloud in equal measure.
+      For the engineer: CapEx looks "free" once paid, OpEx never stops.
+      ~4 minutes.
+    </aside>
+  </section>
 
-      <div class="callout" style="margin-top: 14px;">The number is identical in every row. <em>Only the question changes.</em></div>
-      <div class="slide-foot"><span class="course">§ I · Cost as lens</span><span>04 / 25</span></div>
-      <aside class="notes">
-        Walk row by row. For each, ask "what would change about the decision if
-        we used the wrong lens?" Some answers:
-        Row 1 → If we treat it as fixed, we never re-evaluate value-per-seat.
-        Row 2 → If we count the pre-paid year, we'll keep using a bad tool
-                because "we already paid". This is the sunk-cost trap.
-        Row 3 → If we compare contractor cost only to the $100 and ignore
-                quality/risk, we'll under-cost the alternative.
-        Row 4 → Capex vs opex changes the quarterly P&L, not the cash flow,
-                but it changes how the finance team reacts.
-        ~4 minutes.
-      </aside>
-    </section>
+  <!-- ============= § II DIVIDER ============= -->
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Behavioural cost concepts —<br>how the <em>economist</em><br>sees a software decision.</h2>
+      <p class="divider-quote">Three ideas that don't appear on any budget line yet decide every major engineering choice.</p>
+    </div>
+    <aside class="notes">
+      Transition. Tell them: the next three concepts — opportunity, sunk,
+      marginal — are the ones that engineers almost always misuse. Even
+      experienced engineers. ~30 seconds.
+    </aside>
+  </section>
 
-    <!-- =====================  05 · PULL QUOTE  ===================== -->
-    <section class="pullquote">
-      <div class="slide-meta">
-        <span class="left"><span>§ I</span><span class="dot"></span><span>Working principle</span></span>
-        <span class="right">05</span>
+  <!-- ============= OPPORTUNITY COST ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Opportunity cost</span></span><span class="right">09 / 26</span></div>
+    <span class="label-tag">The cost you don't see on an invoice</span>
+    <h1>The most important cost engineers never name.</h1>
+    <div class="formula">opportunity cost &nbsp;=&nbsp; (value of best alternative you <em>didn't</em> choose)</div>
+    <p style="margin-top: 12px; font-size: 0.95em;">If your senior engineer spends a week refactoring a logging library, the opportunity cost is <strong>not zero</strong> — it is whatever the next-best use of that week would have produced.</p>
+    <div class="two-col" style="margin-top: 10px;">
+      <div class="card">
+        <h3>Engineering example</h3>
+        <p>Two PRs in the queue. Reviewing PR A means PR B sits a day. The opportunity cost of reviewing A is whatever shipping B sooner would have produced.</p>
       </div>
-      <blockquote>
-        A cost concept is not a number — it is the <em>question</em> you ask money about.
-      </blockquote>
-      <cite>— working principle for this course</cite>
-      <div class="slide-foot"><span class="course">§ I · Cost as lens</span><span>05 / 25</span></div>
-      <aside class="notes">
-        Read slowly. Pause. Tell them: this is why the same software project
-        can be "expensive" or "cheap" depending on who's asking. The CFO,
-        the engineering manager, the customer, and the founder are all asking
-        DIFFERENT questions of the same numbers.
-        ~1 minute.
-      </aside>
-    </section>
-
-    <!-- =====================  06 · § II DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part Two</span><span class="dot"></span><span>Taxonomy</span></span>
-        <span class="right">06</span>
+      <div class="card accent">
+        <h3>AI-era example</h3>
+        <p>$1,000 of LLM budget can fix 500 tickets at $2 each <em>or</em> generate marketing copy. Spending it one way costs you the other.</p>
       </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — Two</div>
-        <div class="divider-number">II</div>
-        <h2 class="divider-title">The taxonomy — four axes,<br>every software dollar has<br>a place on each.</h2>
-        <p class="divider-quote">Fixed or variable · direct or indirect · recurring or non-recurring · capital or operating.</p>
+    </div>
+    <aside class="notes">
+      Opportunity cost is the bedrock of every NPV calculation we'll do
+      starting Lecture 5. The discount rate IS an opportunity cost — what
+      else could the capital have earned?
+      Ask the room: "What was the opportunity cost of the last refactor
+      you signed off?" Most can't name it. That's the gap. ~5 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= SUNK COST ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Sunk cost</span></span><span class="right">10 / 26</span></div>
+    <span class="label-tag">A cost already paid — and therefore irrelevant</span>
+    <h1>The trap that keeps dead projects alive.</h1>
+    <p style="font-size: 1em;">A <strong>sunk cost</strong> is money or effort already spent that cannot be recovered. The economically correct response to a sunk cost is to <em>ignore it</em>.</p>
+
+    <div class="formula" style="background: #FBF1E8; border-color: #E8D6B5; color: var(--amber);">future decisions should compare &nbsp;<strong>future</strong>&nbsp; benefits with &nbsp;<strong>future</strong>&nbsp; costs only</div>
+
+    <p style="margin-top: 14px; font-size: 0.92em;">In practice we don't. We keep funding the failing migration because "we've already paid for the licences." We hold onto the rewrite because "we're 70% done." The <em>sunk-cost fallacy</em> is the most expensive behavioural pattern in software organisations.</p>
+    <p class="callout">If you wouldn't start this project today knowing what you know now — the right answer is to stop it, regardless of what you've already spent.</p>
+    <aside class="notes">
+      This is the slide where they have to be honest with themselves.
+      Personal story: the team that spent two years migrating to a NoSQL
+      database, found out at month 18 it was wrong, and migrated for another
+      year anyway because "we can't just throw away two years' work."
+      ~5 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= MARGINAL & AVERAGE ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Marginal vs Average</span></span><span class="right">11 / 26</span></div>
+    <span class="label-tag">The cost of the <em>next</em> unit, vs the cost <em>per</em> unit</span>
+    <h1>For pricing and capacity, marginal is the only thing that matters.</h1>
+    <div class="two-col" style="margin-top: 6px;">
+      <div class="card">
+        <h3>Average cost</h3>
+        <p>Total cost ÷ total units. Useful for accounting, profitability reports, and storytelling.</p>
+        <p style="margin-top: 6px;"><em>Example:</em> Annual infra spend ÷ requests served = $0.004 per request.</p>
       </div>
-      <div class="slide-foot"><span class="course">§ II · Taxonomy</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        Frame the next four slides as "the four axes". Every cost in a software
-        project has a coordinate on each. A junior engineer typically knows
-        none of these; a senior engineer can place any line item in seconds.
-        That fluency is the goal.
-        ~30 seconds.
-      </aside>
-    </section>
-
-    <!-- =====================  07 · FIXED vs VARIABLE  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ II</span><span class="dot"></span><span>Axis 1 — fixed vs variable</span></span>
-        <span class="right">07</span>
+      <div class="card">
+        <h3>Marginal cost</h3>
+        <p>The added cost of serving one <em>more</em> unit. Useful for pricing and capacity decisions.</p>
+        <p style="margin-top: 6px;"><em>Example:</em> The next million LLM tokens cost $X — independent of what the previous billion cost.</p>
       </div>
-      <span class="label-tag">Axis 1 of 4 — does the cost move with volume?</span>
-      <h1 style="font-size: 1.8em; margin-bottom: 0.3em;">Fixed pays the floor, variable pays per use.</h1>
+    </div>
+    <p style="margin-top: 14px; font-size: 0.92em;">Engineers pricing an API often quote the <em>average</em> cost. Customers buying access incur the <em>marginal</em> cost. Mismatch here is a familiar trap — quote a low average price, watch your margin disappear when the customer hits the variable-cost tail.</p>
+    <aside class="notes">
+      In AI products, marginal cost ≈ token cost. It is NOT zero — common
+      misconception from the SaaS-era. A free tier in an AI product is a real
+      cost on every use. Engineers forget this and finance teaches them.
+      ~4 minutes.
+    </aside>
+  </section>
 
-      <div class="two-col" style="grid-template-columns: 1.15fr 1fr; gap: 38px; margin-top: 8px;">
-        <div>
-          <svg class="chart" viewBox="0 0 520 300" preserveAspectRatio="xMidYMid meet">
-            <!-- grid -->
-            <line class="grid-line" x1="60" y1="60"  x2="490" y2="60"/>
-            <line class="grid-line" x1="60" y1="120" x2="490" y2="120"/>
-            <line class="grid-line" x1="60" y1="180" x2="490" y2="180"/>
-            <!-- axes -->
-            <line class="axis-line" x1="60" y1="240" x2="490" y2="240"/>
-            <line class="axis-line" x1="60" y1="40"  x2="60"  y2="240"/>
-            <!-- fixed (horizontal) -->
-            <line class="curve-fixed" x1="60" y1="180" x2="490" y2="180"/>
-            <!-- variable (slope from origin) -->
-            <line class="curve-variable" x1="60" y1="240" x2="490" y2="60"/>
-            <!-- total = fixed + variable -->
-            <line class="curve-total" x1="60" y1="180" x2="490" y2="0"/>
-            <!-- labels -->
-            <text class="axis-label" x="60"  y="265">Volume — users · requests · tasks</text>
-            <text class="axis-label" x="40"  y="40"  transform="rotate(-90 40 40)">Cost ($)</text>
-            <text class="curve-label fixed"     x="380" y="172">fixed cost</text>
-            <text class="curve-label variable"  x="380" y="106">variable cost</text>
-            <text class="curve-label total"     x="350" y="22">total cost</text>
-          </svg>
-        </div>
-        <div>
-          <h3 style="margin-bottom: 6px;">Fixed</h3>
-          <p style="font-size: 0.88em; margin-bottom: 12px;">Does not change as volume changes — at least within the <em>relevant range</em>.</p>
-          <p style="font-size: 0.78em; margin-bottom: 16px; color: var(--ink-mute);"><em>e.g.</em> reserved server lease · team salaries · annual licence.</p>
+  <!-- ============= DISCUSSION ============= -->
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">12 / 26</span></div>
+    <span class="label-tag">Tell us a story</span>
+    <div class="discussion-icon">?</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 2em; margin-top: -6px; line-height: 1.1;">What's the most expensive <em>sunk cost</em> you've ever seen — or paid?</h2>
+    <p class="lede" style="margin-top: 14px;">Share in pairs first (3 minutes), then we'll surface the best three for the whole room.</p>
+    <ul style="margin-top: 10px; font-size: 0.92em;">
+      <li>What was the sunk amount — money, time, headcount, brand?</li>
+      <li>What was the rational call at the decision point?</li>
+      <li>What was actually decided — and what made the team choose it?</li>
+    </ul>
+    <p class="footnote">No naming companies or colleagues. Identify by role and pattern, not person.</p>
+    <aside class="notes">
+      Set a 3-minute pair timer. Walk the room — eavesdrop briefly on 3 pairs
+      to pick interesting stories. Then ask those pairs to share with the
+      class. Aim for variety: one technical sunk cost (a wrong
+      framework/architecture), one organisational (an acquisition or hire),
+      one personal (a side project that should have died).
+      Wrap by naming the common pattern: every story has a moment where the
+      RIGHT call was visible but the sunk-cost narrative won.
+      ~10 minutes total.
+    </aside>
+  </section>
 
-          <h3 style="margin-bottom: 6px;">Variable</h3>
-          <p style="font-size: 0.88em; margin-bottom: 12px;">Scales (often linearly) with units of output, users, or load.</p>
-          <p style="font-size: 0.78em; color: var(--ink-mute);"><em>e.g.</em> per-request inference cost · per-GB egress · token spend · seat-based SaaS.</p>
+  <!-- ============= § III DIVIDER ============= -->
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Lifecycle cost —<br>or, the dollars that arrive<br>after launch.</h2>
+      <p class="divider-quote">Most engineering decisions are made for a fraction of the cost they generate.</p>
+    </div>
+    <aside class="notes">
+      Transition. Tell them: yesterday they learned what SEE is; today they
+      learn the units. The next section is the most important: lifecycle
+      cost, because it reframes what "expensive" even means.
+      ~20 seconds.
+    </aside>
+  </section>
 
-          <div class="callout" style="margin-top: 16px; font-size: 0.85em;">"Fixed" is fixed only inside a range. A server is fixed until you outgrow it; a salary is fixed until you hire one more engineer.</div>
-        </div>
+  <!-- ============= LIFECYCLE PHASES ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Lifecycle phases</span></span><span class="right">14 / 26</span></div>
+    <span class="label-tag">From request to retirement</span>
+    <h1>Five phases. Five buckets of money.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:20%">Phase</th><th>What happens</th><th>Cost drivers</th></tr></thead>
+      <tbody>
+        <tr><td class="label">① Acquisition</td><td>Decide to build or buy. Sign contracts.</td><td>Legal, vendor evaluation, opportunity cost.</td></tr>
+        <tr><td class="label">② Development</td><td>Design, build, test, ship 1.0.</td><td>Engineers, infra, tooling, ramp-up.</td></tr>
+        <tr><td class="label">③ Operation</td><td>Serve users in production.</td><td>Cloud, licences, on-call, observability.</td></tr>
+        <tr><td class="label">④ Maintenance</td><td>Bug fix, enhance, refactor.</td><td>Engineering ÷ years; technical-debt interest.</td></tr>
+        <tr><td class="label">⑤ Retirement</td><td>Sunset, migrate users, archive data.</td><td>Migration project, regulatory, communication.</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">Most software cost lives in ③ and ④. Most engineering attention lives in ②. That is the central misalignment of our profession.</p>
+    <aside class="notes">
+      Walk the five phases briefly. Land the punchline: dev gets the attention,
+      but operation + maintenance get the dollars. Set up the next slide.
+      ~4 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= 60-80% ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>The maintenance bias</span></span><span class="right">15 / 26</span></div>
+    <span class="label-tag">An empirical fact, not a rhetorical flourish</span>
+    <h1>Sixty to eighty percent of a software product's lifetime cost is incurred <em>after</em> 1.0 ships.</h1>
+    <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1.3fr; gap: 40px; align-items: center;">
+      <div class="big-stat" style="font-size: 5em;">60–80%<span class="unit">post-launch</span></div>
+      <div>
+        <p style="font-size: 0.95em;">Established across many empirical studies of large software portfolios since Lientz &amp; Swanson (1980). The exact ratio varies by domain, but the order of magnitude does not.</p>
+        <p style="font-size: 0.92em; margin-top: 10px;">Implication for design choices: any 1.0 decision that reduces future maintenance — clearer code, fewer dependencies, better tests, simpler architecture — pays back at <strong>3–4×</strong> against itself.</p>
       </div>
-      <div class="slide-foot"><span class="course">§ II · Taxonomy</span><span>07 / 25</span></div>
-      <aside class="notes">
-        Walk the chart slowly. Three lines: the flat dashed grey is FIXED;
-        the indigo slope is VARIABLE; the crimson is their sum, TOTAL COST.
-        Make sure students notice: at zero volume, you still pay the fixed cost.
-        Anecdote: a startup that "shut down" a service to save money but kept
-        paying $40K/month for the reserved Kubernetes cluster because no one
-        owned the bill. Fixed costs are sticky — that's the engineering lesson.
-        Mention the "relevant range" idea: nothing is truly fixed forever.
-        ~5 minutes.
-      </aside>
-    </section>
+    </div>
+    <p class="callout" style="margin-top: 18px;">The dollar of effort you spend writing tests today is buying you 3–4 dollars of maintenance later. Refusing to write them is borrowing at a usurious rate.</p>
+    <aside class="notes">
+      This single fact reframes every "we don't have time for tests" argument.
+      Frame it like personal finance: skipping testing is taking out a payday
+      loan against the future maintenance budget — extremely high interest.
+      ~5 minutes.
+    </aside>
+  </section>
 
-    <!-- =====================  08 · DIRECT vs INDIRECT + RECURRING ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ II</span><span class="dot"></span><span>Axes 2 &amp; 3</span></span>
-        <span class="right">08</span>
+  <!-- ============= TCO DEFINITION ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Total Cost of Ownership</span></span><span class="right">16 / 26</span></div>
+    <span class="label-tag">The unit of comparison we will use all term</span>
+    <h1>Total Cost of Ownership (TCO).</h1>
+    <div class="formula">TCO &nbsp;=&nbsp; Σ (all cash outflows over the asset's life), discounted to present value</div>
+    <p style="font-size: 0.95em; margin-top: 10px;">A TCO calculation is honest only if it includes every category we have named so far — fixed and variable, direct and indirect, non-recurring and recurring — across all five lifecycle phases, including the <em>opportunity cost</em> of the engineers' time.</p>
+    <p style="font-size: 0.92em; margin-top: 4px;">It is the standard unit of comparison whenever we choose between alternatives. Lecture 5 will turn this into a numerical decision. Today we just learn to construct the worksheet.</p>
+    <p class="callout">If two alternatives look similar but you can only compare one phase, you are not comparing TCO — you are comparing <em>convenience</em>.</p>
+    <aside class="notes">
+      Tell the class: when they show a TCO comparison to a manager, the
+      manager's job is to look for the missing categories. If they say "I
+      included everything," ask them about the opportunity cost of engineer
+      time. That usually catches them. ~4 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= § IV DIVIDER ============= -->
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">The 2026 cost stack —<br>line items that didn't<br>exist when Boehm wrote.</h2>
+      <p class="divider-quote">A modern software product has cost categories that no classical model anticipates.</p>
+    </div>
+    <aside class="notes">
+      Quick transition. Set up: classical cost concepts unchanged for 40 years,
+      but the LINE ITEMS have changed in just five. ~30 seconds.
+    </aside>
+  </section>
+
+  <!-- ============= MODERN STACK ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>The 2026 stack</span></span><span class="right">18 / 26</span></div>
+    <span class="label-tag">Six new categories every modern budget needs</span>
+    <h1>The new line items.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:22%">Category</th><th>Examples (2026)</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Compute (cloud)</td><td>AWS / GCP / Azure VMs, autoscaling.</td><td class="num">variable, OpEx</td></tr>
+        <tr><td class="label">GPU / accelerators</td><td>H100, Blackwell, TPU v6, Trainium.</td><td class="num">mixed — capex or rented</td></tr>
+        <tr><td class="label">LLM API / tokens</td><td>Anthropic, OpenAI, Google, Chinese vendors.</td><td class="num">variable, OpEx</td></tr>
+        <tr><td class="label">Vector DB</td><td>Pinecone, Weaviate, pgvector, Turbopuffer.</td><td class="num">recurring</td></tr>
+        <tr><td class="label">Inference cache layer</td><td>Redis LangCache, semantic caches.</td><td class="num">recurring, cost-saver</td></tr>
+        <tr><td class="label">AI observability</td><td>Arize, Langfuse, Helicone.</td><td class="num">recurring</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">A startup's pitch deck that lists "infrastructure" as a single number is not yet thinking about the AI cost stack.</p>
+    <aside class="notes">
+      Quick walk through. Highlight that several of these categories
+      didn't exist in 2021. Ask: "Which of these is the FASTEST growing
+      line item in your current org?" Typical answer: tokens. ~5 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= AI AGENT EXAMPLE ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Worked numbers</span></span><span class="right">19 / 26</span></div>
+    <span class="label-tag">A concrete AI feature cost build-up</span>
+    <h1>Anatomy of a 100,000-task-per-month AI agent.</h1>
+    <table>
+      <thead><tr><th>Line item</th><th class="num" style="text-align:right">Per task</th><th class="num" style="text-align:right">Monthly</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="label">LLM input tokens (8K avg)</td><td class="num" style="text-align:right">$0.020</td><td class="num" style="text-align:right">$&nbsp;2,000</td><td class="num">variable</td></tr>
+        <tr><td class="label">LLM output tokens (2K avg)</td><td class="num" style="text-align:right">$0.030</td><td class="num" style="text-align:right">$&nbsp;3,000</td><td class="num">variable</td></tr>
+        <tr><td class="label">Tool / API calls (avg 4)</td><td class="num" style="text-align:right">$0.008</td><td class="num" style="text-align:right">$&nbsp;800</td><td class="num">variable</td></tr>
+        <tr><td class="label">Vector retrieval</td><td class="num" style="text-align:right">$0.002</td><td class="num" style="text-align:right">$&nbsp;200</td><td class="num">variable</td></tr>
+        <tr><td class="label">Observability / log storage</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">$&nbsp;500</td><td class="num">fixed</td></tr>
+        <tr><td class="label">Engineer time (0.5 FTE on-call)</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">$&nbsp;8,000</td><td class="num">fixed, indirect</td></tr>
+        <tr><td class="label"><strong>Total</strong></td><td class="num" style="text-align:right"><strong>$0.145</strong></td><td class="num" style="text-align:right"><strong>$&nbsp;14,500</strong></td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Prompt caching alone could cut the input-token line by 80% — saving $1,600/month, or 11% of TCO. We will quantify caching in Lecture 13.</p>
+    <aside class="notes">
+      Walk one row at a time. Land two points: (a) variable cost dominates,
+      (b) the "engineer time" row is the largest single cost — engineers
+      systematically under-count their own time. ~6 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= § V DIVIDER ============= -->
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Hands-on —<br>build a 5-year TCO worksheet<br>before you leave.</h2>
+      <p class="divider-quote">In pairs, ten minutes. Bring it back next class.</p>
+    </div>
+    <aside class="notes">
+      ~20 seconds.
+    </aside>
+  </section>
+
+  <!-- ============= TCO WORKSHEET ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>TCO worksheet</span></span><span class="right">21 / 26</span></div>
+    <span class="label-tag">Your starting template</span>
+    <h1>Five years, ten categories, one decision.</h1>
+    <table class="compact" style="font-size: 0.95em;">
+      <thead><tr><th>Category</th><th class="num" style="text-align:right">Y1</th><th class="num" style="text-align:right">Y2</th><th class="num" style="text-align:right">Y3</th><th class="num" style="text-align:right">Y4</th><th class="num" style="text-align:right">Y5</th></tr></thead>
+      <tbody>
+        <tr><td>Development (non-recurring)</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>Cloud compute</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>LLM tokens / GPU</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>SaaS / licences</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>Engineering (FTE × salary)</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>Indirect (security, IT, etc.)</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>Opportunity cost (engineer)</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+        <tr><td>Retirement / migration</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">Pair up. Pick a project from your job — real one preferred. Fill in any cells you can defend. We will not discount today (that's Lecture 3); just get the cash flows down.</p>
+    <aside class="notes">
+      Hand out the worksheet (URL or paper). Walk the room. Most pairs will
+      forget at least two categories — that's the lesson. Tell them they will
+      finish the worksheet for Homework 2.
+      ~10 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= BRIDGE TO LEC 3 ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 3</span></span><span class="right">22 / 26</span></div>
+    <span class="label-tag">Where this is going</span>
+    <h1>Tomorrow we discount.</h1>
+    <p class="lede">Today you have learned to name every cash flow. But $1 spent in Year 5 is not the same as $1 spent today. Tomorrow we make that explicit.</p>
+    <p style="font-size: 0.95em;">In Lecture 3 we introduce <strong>Present Value</strong> and <strong>Future Value</strong>, the time-value of money, and the discount-rate machinery that turns the worksheet you just built into a single comparable number.</p>
+    <p class="callout">Bring your TCO worksheet to Lecture 3 — we will discount it together as the first warm-up.</p>
+    <aside class="notes">
+      Tell them: today was vocabulary, tomorrow is calculus. Lecture 3 is
+      the most quantitative day of the term — bring calculators. ~2 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= HOMEWORK ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 4</span></span><span class="right">23 / 26</span></div>
+    <span class="label-tag">Homework 02 — due Saturday 6 June, before class</span>
+    <h1>Build a complete TCO.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Choose a software product or feature you have personally worked on (or are working on). It can be commercial, internal, or a side project.</li>
+      <li>Build a complete 5-year TCO worksheet. Include every category from today's lecture. Show your assumptions explicitly — they will matter more than the numbers.</li>
+      <li>In one paragraph, state which category surprised you the most when you wrote it down — and why.</li>
+    </ol>
+    <p class="callout">Submit as a single PDF + the spreadsheet to <code>/submissions/HW2/&lt;your-name&gt;/</code> in the course Git repository.</p>
+    <aside class="notes">
+      Stress the assumptions. A defensible bad number beats a magical good
+      number. The reflection paragraph is where they internalise the lesson.
+      ~3 minutes.
+    </aside>
+  </section>
+
+  <!-- ============= REFERENCES ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>Reading</span><span class="dot"></span><span>Further</span></span><span class="right">24 / 26</span></div>
+    <span class="label-tag">If you want to go deeper</span>
+    <h1>To read this week.</h1>
+    <div class="two-col">
+      <div>
+        <h3>Classical</h3>
+        <ul>
+          <li>Boehm (1981), <em>Software Engineering Economics</em>, Chapter 3 — cost concepts.</li>
+          <li>Lientz &amp; Swanson (1980), <em>Software Maintenance Management</em> — the original 60–80% finding.</li>
+          <li>Park, <em>Contemporary Engineering Economics</em>, cost concepts chapter.</li>
+        </ul>
       </div>
-      <span class="label-tag">Axes 2 &amp; 3 of 4 — attribution &amp; recurrence</span>
-      <h1 style="font-size: 1.7em; margin-bottom: 0.3em;">Can we trace it? Will it come back?</h1>
-
-      <div class="two-col" style="margin-top: 14px;">
-        <div>
-          <h3 style="color: var(--indigo-dk);">Direct vs Indirect</h3>
-          <p style="font-size: 0.85em; margin-bottom: 10px;">A <em>direct</em> cost can be traced to one project or product without allocation. An <em>indirect</em> cost serves many and must be split.</p>
-          <table class="compact">
-            <tbody>
-              <tr><td class="label">Direct</td><td>Salary of an engineer working only on Project X.</td></tr>
-              <tr><td class="label">Direct</td><td>The cloud account dedicated to Project X.</td></tr>
-              <tr><td class="label">Indirect</td><td>HR, IT support, the office lease, the CI runner pool.</td></tr>
-              <tr><td class="label">Indirect</td><td>The CTO's time — shared across every project.</td></tr>
-            </tbody>
-          </table>
-          <p class="footnote" style="margin-top: 8px;">Indirect costs are often called <em>overhead</em> and applied as a percentage on top of direct cost.</p>
-        </div>
-        <div>
-          <h3 style="color: var(--indigo-dk);">Recurring vs Non-recurring</h3>
-          <p style="font-size: 0.85em; margin-bottom: 10px;">A <em>non-recurring</em> cost is paid once. A <em>recurring</em> cost returns every month, quarter, or year for the life of the system.</p>
-          <table class="compact">
-            <tbody>
-              <tr><td class="label">Non-recurring</td><td>Initial data migration · architecture spike.</td></tr>
-              <tr><td class="label">Non-recurring</td><td>One-time hardware purchase · build setup.</td></tr>
-              <tr><td class="label">Recurring</td><td>Monthly SaaS bill · per-token API cost.</td></tr>
-              <tr><td class="label">Recurring</td><td>On-call rota · annual compliance audit.</td></tr>
-            </tbody>
-          </table>
-          <p class="footnote" style="margin-top: 8px;">Engineers under-count recurring; finance under-counts non-recurring. Both biases bite.</p>
-        </div>
+      <div>
+        <h3>Modern</h3>
+        <ul>
+          <li>Iternal.ai (2026), <em>AI Token Usage Guide — 10 Use Case Cost Profiles</em>.</li>
+          <li>Silicon Data (2026), <em>Understanding LLM Cost Per Token: A Practical Guide</em>.</li>
+          <li>Zylos (2026), <em>AI Agent Cost Optimization: Token Economics and FinOps in Production</em>.</li>
+        </ul>
       </div>
-      <div class="slide-foot"><span class="course">§ II · Taxonomy</span><span>08 / 25</span></div>
-      <aside class="notes">
-        For DIRECT/INDIRECT — students often miss that the CTO's time is a real
-        cost. When the CTO spends two days on your project, the company is
-        paying for it; it just doesn't appear on your project's cost line. This
-        is why companies allocate overhead — to make sure indirect costs are
-        recovered.
-        For RECURRING/NON-RECURRING — give the canonical anecdote: a team that
-        celebrated shipping a feature "for $40K" and then paid $25K/year forever
-        in cloud costs they hadn't planned. Year 3, the recurring cost has
-        already eclipsed the build cost. Recurring is the silent killer.
-        ~6 minutes.
-      </aside>
-    </section>
+    </div>
+    <aside class="notes">
+      Boehm Ch.3 is the canon. Lientz &amp; Swanson is a 45-year-old study
+      whose conclusion still holds — assign it as evidence that the
+      maintenance-bias is older than most students. ~2 minutes.
+    </aside>
+  </section>
 
-    <!-- =====================  09 · CAPEX vs OPEX  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ II</span><span class="dot"></span><span>Axis 4 — capex vs opex</span></span>
-        <span class="right">09</span>
-      </div>
-      <span class="label-tag">Axis 4 of 4 — accounting treatment</span>
-      <h1 style="font-size: 1.7em; margin-bottom: 0.3em;">Capital builds the asset. Operating runs it.</h1>
+  <!-- ============= DISCUSSION RECAP ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">25 / 26</span></div>
+    <span class="label-tag">Five take-aways for tomorrow</span>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 8px; font-size: 0.95em;">
+      <li>Every software cost lives in a <strong>fixed / variable × direct / indirect × non-recurring / recurring</strong> cell.</li>
+      <li><strong>Opportunity cost</strong> is the cost you never see on an invoice — and the one NPV is built on.</li>
+      <li><strong>Sunk costs</strong> are irrelevant to forward-looking decisions. Don't let them be.</li>
+      <li>Software TCO is dominated by phases ③ and ④ — <strong>60–80% lies after launch</strong>.</li>
+      <li>A modern AI product has new line items: <strong>tokens, GPUs, vector DBs, inference caches</strong>. Budgets that don't name them are wrong by construction.</li>
+    </ol>
+    <aside class="notes">
+      Read the five out loud. Pause on #3 (sunk cost) — that's the hardest
+      to live by. Promise: tomorrow we make these formal with PV / FV. ~2 minutes.
+    </aside>
+  </section>
 
-      <table>
-        <thead><tr><th style="width:18%">&nbsp;</th><th>Capital Expenditure (CapEx)</th><th>Operating Expenditure (OpEx)</th></tr></thead>
-        <tbody>
-          <tr><td class="label">What it is</td><td>Money spent to acquire a long-lived asset.</td><td>Money spent to run the business this period.</td></tr>
-          <tr><td class="label">Software examples</td><td>Server purchase · perpetual licence · self-built platform.</td><td>Cloud bill · SaaS subscription · per-token API spend.</td></tr>
-          <tr><td class="label">Accounting</td><td><em>Capitalised</em> and depreciated over useful life.</td><td>Expensed in the period incurred — hits margin directly.</td></tr>
-          <tr><td class="label">Cash flow</td><td>Big up-front outflow; smaller drag thereafter.</td><td>Smaller, steady, predictable outflow.</td></tr>
-          <tr><td class="label">Strategic effect</td><td>Builds an owned asset; cheaper at scale; less flexible.</td><td>No asset on the balance sheet; flexible; cheaper at low scale.</td></tr>
-        </tbody>
-      </table>
+  <!-- ============= END ============= -->
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Two</span></span><span class="right">26 / 26</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">
+      Thank the class. Remind: Lecture 3 is tomorrow, same time, room SY109.
+      Bring calculators. Encourage early start on Homework 2.
+      ~8 minutes Q&amp;A.
+    </aside>
+  </section>
 
-      <div class="callout" style="margin-top: 14px;">The 2010s "shift from CapEx to OpEx" is exactly the move from data centres to the cloud — same workload, different accounting, different freedom to scale.</div>
-      <div class="slide-foot"><span class="course">§ II · Taxonomy</span><span>09 / 25</span></div>
-      <aside class="notes">
-        Anchor this to a story students know: every cloud-migration debate of
-        the last 15 years has been a CapEx→OpEx debate, even if the engineers
-        in the room didn't know the terms.
-        The trade-off: capex is cheaper at scale but inflexible; opex is more
-        expensive per-unit but you can turn it off tomorrow. Many AI workloads
-        today face the same fork: do we buy GPUs (capex) or rent them (opex)?
-        Lecture 13 returns to this in token economics.
-        ~5 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  10 · § III DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part Three</span><span class="dot"></span><span>Behavioural costs</span></span>
-        <span class="right">10</span>
-      </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — Three</div>
-        <div class="divider-number">III</div>
-        <h2 class="divider-title">The four costs that <em>behave</em><br>differently in a decision —<br>and the rule for which to count.</h2>
-        <p class="divider-quote">Opportunity · sunk · marginal · average.</p>
-      </div>
-      <div class="slide-foot"><span class="course">§ III · Behavioural</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        Frame: the previous part was *what kind* of cost. This part is *how
-        does the cost behave in a decision.* It's a smaller set — four
-        concepts — but each one is responsible for a famous engineering
-        mistake. Tell students by the end of this section they should be
-        able to recognise each mistake in the wild.
-        ~30 seconds.
-      </aside>
-    </section>
-
-    <!-- =====================  11 · OPPORTUNITY COST  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ III</span><span class="dot"></span><span>Opportunity cost</span></span>
-        <span class="right">11</span>
-      </div>
-      <span class="label-tag">Concept 1 of 4</span>
-      <h1 style="font-size: 1.8em;">Opportunity cost — <em>the road not taken</em>.</h1>
-
-      <div class="two-col" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
-        <div>
-          <p style="font-size: 0.92em;">The <em>value of the next best alternative you gave up</em> by choosing what you chose.</p>
-          <p style="font-size: 0.88em;">It is almost never on an invoice — so it is almost never in the spreadsheet — so it is almost never in the decision.</p>
-          <div class="callout" style="font-size: 0.88em; margin-top: 14px;">Formula, in spirit: <span class="mono">true cost = cash cost + opportunity cost</span></div>
-        </div>
-        <div class="card" style="padding: 22px 26px;">
-          <h3 style="color: var(--indigo-dk); margin-bottom: 10px;">A small example</h3>
-          <p style="font-size: 0.85em;">Your three best engineers spend Q3 rewriting the build system.</p>
-          <ul style="font-size: 0.82em; margin-top: 6px;">
-            <li>Cash cost of the rewrite: <strong>$0</strong> — they're salaried.</li>
-            <li>Opportunity cost: <strong>the customer feature</strong> those three engineers <em>didn't</em> ship.</li>
-            <li>If that feature would have generated $300K, the rewrite cost <em>$300K</em> — not $0.</li>
-          </ul>
-          <p class="footnote" style="margin-top: 12px;">Engineers who say "internal work is free" are silently making the largest economic error in the field.</p>
-        </div>
-      </div>
-      <div class="slide-foot"><span class="course">§ III · Behavioural</span><span>11 / 25</span></div>
-      <aside class="notes">
-        This is the single most under-counted cost in tech. Hammer it.
-        Stories to tell:
-        • The team that spent six months on an internal tooling project that
-          paid back $50K/yr in saved engineer time — but the engineers could
-          have built a customer feature worth $500K/yr in the same months.
-        • The CEO who treats founder time as "free" and personally fixes bugs
-          while a contractor would cost $200/hr.
-        The point: "free" never means free. It means the cost isn't on an
-        invoice. Senior engineers learn to see invisible costs; that's part
-        of what makes them senior.
-        ~5 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  12 · SUNK COST  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ III</span><span class="dot"></span><span>Sunk cost</span></span>
-        <span class="right">12</span>
-      </div>
-      <span class="label-tag">Concept 2 of 4</span>
-      <h1 style="font-size: 1.8em;">Sunk cost — money already spent, decisions already over.</h1>
-
-      <div class="two-col" style="grid-template-columns: 1fr 1fr; margin-top: 6px;">
-        <div>
-          <p style="font-size: 0.92em;">A <em>sunk cost</em> has already been incurred and cannot be recovered, regardless of which option you now choose.</p>
-          <p style="font-size: 0.92em;">It is therefore <strong>irrelevant</strong> to the decision in front of you. Rationally, you must ignore it.</p>
-          <p style="font-size: 0.88em;">In practice, humans (and especially teams that championed the original investment) cannot ignore it. This is the <em>sunk-cost fallacy</em>.</p>
-        </div>
-        <div class="card" style="padding: 22px 26px; background: var(--crimson-lt); border-color: var(--crimson);">
-          <h3 style="color: var(--crimson); margin-bottom: 10px;">Three software sunk-cost traps</h3>
-          <ul style="font-size: 0.82em;">
-            <li>Six-month migration is 80% done; the new path is worse than where we started — but "we've come too far to turn back."</li>
-            <li>An annual SaaS subscription was paid in January; we keep forcing the team to use a tool nobody likes "to get our money's worth."</li>
-            <li>Three engineers wrote a custom framework no one else uses; we maintain it forever rather than admitting it was a wrong turn.</li>
-          </ul>
-          <p class="footnote" style="margin-top: 12px;">The healthy phrase: "What would we decide if we were arriving today, with no history?"</p>
-        </div>
-      </div>
-      <div class="slide-foot"><span class="course">§ III · Behavioural</span><span>12 / 25</span></div>
-      <aside class="notes">
-        The sunk-cost fallacy is universal — every student has done it. Ask
-        for a show of hands: "Have you ever finished a Netflix show you weren't
-        enjoying because you'd watched four episodes?" Most hands go up. That
-        is the sunk-cost fallacy in miniature.
-        The professional version is more expensive. Migrations, frameworks,
-        partnerships — all classic traps.
-        Teach the cure: a literal mental phrase. "If we were arriving today,
-        with no history, would we choose this path?" If the answer is no,
-        the sunk cost is dragging you. Walk away.
-        ~5 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  13 · MARGINAL vs AVERAGE  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ III</span><span class="dot"></span><span>Marginal vs average</span></span>
-        <span class="right">13</span>
-      </div>
-      <span class="label-tag">Concepts 3 &amp; 4 of 4</span>
-      <h1 style="font-size: 1.8em; margin-bottom: 0.3em;">The next unit costs less<br>(or more) than the average.</h1>
-
-      <div class="two-col" style="grid-template-columns: 1.1fr 1fr; gap: 38px; margin-top: 6px;">
-        <div>
-          <svg class="chart" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid meet">
-            <line class="grid-line" x1="60" y1="60"  x2="490" y2="60"/>
-            <line class="grid-line" x1="60" y1="120" x2="490" y2="120"/>
-            <line class="grid-line" x1="60" y1="180" x2="490" y2="180"/>
-            <line class="axis-line" x1="60" y1="240" x2="490" y2="240"/>
-            <line class="axis-line" x1="60" y1="40"  x2="60"  y2="240"/>
-            <!-- average cost (U-shape) -->
-            <path class="curve-avg" d="M 80 100 Q 200 230 280 200 T 480 100"/>
-            <!-- marginal cost (steeper U) -->
-            <path class="curve-marg" d="M 80 60 Q 200 240 290 220 T 480 50"/>
-            <!-- crossover dot -->
-            <circle class="anno-dot" cx="320" cy="190" r="4"/>
-            <text class="curve-label" x="328" y="186" style="fill: var(--crimson); font-size: 11px;">marginal = average</text>
-            <text class="curve-label" x="98"  y="92"  style="font-size: 12px; fill: var(--ink-soft);">average cost</text>
-            <text class="curve-label" x="98"  y="52"  style="font-size: 12px; fill: var(--indigo-dk);">marginal cost</text>
-            <text class="axis-label"  x="60"  y="265">Units produced — requests, inferences, tasks</text>
-            <text class="axis-label"  x="40"  y="40"  transform="rotate(-90 40 40)">Cost per unit ($)</text>
-          </svg>
-        </div>
-        <div>
-          <h3>Marginal cost</h3>
-          <p style="font-size: 0.85em;">The cost of <em>one more</em> unit — the next request, the next inference, the next user, the next feature.</p>
-
-          <h3 style="margin-top: 14px;">Average cost</h3>
-          <p style="font-size: 0.85em;">Total cost <em>divided by</em> total units. Easy to compute, easy to mislead with.</p>
-
-          <div class="callout" style="margin-top: 16px; font-size: 0.85em;">For most decisions in software, the question is <em>marginal</em>, not average. "Should we accept one more API request?" is a marginal question; "What does our service cost per user on average?" is a reporting question.</div>
-        </div>
-      </div>
-      <div class="slide-foot"><span class="course">§ III · Behavioural</span><span>13 / 25</span></div>
-      <aside class="notes">
-        The cost curves both U-shape because: at low volume, fixed costs are
-        spread over few units (average is high); at high volume you hit
-        capacity limits, congestion, and on-call overhead (marginal climbs).
-        Sweet spot is where marginal cost crosses average — the classical
-        "optimal scale" insight.
-        Software-specific intuition: serverless API has near-zero marginal
-        cost at low scale, then a sharp climb when you hit per-request
-        pricing tiers. LLM inference has marginal cost dominated by tokens —
-        easy to compute, often ignored. Lecture 13 will return to this.
-        ~5 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  14 · DECISION-RELEVANCE RULE  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ III</span><span class="dot"></span><span>Decision rule</span></span>
-        <span class="right">14</span>
-      </div>
-      <span class="label-tag">The single rule that makes the taxonomy useful</span>
-      <h1 style="font-size: 1.7em; margin-bottom: 0.2em;">In any decision, count only<br>the <em>future</em> and the <em>different</em>.</h1>
-      <p class="lede" style="font-size: 0.95em; margin-bottom: 0;">The taxonomy on its own is just labels. The rule below is what turns labels into <em>better choices</em>.</p>
-
-      <div class="rule-card">
-        <div class="yes">
-          <div class="heading">Count these — Decision-relevant</div>
-          <ul>
-            <li><strong>Future</strong> costs that have not yet been incurred.</li>
-            <li><strong>Differential</strong> costs that differ between the alternatives.</li>
-            <li><strong>Opportunity</strong> costs — the value of what you give up.</li>
-            <li><strong>Cash-flow</strong> consequences, including risk.</li>
-          </ul>
-        </div>
-        <div class="no">
-          <div class="heading">Ignore these — Irrelevant to <em>this</em> decision</div>
-          <ul>
-            <li><strong>Sunk</strong> costs — already spent, unrecoverable.</li>
-            <li><strong>Common</strong> costs that are identical across alternatives.</li>
-            <li><strong>Allocated overhead</strong> that will be paid either way.</li>
-            <li><strong>Accounting artefacts</strong> with no cash consequence.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="slide-foot"><span class="course">§ III · Behavioural</span><span>14 / 25</span></div>
-      <aside class="notes">
-        This is the single most important slide in the lecture. Pause on it.
-        Tell the class: if you internalise nothing else today, internalise this.
-        The vocabulary of cost types is so they can EXECUTE this rule —
-        recognise "this is sunk, ignore it"; "this is differential, count it";
-        "this is allocated, irrelevant to this decision."
-        Most bad project decisions are rule violations: someone counted a
-        sunk cost, or someone ignored an opportunity cost, or someone
-        compared total cost when they should have compared incremental cost.
-        ~5 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  15 · § IV DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part Four</span><span class="dot"></span><span>Lifecycle</span></span>
-        <span class="right">15</span>
-      </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — Four</div>
-        <div class="divider-number">IV</div>
-        <h2 class="divider-title">Software has a life — and most<br>of its cost lives <em>after</em><br>the launch party.</h2>
-      </div>
-      <div class="slide-foot"><span class="course">§ IV · Lifecycle</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        The big reveal of this part: development is the small slice; everything
-        after launch is the big slice. Most engineers spend most of their time
-        thinking about the small slice. Boehm's most cited finding is that
-        maintenance dominates lifetime cost — often 60-80%.
-        ~30 seconds.
-      </aside>
-    </section>
-
-    <!-- =====================  16 · LIFECYCLE TIMELINE + ICEBERG  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ IV</span><span class="dot"></span><span>Five phases</span></span>
-        <span class="right">16</span>
-      </div>
-      <span class="label-tag">The shape of a software lifetime</span>
-      <h1 style="font-size: 1.65em; margin-bottom: 0.2em;">Five phases — and the iceberg.</h1>
-
-      <div class="timeline">
-        <div class="phase">
-          <div class="roman">I</div>
-          <div class="dot"></div>
-          <div class="name">Acquisition</div>
-          <div class="blurb">Specification, vendor selection, contract, procurement.</div>
-        </div>
-        <div class="phase">
-          <div class="roman">II</div>
-          <div class="dot"></div>
-          <div class="name">Development</div>
-          <div class="blurb">Design, build, test, deploy. The phase engineers see most.</div>
-        </div>
-        <div class="phase">
-          <div class="roman">III</div>
-          <div class="dot"></div>
-          <div class="name">Operation</div>
-          <div class="blurb">Run-time hosting, support, on-call, observability.</div>
-        </div>
-        <div class="phase">
-          <div class="roman">IV</div>
-          <div class="dot"></div>
-          <div class="name">Maintenance</div>
-          <div class="blurb">Bug fixes, evolution, dependency updates, security patches.</div>
-        </div>
-        <div class="phase">
-          <div class="roman">V</div>
-          <div class="dot"></div>
-          <div class="name">Retirement</div>
-          <div class="blurb">Data migration, sunsetting, archival, decommissioning.</div>
-        </div>
-      </div>
-
-      <div class="two-col" style="grid-template-columns: 1.05fr 1fr; gap: 38px; margin-top: 20px; align-items: center;">
-        <div class="iceberg">
-          <div class="ice-top"></div>
-          <div class="top-label">Development<span class="pct">~ 20 %</span></div>
-          <div class="waterline"></div>
-          <div class="waterline-label">Launch</div>
-          <div class="ice-bottom"></div>
-          <div class="bot-label">Operation + Maintenance<span class="big-pct">≈ 80 %</span></div>
-          <div class="bot-sub">+ Evolution + Retirement</div>
-        </div>
-        <div>
-          <h3 style="margin-bottom: 6px;">Boehm's iceberg</h3>
-          <p style="font-size: 0.88em;">Most engineering culture, most planning meetings, and most cost spreadsheets concern themselves with the <em>visible 20%</em> — design and build.</p>
-          <p style="font-size: 0.88em;">Boehm (1981) found that <strong>60–80%</strong> of lifetime cost lives below the waterline: in operation, maintenance, and evolution. Modern AI-era systems are not exempt — and often worse.</p>
-          <div class="callout" style="font-size: 0.85em; margin-top: 14px;">A decision that lowers build cost 30% but raises maintenance cost 30% almost always makes the project <em>more</em> expensive.</div>
-        </div>
-      </div>
-      <div class="slide-foot"><span class="course">§ IV · Lifecycle</span><span>16 / 25</span></div>
-      <aside class="notes">
-        Walk the timeline left to right. Hover slightly on phase IV
-        (Maintenance) — that's the one engineers under-spend on emotionally.
-        Then move to the iceberg. The numbers are well-cited but vary by
-        domain — some studies (Lientz & Swanson) put maintenance at 60%;
-        others as high as 90% for long-lived enterprise systems. The
-        consistent story: development is the tip, not the body.
-        Implication for decisions: ANY decision made during build that
-        shifts cost into ops/maintenance can wipe out apparent build savings.
-        This is the rationale for TCO thinking — the next section.
-        ~7 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  17 · § V DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part Five</span><span class="dot"></span><span>TCO</span></span>
-        <span class="right">17</span>
-      </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — Five</div>
-        <div class="divider-number">V</div>
-        <h2 class="divider-title">Total Cost of Ownership —<br>the only honest way to<br><em>add up</em> a software bill.</h2>
-        <p class="divider-quote">If your cost model has only the build, you have a build estimate — not a TCO.</p>
-      </div>
-      <div class="slide-foot"><span class="course">§ V · TCO</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        Bridge: now we put the taxonomy, the behavioural concepts, and the
-        lifecycle into one practical artefact — a Total Cost of Ownership
-        table. We'll work an example, then they'll build one in pairs.
-        ~30 seconds.
-      </aside>
-    </section>
-
-    <!-- =====================  18 · TCO WORKED EXAMPLE  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ V</span><span class="dot"></span><span>Worked TCO</span></span>
-        <span class="right">18</span>
-      </div>
-      <span class="label-tag">A five-year TCO — internal AI-assisted code-review tool · 60 engineers</span>
-      <h1 style="font-size: 1.55em; margin-bottom: 0.25em;">All the lines that should be in the spreadsheet.</h1>
-      <p class="lede" style="font-size: 0.92em; margin-bottom: 12px;">Same workload, five years. Bar length is proportional to total cost; segments show the cost categories.</p>
-
-      <div style="margin-top: 6px;">
-        <div class="tco-bars"><div class="yr">Yr 0 · Setup</div><div class="bar">
-          <div class="seg s1" style="width: 32%;">build $42K</div>
-          <div class="seg s2" style="width: 14%;">integ $18K</div>
-          <div class="seg s4" style="width: 12%;">train $15K</div>
-        </div><div class="total">$&nbsp;75,000</div></div>
-
-        <div class="tco-bars"><div class="yr">Yr 1</div><div class="bar">
-          <div class="seg s3" style="width: 28%;">SaaS $36K</div>
-          <div class="seg s5" style="width: 22%;">tokens $28K</div>
-          <div class="seg s6" style="width: 14%;">vec-db $18K</div>
-          <div class="seg s2" style="width: 12%;">ops $15K</div>
-          <div class="seg s4" style="width: 8%;">eval $10K</div>
-        </div><div class="total">$&nbsp;107,000</div></div>
-
-        <div class="tco-bars"><div class="yr">Yr 2</div><div class="bar">
-          <div class="seg s3" style="width: 28%;">SaaS $36K</div>
-          <div class="seg s5" style="width: 24%;">tokens $31K</div>
-          <div class="seg s6" style="width: 14%;">vec-db $18K</div>
-          <div class="seg s2" style="width: 12%;">ops $15K</div>
-          <div class="seg s4" style="width: 8%;">eval $10K</div>
-        </div><div class="total">$&nbsp;110,000</div></div>
-
-        <div class="tco-bars"><div class="yr">Yr 3</div><div class="bar">
-          <div class="seg s3" style="width: 28%;">SaaS $36K</div>
-          <div class="seg s5" style="width: 26%;">tokens $34K</div>
-          <div class="seg s6" style="width: 14%;">vec-db $18K</div>
-          <div class="seg s2" style="width: 14%;">ops $18K</div>
-          <div class="seg s4" style="width: 8%;">eval $10K</div>
-        </div><div class="total">$&nbsp;116,000</div></div>
-
-        <div class="tco-bars"><div class="yr">Yr 4</div><div class="bar">
-          <div class="seg s3" style="width: 28%;">SaaS $36K</div>
-          <div class="seg s5" style="width: 28%;">tokens $37K</div>
-          <div class="seg s6" style="width: 14%;">vec-db $18K</div>
-          <div class="seg s2" style="width: 14%;">ops $18K</div>
-          <div class="seg s4" style="width: 9%;">eval $12K</div>
-        </div><div class="total">$&nbsp;121,000</div></div>
-
-        <div class="tco-bars"><div class="yr">Yr 5 · Retire</div><div class="bar">
-          <div class="seg s3" style="width: 14%;">SaaS $18K</div>
-          <div class="seg s5" style="width: 14%;">tokens $20K</div>
-          <div class="seg s2" style="width: 18%;">migrate $25K</div>
-          <div class="seg s1" style="width: 8%;">archive $8K</div>
-        </div><div class="total">$&nbsp;71,000</div></div>
-      </div>
-
-      <div class="tco-legend">
-        <span class="lg"><span class="sw" style="background: var(--indigo-dk);"></span>Build / migration</span>
-        <span class="lg"><span class="sw" style="background: var(--indigo);"></span>Operations · on-call</span>
-        <span class="lg"><span class="sw" style="background: #6573C3;"></span>SaaS · licence</span>
-        <span class="lg"><span class="sw" style="background: #9FA8DA;"></span>Training · eval</span>
-        <span class="lg"><span class="sw" style="background: var(--crimson);"></span>API · tokens</span>
-        <span class="lg"><span class="sw" style="background: #E08087;"></span>Vector DB · infra</span>
-      </div>
-
-      <div class="callout" style="margin-top: 14px;">5-year TCO ≈ <strong>$600K</strong>. The build phase is <em>12%</em> of it. Everything below the waterline — operations, tokens, infra — is the other <em>88%</em>.</div>
-      <div class="slide-foot"><span class="course">§ V · TCO</span><span>18 / 25</span></div>
-      <aside class="notes">
-        Walk the bars left to right. Highlight three things:
-        (1) Year 0 (the "build") is dwarfed by every operating year.
-        (2) Tokens — a line that did not exist in Boehm's 1981 canon — grow
-            every year as the team uses the tool more. They are recurring,
-            variable-with-usage costs.
-        (3) Year 5 spikes again because of retirement (data migration off
-            the system, archival). Retirement costs are routinely forgotten.
-        Connect back to the iceberg: 12% above the waterline; 88% below.
-        Then segue: now they'll build their own.
-        ~6 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  19 · IN-CLASS EXERCISE / DISCUSSION  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ V</span><span class="dot"></span><span>In-class exercise</span></span>
-        <span class="right">19</span>
-      </div>
-      <span class="label-tag">Work in pairs · 10 minutes · then 5 minutes of group share</span>
-      <h1 style="font-size: 1.6em; margin-bottom: 0.2em;">Build a five-year TCO worksheet.</h1>
-      <p class="lede" style="font-size: 0.95em; margin-bottom: 8px;">Pick a small internal tool you've used. List every cost line that <em>should</em> be in its 5-year TCO. Don't compute amounts — focus on completeness.</p>
-
-      <div class="worksheet">
-        <h3>Worksheet — cost lines to consider (don't restrict yourself to these)</h3>
-        <div class="ws-grid">
-          <div class="ws-col">
-            <h4>Build &amp; setup</h4>
-            <ul>
-              <li>Engineer time</li>
-              <li>Architecture / spike</li>
-              <li>Initial data migration</li>
-              <li>Security review</li>
-              <li>UX research</li>
-            </ul>
-          </div>
-          <div class="ws-col">
-            <h4>Operate &amp; maintain</h4>
-            <ul>
-              <li>SaaS / licence fees</li>
-              <li>Cloud / infra</li>
-              <li>On-call rota</li>
-              <li>Observability tooling</li>
-              <li>Annual security audit</li>
-            </ul>
-          </div>
-          <div class="ws-col">
-            <h4>AI-era &amp; retire</h4>
-            <ul>
-              <li>LLM tokens (in/out/cache)</li>
-              <li>Vector DB · embeddings</li>
-              <li>GPU hours (if any)</li>
-              <li>Human verification time</li>
-              <li>Retirement / archive</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout" style="margin-top: 14px;">For each line, mark it on three axes: <span class="mono">fixed / variable · recurring / one-time · direct / indirect.</span> Then circle anything that would be <em>different</em> between two realistic alternatives.</div>
-      <div class="slide-foot"><span class="course">§ V · Exercise</span><span>19 / 25</span></div>
-      <aside class="notes">
-        Set the exercise carefully.
-        • Pairs — not solo, not teams of four. Pairs talk most.
-        • 10 minutes hard timer; warn at 5 and 1 minutes left.
-        • At the end, ask three pairs to share *the cost line most teams forget*.
-          Almost always: retirement, security audit, or LLM tokens.
-        Move around the room — listen for the word "free." Whenever you hear
-        it, ask: "What's the opportunity cost?"
-        After 10 minutes of pair work + 5 of share-back = 15 minutes total.
-        ~15 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  20 · § VI DIVIDER  ===================== -->
-    <section class="divider">
-      <div class="slide-meta">
-        <span class="left"><span>Part Six</span><span class="dot"></span><span>Modern ledger</span></span>
-        <span class="right">20</span>
-      </div>
-      <div class="divider-content">
-        <div class="divider-roman">Part — Six</div>
-        <div class="divider-number">VI</div>
-        <h2 class="divider-title">The modern ledger —<br>cost lines Boehm could not have<br>imagined in 1981.</h2>
-        <p class="divider-quote">Tokens, GPU-hours, vector storage, and human verification — none of them on the 1981 spreadsheet.</p>
-      </div>
-      <div class="slide-foot"><span class="course">§ VI · Modern ledger</span><span>Lecture Two</span></div>
-      <aside class="notes">
-        Bridge: the taxonomy is timeless; the ledger is not. Now we name the
-        new lines. Tell students: Lectures 12 and 13 will quantify these in
-        detail — today we just need them in our vocabulary.
-        ~30 seconds.
-      </aside>
-    </section>
-
-    <!-- =====================  21 · AI-ERA LEDGER  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ VI</span><span class="dot"></span><span>AI-era ledger</span></span>
-        <span class="right">21</span>
-      </div>
-      <span class="label-tag">Eight modern cost lines</span>
-      <h1 style="font-size: 1.65em; margin-bottom: 0.3em;">The ledger of an AI-assisted system.</h1>
-
-      <table class="ledger">
-        <thead>
-          <tr><th style="width:22%">Line</th><th>What it pays for</th><th style="width:14%">Behaviour</th><th style="width:14%" class="r">Order of magnitude</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="label">Per-seat licence</td><td>An AI coding assistant or copilot per developer.</td><td>Fixed · recurring</td><td class="r num">$20–60 / dev / mo</td></tr>
-          <tr class="new"><td class="label">Input tokens <span class="tag">new</span></td><td>Prompt + context sent into the model.</td><td>Variable · recurring</td><td class="r num">$3–15 / 1M tok</td></tr>
-          <tr class="new"><td class="label">Output tokens <span class="tag">new</span></td><td>Model-generated text — usually 3–5× input price.</td><td>Variable · recurring</td><td class="r num">$15–75 / 1M tok</td></tr>
-          <tr class="new"><td class="label">Cache reads <span class="tag">new</span></td><td>Repeated context served from a cheaper cache tier.</td><td>Variable · recurring</td><td class="r num">~10% of input</td></tr>
-          <tr class="new"><td class="label">Embeddings &amp; vector DB <span class="tag">new</span></td><td>Storing and querying semantic vectors for RAG.</td><td>Fixed + variable</td><td class="r num">$0.10–0.50 / 1K vec/mo</td></tr>
-          <tr class="new"><td class="label">GPU hours <span class="tag">new</span></td><td>Fine-tuning, eval, custom inference.</td><td>Variable · spiky</td><td class="r num">$2–8 / GPU-hr</td></tr>
-          <tr class="new"><td class="label">Human verification <span class="tag">new</span></td><td>Engineer time spent reviewing AI output.</td><td>Variable · hidden</td><td class="r num">5–25% of dev time</td></tr>
-          <tr><td class="label">Compliance / eval</td><td>Red-team, safety review, hallucination audits.</td><td>Fixed · recurring</td><td class="r num">$10K–100K / yr</td></tr>
-        </tbody>
-      </table>
-
-      <p class="footnote">Ranges are 2026 order-of-magnitude figures; treat them as planning numbers, not quotes. Lecture 13 covers pricing tiers and prompt caching in depth.</p>
-      <div class="slide-foot"><span class="course">§ VI · Modern ledger</span><span>21 / 25</span></div>
-      <aside class="notes">
-        Highlight the SHADED rows — those are the lines that did not exist in
-        Boehm's textbook. Five out of eight modern lines are new in the AI era.
-        Two non-obvious lines to call out:
-        • CACHE READS — most teams don't realise prompt caching can cut input
-          cost by ~90%. This single design choice can be the difference
-          between an AI feature being profitable or not.
-        • HUMAN VERIFICATION — the most under-counted modern cost. Every AI
-          output that gets reviewed by an engineer costs engineer time.
-          Treat it as part of the per-task cost. Lecture 13 has a model
-          for this.
-        Tell them: any AI cost model that omits these lines is wrong by
-        construction. They will see this gospel in Lecture 13.
-        ~6 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  22 · STAT CALLOUT  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>§ VI</span><span class="dot"></span><span>Three numbers</span></span>
-        <span class="right">22</span>
-      </div>
-      <span class="label-tag">A teaser — three numbers Lecture 13 will defend</span>
-      <h1 style="font-size: 1.55em; margin-bottom: 0.4em;">Three planning numbers,<br>each on its own line.</h1>
-
-      <div class="three-col" style="gap: 28px; margin-top: 22px;">
-        <div class="card" style="text-align: center; padding: 28px 18px;">
-          <div class="big-stat" style="font-size: 3.6em;">88<span style="font-size: 0.45em; color: var(--indigo); letter-spacing: -0.04em;">%</span></div>
-          <p style="margin: 10px 0 0; font-size: 0.82em;">of our worked TCO sits <em>below</em> the launch waterline.</p>
-        </div>
-        <div class="card" style="text-align: center; padding: 28px 18px; background: var(--indigo-lt); border-color: var(--indigo);">
-          <div class="big-stat" style="font-size: 3.6em; color: var(--indigo-dk);">5<span class="unit" style="padding-top: 1.2em;">of 8</span></div>
-          <p style="margin: 10px 0 0; font-size: 0.82em;">modern ledger lines <em>did not exist</em> in Boehm (1981).</p>
-        </div>
-        <div class="card" style="text-align: center; padding: 28px 18px;">
-          <div class="big-stat" style="font-size: 3.4em; color: var(--crimson);">90<span style="font-size: 0.45em; color: var(--crimson); letter-spacing: -0.04em;">%</span></div>
-          <p style="margin: 10px 0 0; font-size: 0.82em;">peak input-cost saving from <em>prompt caching</em>, in well-tuned systems.</p>
-        </div>
-      </div>
-
-      <p class="footnote" style="margin-top: 24px;">Why these three — they together explain why naive AI cost estimates are routinely off by 5–10×.</p>
-      <div class="slide-foot"><span class="course">§ VI · Modern ledger</span><span>22 / 25</span></div>
-      <aside class="notes">
-        Three numbers, three sentences. Don't over-explain — these are bait
-        for Lecture 13. The point is to anchor them in memory:
-        88% below the waterline.
-        5 of 8 ledger lines new.
-        90% maximum caching saving.
-        Tell them: if you carry these three numbers out of today, you will
-        ask the right questions of every AI cost proposal you see for the
-        next five years.
-        ~3 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  23 · DISCUSSION  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>Discussion</span><span class="dot"></span><span>Three prompts</span></span>
-        <span class="right">23</span>
-      </div>
-      <span class="label-tag">Open floor · 10 minutes</span>
-      <h1>Three questions for the room.</h1>
-
-      <ol style="margin-top: 26px; font-size: 1.05em;">
-        <li>Name a software cost in your own life or job that you suspect is <em>under-counted</em>. Which axis of the taxonomy does it sit on, and why is it invisible?</li>
-        <li>Describe a software decision you've seen made on the wrong cost — sunk, common, allocated, or accounting-only. What did the better cost lens look like?</li>
-        <li>Pick one line from the AI-era ledger. Is it <em>going up</em> or <em>down</em> in your organisation over the next two years — and what would change that direction?</li>
-      </ol>
-      <div class="slide-foot"><span class="course">Discussion</span><span>23 / 25</span></div>
-      <aside class="notes">
-        Open the floor. Target 4–5 voices. If the room is shy, start with
-        question 2 — everyone has a story of a sunk-cost decision in their
-        career or in software they've used.
-        Listen for:
-        • "On-call" or "documentation" as the under-counted cost (Q1).
-        • Migration battles as sunk-cost stories (Q2).
-        • Token spend as the rising line (Q3) — and "engineers who learned
-          to cache" as what changes the direction.
-        Do not moderate too tightly. The course's job is to give them
-        vocabulary; their experience supplies the cases.
-        ~10 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  24 · HOMEWORK  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 4</span></span>
-        <span class="right">24</span>
-      </div>
-      <span class="label-tag">Homework 02 — due Saturday 6 June, before class</span>
-      <h1>Build a real TCO.</h1>
-
-      <ol style="margin-top: 24px;">
-        <li>Choose a software product you know well — a tool you use, a system you maintain, or a small product idea. Build a <strong>five-year Total Cost of Ownership spreadsheet</strong>: every line, every year. Include the modern AI-era lines where applicable.</li>
-        <li>Identify the <strong>three largest cost categories</strong> over the five years and write a one-paragraph explanation of <em>why</em> — referring to at least two terms from today's vocabulary (e.g. <em>recurring · opex · variable · opportunity</em>).</li>
-        <li>Mark each line as <em>decision-relevant</em> or <em>not</em>, assuming the decision is <em>"keep using this tool or replace it next year?"</em></li>
-      </ol>
-
-      <div class="callout" style="margin-top: 18px;">Submit a single PDF (export of your spreadsheet + the paragraph) to the course repository at <code>/submissions/HW2/&lt;your-name&gt;.pdf</code>. Late: −10% / day.</div>
-      <div class="slide-foot"><span class="course">Homework 02</span><span>24 / 25</span></div>
-      <aside class="notes">
-        The point of #3 is to force them to apply the decision-relevance rule
-        (slide 14) on their own ledger. Most students will discover at least
-        one line they put in the TCO that is NOT decision-relevant for the
-        keep-or-replace question. That insight is the homework's payoff.
-        Office hours: tomorrow, 10:00–11:30, before Lecture 3.
-        ~2 minutes.
-      </aside>
-    </section>
-
-    <!-- =====================  25 · END  ===================== -->
-    <section>
-      <div class="slide-meta">
-        <span class="left"><span>End</span><span class="dot"></span><span>Lecture Two</span></span>
-        <span class="right">25</span>
-      </div>
-      <div class="end">
-        <div class="ampersand">&amp;</div>
-        <h2>Questions &amp; conversation.</h2>
-        <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
-      </div>
-      <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen · FSU 2026</span></div>
-      <aside class="notes">
-        Thank the class. Two things to remind them:
-        (1) Lecture 3 is tomorrow same time, in SY109 — note the room change.
-            Tomorrow we put numbers in motion: Time Value of Money.
-        (2) Homework 2 (the TCO) is due before Lecture 4, Saturday.
-        Field questions until the period ends. If a long discussion thread
-        opens, take it offline or to office hours.
-        ~10 minutes for Q&A.
-      </aside>
-    </section>
-
-  </div>
-</div>
+</div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
 <script>
   Reveal.initialize({
-    hash: true,
-    slideNumber: false,
-    controls: true,
-    progress: true,
-    width: 1440,
-    height: 900,
-    margin: 0.04,
-    center: false,
-    transition: 'fade',
-    transitionSpeed: 'default',
-    backgroundTransition: 'fade',
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
     plugins: [ RevealNotes, RevealMath.MathJax3 ],
-    mathjax3: {
-      tex: { inlineMath: [['\\(','\\)']] },
-      svg: { fontCache: 'global' }
-    }
+    mathjax3: { tex: { inlineMath: [['\\(','\\)']] }, svg: { fontCache: 'global' } }
   });
 </script>
 </body>

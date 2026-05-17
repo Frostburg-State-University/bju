@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 6 — Break-even &amp; Sensitivity Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Six · 8 June 2026</div>
+        <div class="cover-volume">06<span class="small">Lecture Six</span></div>
+        <h1 class="cover-title">Break-even<br>&amp; <span class="accent">Sensitivity</span><br>Analysis</h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">A single NPV is a single guess. Today we replace it with a confidence range — and learn which assumptions deserve the most paranoia.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 06 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">8 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF108</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Workshop</div></div>
+        </div>
+        <div class="footnote">Start of Week 2. Bring last week's NPV and a willingness to break it.</div>
+      </div>
+    </div>
+    <aside class="notes">Welcome back to Week 2. ~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture VI</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 20</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Three tools, one question.</h1>
+    <p class="lede">If the NPV depends on twenty assumptions, which one should I actually worry about?</p>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Break-even analysis</td><td class="num">25</td></tr>
+        <tr><td class="num">II.</td><td>Single &amp; multi-variable sensitivity</td><td class="num">25</td></tr>
+        <tr><td class="num">III.</td><td>Tornado diagrams</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Scenario planning</td><td class="num">15</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: stress your own NPV</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Worked AI-feature example</td><td class="num">15</td></tr>
+        <tr><td></td><td><em>HW6, questions</em></td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Break-even —<br>the question every<br>investor eventually asks.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Definition</span></span><span class="right">04 / 20</span></div>
+    <span class="label-tag">When does cumulative cash flow turn positive?</span>
+    <h1>Break-even analysis.</h1>
+    <p style="font-size: 0.95em;">The <strong>break-even point</strong> is the level of a parameter at which the project's economic result is neither positive nor negative.</p>
+    <div class="three-col" style="margin-top: 10px;">
+      <div class="card"><h3>Volume</h3><p>At what user / request / unit count do we cover costs?</p></div>
+      <div class="card"><h3>Time</h3><p>How long until cumulative NPV first turns positive?</p></div>
+      <div class="card"><h3>Price</h3><p>What price per unit makes us break even?</p></div>
+    </div>
+    <p style="margin-top: 14px; font-size: 0.92em;">Break-even is the threshold below which a project loses money and above which it makes money. It answers "how good do things have to be?" — a useful framing for decisions with uncertain demand.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>The basic formula</span></span><span class="right">05 / 20</span></div>
+    <span class="label-tag">Fixed cost, variable cost, contribution</span>
+    <h1>Break-even volume.</h1>
+    <div class="formula" style="font-size: 1.0em;">break-even quantity &nbsp;=&nbsp; <span style="font-family: 'Fraunces',serif;">fixed cost ÷ (price per unit − variable cost per unit)</span></div>
+    <p style="font-size: 0.95em; margin-top: 10px;"><em>Software example:</em> An AI feature has $200K of fixed annual cost (engineering, observability) and $0.05 marginal cost per request. Price per request: $0.25.</p>
+    <div class="formula">break-even &nbsp;=&nbsp; 200,000 ÷ (0.25 − 0.05) &nbsp;=&nbsp; 1,000,000 requests / year</div>
+    <p class="callout">If you can confidently project &gt; 1M requests per year, the unit economics work. If you cannot, no amount of cost discipline will save the project.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Discounted payback</span></span><span class="right">06 / 20</span></div>
+    <span class="label-tag">Break-even in time, properly discounted</span>
+    <h1>Discounted break-even (time).</h1>
+    <p style="font-size: 0.95em;">A more rigorous time-based break-even discounts each period's cash flow before summing — answering "in what year does cumulative PV first turn positive?"</p>
+    <table class="compact">
+      <thead><tr><th>Year</th><th class="num" style="text-align:right">CF</th><th class="num" style="text-align:right">PV @ 10%</th><th class="num" style="text-align:right">Cumulative PV</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td class="num" style="text-align:right">−$200K</td><td class="num" style="text-align:right">−$200K</td><td class="num" style="text-align:right">−$200K</td></tr>
+        <tr><td>1</td><td class="num" style="text-align:right">+$80K</td><td class="num" style="text-align:right">+$72.7K</td><td class="num" style="text-align:right">−$127.3K</td></tr>
+        <tr><td>2</td><td class="num" style="text-align:right">+$80K</td><td class="num" style="text-align:right">+$66.1K</td><td class="num" style="text-align:right">−$61.2K</td></tr>
+        <tr><td>3</td><td class="num" style="text-align:right">+$80K</td><td class="num" style="text-align:right">+$60.1K</td><td class="num" style="text-align:right">−$1.1K</td></tr>
+        <tr><td>4</td><td class="num" style="text-align:right">+$80K</td><td class="num" style="text-align:right">+$54.6K</td><td class="num" style="text-align:right"><strong>+$53.5K</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Discounted payback ≈ 3.02 years. The simple (undiscounted) payback would be 2.5 years — too optimistic by half a year. The discount rate has real teeth.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Sensitivity —<br>which assumption<br>actually moves the needle?</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Single-variable</span></span><span class="right">08 / 20</span></div>
+    <span class="label-tag">One variable at a time</span>
+    <h1>Single-variable sensitivity analysis.</h1>
+    <p style="font-size: 0.95em;">Hold all inputs at their base-case values. Vary one input by ±X%. Record the resulting NPV. Repeat for every important input. The slope of NPV vs. input is the <strong>sensitivity</strong>.</p>
+    <table class="compact">
+      <thead><tr><th>Input</th><th class="num" style="text-align:right">−20%</th><th class="num" style="text-align:right">Base</th><th class="num" style="text-align:right">+20%</th><th class="num" style="text-align:right">Range</th></tr></thead>
+      <tbody>
+        <tr><td>User count</td><td class="num" style="text-align:right">$10K</td><td class="num" style="text-align:right">$60K</td><td class="num" style="text-align:right">$110K</td><td class="num" style="text-align:right">$100K</td></tr>
+        <tr><td>Token price</td><td class="num" style="text-align:right">$85K</td><td class="num" style="text-align:right">$60K</td><td class="num" style="text-align:right">$35K</td><td class="num" style="text-align:right">$50K</td></tr>
+        <tr><td>Discount rate</td><td class="num" style="text-align:right">$72K</td><td class="num" style="text-align:right">$60K</td><td class="num" style="text-align:right">$48K</td><td class="num" style="text-align:right">$24K</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">User count drives NPV more than 4× as strongly as discount rate. <em>That</em> is where the team's research effort should go.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Multi-variable</span></span><span class="right">09 / 20</span></div>
+    <span class="label-tag">When inputs move together</span>
+    <h1>Multi-variable sensitivity.</h1>
+    <p style="font-size: 0.95em;">Many inputs are correlated: if user growth slows, token spend falls too. Single-variable sensitivity overstates the role of inputs whose movement is naturally hedged.</p>
+    <p style="font-size: 0.95em; margin-top: 8px;">Multi-variable sensitivity captures these joint movements. Common techniques:</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li><strong>Correlated scenarios</strong>: define groups of inputs that move together (e.g., "low user adoption" implies low revenue AND low token cost).</li>
+      <li><strong>Spider plots</strong>: plot NPV vs each input, one line per input.</li>
+      <li><strong>Two-way tables</strong>: NPV as a function of two key inputs varying simultaneously.</li>
+    </ul>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Tornado diagrams —<br>communication tool<br>for boards and stand-ups.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>The Tornado</span></span><span class="right">11 / 20</span></div>
+    <span class="label-tag">Sensitivity at a glance</span>
+    <h1>The Tornado diagram.</h1>
+    <p style="font-size: 0.95em;">A horizontal bar chart, one bar per input, length proportional to the NPV range when that input varies through its plausible range. Sorted longest-bar-at-top → the silhouette resembles a tornado.</p>
+    <div style="margin-top: 12px; background: var(--paper-warm); padding: 14px 22px; border-radius: 3px;">
+      <p style="font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--ink-soft); margin: 0;">
+        User count         ████████████████████████  range $100K<br>
+        Token unit cost    █████████████  range $50K<br>
+        Engineer salary    ████████  range $30K<br>
+        Discount rate      █████  range $24K<br>
+        Cloud egress       ███  range $15K
+      </p>
+    </div>
+    <p class="callout">In one glance, leadership knows where the project's uncertainty really lives. Spend research budget on the top of the tornado — never on the bottom.</p>
+    <aside class="notes">
+      A spreadsheet can produce this in five minutes. Show one if possible.
+      ~5 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Scenarios —<br>three numbers,<br>not one.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Three-point scenarios</span></span><span class="right">13 / 20</span></div>
+    <span class="label-tag">A standard format leadership recognises</span>
+    <h1>Optimistic · realistic · pessimistic.</h1>
+    <table>
+      <thead><tr><th>Input</th><th class="num" style="text-align:right">Pessimistic</th><th class="num" style="text-align:right">Realistic</th><th class="num" style="text-align:right">Optimistic</th></tr></thead>
+      <tbody>
+        <tr><td>User count (Y1)</td><td class="num" style="text-align:right">5,000</td><td class="num" style="text-align:right">15,000</td><td class="num" style="text-align:right">30,000</td></tr>
+        <tr><td>Token unit cost</td><td class="num" style="text-align:right">$0.06</td><td class="num" style="text-align:right">$0.04</td><td class="num" style="text-align:right">$0.025</td></tr>
+        <tr><td>Engineer cost</td><td class="num" style="text-align:right">$200K</td><td class="num" style="text-align:right">$180K</td><td class="num" style="text-align:right">$160K</td></tr>
+        <tr><td><strong>NPV</strong></td><td class="num" style="text-align:right"><strong>−$45K</strong></td><td class="num" style="text-align:right"><strong>+$78K</strong></td><td class="num" style="text-align:right"><strong>+$320K</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">A board sees ONE number: $78K NPV. Showing the three scenarios reframes the decision honestly: positive expected outcome with downside risk of $45K.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">14 / 20</span></div>
+    <span class="label-tag">Stress your own NPV</span>
+    <div class="discussion-icon">!</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 2em; margin-top: -6px; line-height: 1.1;">Which assumption in <em>your</em> homework-5 NPV would you defend least?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 minutes), trade NPV mini-cases. Identify the single most uncertain assumption in each other's model. Compute the NPV impact of being wrong by ±30%.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Is the project still positive in the pessimistic case?</li>
+      <li>If not, what level of confidence in your assumption would you need to proceed?</li>
+      <li>What would change your mind — a customer interview, an experiment, a competitor signal?</li>
+    </ul>
+    <p class="footnote">Bring a sensitivity table you would actually defend to a CFO.</p>
+    <aside class="notes">~10 minutes total.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">A worked example —<br>an AI feature break-even<br>under uncertainty.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>AI feature break-even</span></span><span class="right">16 / 20</span></div>
+    <span class="label-tag">Build a tornado in 10 minutes</span>
+    <h1>AI feature — fully stress-tested.</h1>
+    <p style="font-size: 0.92em;">Hypothetical AI sales-assistant: $250K dev cost, $0.04 / request marginal cost, monetised at $0.20 / qualified lead, 5-year horizon, MARR 12%.</p>
+    <table class="compact">
+      <thead><tr><th>Input</th><th class="num" style="text-align:right">Low</th><th class="num" style="text-align:right">Base</th><th class="num" style="text-align:right">High</th><th class="num" style="text-align:right">NPV range</th></tr></thead>
+      <tbody>
+        <tr><td>Qualified lead conversion</td><td class="num" style="text-align:right">4%</td><td class="num" style="text-align:right">8%</td><td class="num" style="text-align:right">15%</td><td class="num" style="text-align:right">$220K</td></tr>
+        <tr><td>Requests / month</td><td class="num" style="text-align:right">40K</td><td class="num" style="text-align:right">80K</td><td class="num" style="text-align:right">150K</td><td class="num" style="text-align:right">$140K</td></tr>
+        <tr><td>Token cost / request</td><td class="num" style="text-align:right">$0.07</td><td class="num" style="text-align:right">$0.04</td><td class="num" style="text-align:right">$0.025</td><td class="num" style="text-align:right">$72K</td></tr>
+        <tr><td>Lead value</td><td class="num" style="text-align:right">$0.15</td><td class="num" style="text-align:right">$0.20</td><td class="num" style="text-align:right">$0.28</td><td class="num" style="text-align:right">$58K</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Lead-conversion rate dominates the tornado. Before scaling, the team must run a measurement experiment to nail down this single input. Token cost matters far less than the team would have guessed.</p>
+    <aside class="notes">~7 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 7</span></span><span class="right">17 / 20</span></div>
+    <span class="label-tag">Where this is going</span>
+    <h1>Tomorrow we put probabilities on the assumptions.</h1>
+    <p class="lede">Sensitivity says <em>which</em> inputs matter. Tomorrow we say <em>how likely</em> each input is — decision trees, expected value, Monte Carlo simulation.</p>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 8</span></span><span class="right">18 / 20</span></div>
+    <span class="label-tag">Homework 06 — due Wednesday 10 June</span>
+    <h1>Build your tornado.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Pick a project you have NPV-ed (yours or HW5's mini-case). Build a one-variable sensitivity table for at least five inputs.</li>
+      <li>Construct a Tornado diagram. Identify the top three NPV drivers.</li>
+      <li>Run three scenarios (pess / real / opt). Decide whether the project would still be approved in the pessimistic case.</li>
+      <li>One paragraph: what experiment would you propose to <em>reduce</em> the uncertainty of the top driver?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">19 / 20</span></div>
+    <span class="label-tag">Three take-aways</span>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>Break-even</strong> tells you how good things need to be. Useful when demand is uncertain.</li>
+      <li><strong>Sensitivity</strong> tells you which assumptions deserve scrutiny. A Tornado diagram is the standard format.</li>
+      <li><strong>Scenarios</strong> turn a single NPV into a decision narrative leadership can actually act on.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Six</span></span><span class="right">20 / 20</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~8 min. Next: Lecture 7 — risk &amp; decision trees.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 11 — Build / Buy / Reuse &amp; Value-Based Software Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Eleven · 13 June 2026</div>
+        <div class="cover-volume">11<span class="small">Lecture Eleven</span></div>
+        <h1 class="cover-title">Build · Buy · Reuse —<br>&amp; <span class="accent">VBSE</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">Choosing among five alternatives — and the framework that puts <em>value</em>, not feature parity, at the centre of every choice.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 11 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">13 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">SY109</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Workshop</div></div>
+        </div>
+        <div class="footnote">Project teams must be confirmed today.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture XI</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 18</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Five alternatives, one framework.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Five alternatives — build, buy, reuse, OSS, SaaS</td><td class="num">15</td></tr>
+        <tr><td class="num">II.</td><td>Reuse economics — the COCOMO II reuse model</td><td class="num">15</td></tr>
+        <tr><td class="num">III.</td><td>The decision matrix — weighted criteria</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Value-Based Software Engineering (VBSE)</td><td class="num">20</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: Build/Buy on a real component</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Stakeholder value &amp; the win-condition map</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW11, questions</em></td><td class="num">15</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Five alternatives —<br>not just<br>"build or buy."</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>The five options</span></span><span class="right">04 / 18</span></div>
+    <span class="label-tag">A modern decision space</span>
+    <h1>The Build / Buy / Reuse decision is really a five-way.</h1>
+    <table class="compact">
+      <thead><tr><th>Option</th><th>Definition</th><th>Trade-off</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Build (in-house)</td><td>Develop and own the code internally.</td><td>Max control, max cost.</td></tr>
+        <tr><td class="label">Buy (commercial)</td><td>License or buy a packaged product.</td><td>Predictable cost, vendor dependence.</td></tr>
+        <tr><td class="label">Reuse</td><td>Adapt an existing internal component.</td><td>Low cost, integration friction.</td></tr>
+        <tr><td class="label">Open-source (OSS)</td><td>Adopt a community-maintained codebase.</td><td>Zero licence fee, real maintenance burden.</td></tr>
+        <tr><td class="label">SaaS</td><td>Subscribe to a hosted service.</td><td>Variable cost, lowest control.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Most real decisions are blends: buy the core + build customisations + integrate OSS pieces + run on SaaS infrastructure. Pure choices are rare and usually unwise.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Reuse economics —<br>nothing is<br>free to reuse.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>COCOMO II reuse</span></span><span class="right">06 / 18</span></div>
+    <span class="label-tag">Equivalent Source Lines of Code</span>
+    <h1>The reuse model — Equivalent KSLOC.</h1>
+    <p style="font-size: 0.93em;">When reusing an existing component, COCOMO II computes <em>equivalent</em> KSLOC, weighted by the three integration components:</p>
+    <div class="formula" style="font-size: 0.85em;">ESLOC &nbsp;=&nbsp; ASLOC × ((AA + SU + 0.4×DM + 0.3×CM + 0.3×IM) ÷ 100)</div>
+    <p style="font-size: 0.9em; margin-top: 6px;">
+      ASLOC = adapted source lines · AA = assessment / assimilation (0–8) · SU = software understanding (10–50) ·
+      DM = design modification % · CM = code modification % · IM = integration modification %.
+    </p>
+    <p class="callout">In practice, reusing a 50K-line library can cost 30–60% of what writing it from scratch would. "Free" reuse is myth; the question is just how much friction.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Decision matrix —<br>making the trade-off<br>legible.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Matrix</span></span><span class="right">08 / 18</span></div>
+    <span class="label-tag">Weighted multi-criteria scoring</span>
+    <h1>The weighted decision matrix.</h1>
+    <table class="compact">
+      <thead><tr><th>Criterion</th><th class="num" style="text-align:right">Weight</th><th class="num" style="text-align:right">Build</th><th class="num" style="text-align:right">Buy</th><th class="num" style="text-align:right">OSS</th><th class="num" style="text-align:right">SaaS</th></tr></thead>
+      <tbody>
+        <tr><td>5-yr TCO (low = high score)</td><td class="num" style="text-align:right">25</td><td class="num" style="text-align:right">4</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">9</td><td class="num" style="text-align:right">6</td></tr>
+        <tr><td>Time to value</td><td class="num" style="text-align:right">20</td><td class="num" style="text-align:right">3</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">8</td><td class="num" style="text-align:right">10</td></tr>
+        <tr><td>Control / flexibility</td><td class="num" style="text-align:right">15</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">5</td><td class="num" style="text-align:right">8</td><td class="num" style="text-align:right">4</td></tr>
+        <tr><td>Compliance fit</td><td class="num" style="text-align:right">15</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">6</td><td class="num" style="text-align:right">5</td></tr>
+        <tr><td>Vendor-lock risk</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">10</td><td class="num" style="text-align:right">5</td><td class="num" style="text-align:right">8</td><td class="num" style="text-align:right">4</td></tr>
+        <tr><td>Talent availability</td><td class="num" style="text-align:right">15</td><td class="num" style="text-align:right">5</td><td class="num" style="text-align:right">8</td><td class="num" style="text-align:right">7</td><td class="num" style="text-align:right">9</td></tr>
+        <tr><td><strong>Weighted total</strong></td><td></td><td class="num" style="text-align:right"><strong>5.85</strong></td><td class="num" style="text-align:right"><strong>6.55</strong></td><td class="num" style="text-align:right"><strong>7.85</strong></td><td class="num" style="text-align:right"><strong>6.40</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Decision matrices are most useful for surfacing <em>weights</em>. Disagreement about weight is usually disagreement about strategy — and that's a productive conversation to have.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">VBSE —<br>value-based<br>software engineering.</h2>
+      <p class="divider-quote">Boehm &amp; Sullivan, 2000 — stakeholders before specifications.</p>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>VBSE principles</span></span><span class="right">10 / 18</span></div>
+    <span class="label-tag">Putting value at the centre</span>
+    <h1>VBSE in five principles.</h1>
+    <ol style="margin-top: 6px; font-size: 0.93em;">
+      <li><strong>Benefits realisation analysis.</strong> Connect technical work to a measurable business benefit.</li>
+      <li><strong>Stakeholder value proposition elicitation.</strong> Identify every party with a stake; document each one's "win" condition.</li>
+      <li><strong>Business case analysis.</strong> Build an NPV-style argument for the project.</li>
+      <li><strong>Continuous risk &amp; opportunity management.</strong> Track real-options value over time, not just at proposal.</li>
+      <li><strong>Concurrent system &amp; process engineering.</strong> Optimise the build process alongside the product.</li>
+    </ol>
+    <p class="callout">A pure feature-parity comparison ignores value. VBSE asks: "value to <em>whom</em>, in <em>which time horizon</em>, at <em>what risk</em>?"</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">11 / 18</span></div>
+    <span class="label-tag">Real component, real choice</span>
+    <div class="discussion-icon">⇄</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.9em; margin-top: -6px; line-height: 1.1;">For your group project — would you <em>build</em> the AI inference layer, or <em>buy</em> an API?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 minutes), fill in a four-row decision matrix (TCO, time-to-value, control, lock-in) for the two options.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Which weight matters most in <em>your</em> project? Why?</li>
+      <li>Would your answer flip if a vendor offered to pin model behaviour for 3 years?</li>
+      <li>Would your answer flip if internal team size doubled?</li>
+    </ul>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Win conditions —<br>who wins,<br>and at what cost?</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Win-Win negotiation</span></span><span class="right">13 / 18</span></div>
+    <span class="label-tag">Boehm's WinWin model</span>
+    <h1>Stakeholders, win conditions, conflicts.</h1>
+    <table class="compact">
+      <thead><tr><th>Stakeholder</th><th>Win condition</th><th>Conflict with…</th></tr></thead>
+      <tbody>
+        <tr><td>End user</td><td>Frictionless feature</td><td>Security team</td></tr>
+        <tr><td>Engineering</td><td>Maintainable code</td><td>Marketing's launch date</td></tr>
+        <tr><td>Sales</td><td>Demo-able by Q3</td><td>Engineering quality</td></tr>
+        <tr><td>Compliance</td><td>Auditable trail</td><td>End-user simplicity</td></tr>
+        <tr><td>Finance</td><td>Forecastable cost</td><td>Variable AI spend</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">A decision is "WinWin" when every stakeholder achieves at least the minimum they consider acceptable. If a stakeholder cannot win even minimally, the decision is unstable — it will be relitigated.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Real options</span></span><span class="right">14 / 18</span></div>
+    <span class="label-tag">Value of postponing</span>
+    <h1>Optionality has economic value.</h1>
+    <p style="font-size: 0.93em;">Sometimes the right alternative is the one that <em>keeps options open</em>:</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Choose Buy now, with a clean exit plan, so you can later Build if the vendor disappoints.</li>
+      <li>Choose Reuse with abstraction, so you can later swap out the implementation.</li>
+      <li>Choose SaaS for a 6-month trial; if metrics are good, deepen — if not, walk away cheaply.</li>
+    </ul>
+    <p class="callout">Real-option thinking accounts for the value of waiting and learning. The minimum-NPV alternative may not be the best if it forecloses future flexibility.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 13</span></span><span class="right">15 / 18</span></div>
+    <span class="label-tag">Homework 11 — due Monday 15 June</span>
+    <h1>VBSE on your project.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Apply VBSE to your group project: list at least 5 stakeholders and their win conditions. Identify the two largest stakeholder conflicts.</li>
+      <li>Build a 5-option decision matrix (Build/Buy/Reuse/OSS/SaaS) for one major component. Justify your weights.</li>
+      <li>Propose a real-option strategy: which option offers the best optionality value, separate from its NPV?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 12</span></span><span class="right">16 / 18</span></div>
+    <h1>Tomorrow: AI's seismic shift in the cost equation.</h1>
+    <p class="lede">For 40 years the SEE canon has assumed humans write the code. In the next two lectures, we look at what changes — and what doesn't — when AI writes much of it.</p>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">17 / 18</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li>Build / Buy / Reuse / OSS / SaaS are five alternatives — most decisions are <em>blends</em>.</li>
+      <li>A weighted decision matrix makes weights — and disagreements — visible.</li>
+      <li>VBSE puts <strong>stakeholder value</strong> at the centre. A WinWin outcome is the only stable one.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Eleven</span></span><span class="right">18 / 18</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~8 min. Tomorrow opens the AI block.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

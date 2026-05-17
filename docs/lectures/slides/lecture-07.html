@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 7 — Risk &amp; Decision under Uncertainty</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Seven · 9 June 2026</div>
+        <div class="cover-volume">07<span class="small">Lecture Seven</span></div>
+        <h1 class="cover-title">Risk &amp; Decision<br>under <span class="accent">Uncertainty</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">When the inputs are not numbers but distributions — decision trees, expected value, utility, and Monte Carlo.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 07 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">9 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF108</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Simulation</div></div>
+        </div>
+        <div class="footnote">Today: probabilities meet PV. Bring Python or a spreadsheet.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture VII</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 20</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Probability for engineers.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Risk vs uncertainty — terms first</td><td class="num">10</td></tr>
+        <tr><td class="num">II.</td><td>Decision trees &amp; expected monetary value</td><td class="num">25</td></tr>
+        <tr><td class="num">III.</td><td>Utility &amp; risk attitude</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Monte Carlo simulation</td><td class="num">25</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: risk-attitude self-assessment</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Software-specific risks &amp; bias</td><td class="num">15</td></tr>
+        <tr><td></td><td><em>HW7, questions</em></td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Risk vs uncertainty —<br>a vocabulary the textbooks<br>insist on.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Vocabulary</span></span><span class="right">04 / 20</span></div>
+    <span class="label-tag">Knight, 1921</span>
+    <h1>The classical distinction.</h1>
+    <div class="two-col" style="margin-top: 8px;">
+      <div class="card"><h3>Risk</h3><p>Outcomes uncertain, but probabilities <em>known</em>. Roll of a fair die. Software example: a deployment with a known failure rate.</p></div>
+      <div class="card"><h3>Uncertainty (true)</h3><p>Outcomes uncertain AND probabilities <em>unknown</em>. New AI feature adoption. We act as if probabilities exist, but they're really subjective estimates.</p></div>
+    </div>
+    <p class="callout">Most software-economics problems are technically uncertainty masquerading as risk. We assign probabilities anyway — the act of estimation is half the value.</p>
+    <aside class="notes">
+      Even bad probability estimates beat unstated ones. The discipline of
+      writing down a number — and being held to it — forces clarity. ~4 minutes.
+    </aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">Decision trees —<br>think out loud, on paper.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Tree structure</span></span><span class="right">06 / 20</span></div>
+    <span class="label-tag">Decisions, chances, terminals</span>
+    <h1>A decision tree is three node types.</h1>
+    <div class="three-col" style="margin-top: 6px;">
+      <div class="card"><h3>□ Decision node</h3><p>Branches the engineer controls. Pick the branch with the highest expected value.</p></div>
+      <div class="card"><h3>○ Chance node</h3><p>Branches nature controls. Multiply each branch's value by its probability; sum.</p></div>
+      <div class="card"><h3>△ Terminal</h3><p>An end state. Record the payoff (or cost).</p></div>
+    </div>
+    <p style="margin-top: 12px; font-size: 0.95em;">Build the tree left-to-right (in time order). <strong>Roll back</strong> right-to-left, computing expected values at chance nodes and choosing maxima at decision nodes.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Worked example</span></span><span class="right">07 / 20</span></div>
+    <span class="label-tag">Should we ship the AI feature now?</span>
+    <h1>EMV on a real decision.</h1>
+    <p style="font-size: 0.93em;">Two options: <strong>A:</strong> ship now ($60K dev cost). <strong>B:</strong> spend $40K on a 6-week customer-discovery study, then decide.</p>
+    <table class="compact">
+      <thead><tr><th>Branch</th><th class="num" style="text-align:right">P</th><th class="num" style="text-align:right">Outcome NPV</th><th class="num" style="text-align:right">Contribution</th></tr></thead>
+      <tbody>
+        <tr><td>A: ship · high demand</td><td class="num" style="text-align:right">0.4</td><td class="num" style="text-align:right">+$300K</td><td class="num" style="text-align:right">+$120K</td></tr>
+        <tr><td>A: ship · low demand</td><td class="num" style="text-align:right">0.6</td><td class="num" style="text-align:right">−$60K</td><td class="num" style="text-align:right">−$36K</td></tr>
+        <tr><td><strong>EMV(A)</strong></td><td></td><td></td><td class="num" style="text-align:right"><strong>+$84K</strong></td></tr>
+        <tr><td>B: study · then ship if signal</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right">—</td><td class="num" style="text-align:right"><strong>+$108K</strong> *</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">* The study clarifies the probability, so the conditional ship decision is informed. Despite the $40K cost, the expected outcome rises.</p>
+    <p class="callout">The study creates <em>option value</em> — the right to ship only when conditions favour it. Information has measurable economic worth.</p>
+    <aside class="notes">~8 minutes. Walk both paths through rollback.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Utility &amp; risk attitude —<br>not everyone treats<br>a 50/50 the same.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Utility functions</span></span><span class="right">09 / 20</span></div>
+    <span class="label-tag">Beyond expected value</span>
+    <h1>Risk attitude shapes the decision.</h1>
+    <p style="font-size: 0.95em;">EMV treats $1M with certainty as equal to a 50/50 shot at $2M. In practice, decision-makers differ:</p>
+    <table class="compact">
+      <thead><tr><th>Attitude</th><th>Utility shape</th><th>Will accept</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Risk-averse</td><td>Concave (log, square root)</td><td>Smaller, more certain payoffs</td></tr>
+        <tr><td class="label">Risk-neutral</td><td>Linear</td><td>Anything with EMV ≥ 0</td></tr>
+        <tr><td class="label">Risk-seeking</td><td>Convex (exponential)</td><td>Lottery-style large variance bets</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 14px; font-size: 0.95em;">Most software organisations are <strong>moderately risk-averse</strong>: a $100K loss hurts more than a $100K gain helps. Frame your decision tree with that in mind.</p>
+    <p class="callout">When you present a positive-EMV project that has substantial downside, expect resistance — and prepare a hedging argument.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Monte Carlo simulation —<br>let the inputs roll.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>The technique</span></span><span class="right">11 / 20</span></div>
+    <span class="label-tag">Probability distributions in, NPV distribution out</span>
+    <h1>Monte Carlo in 4 steps.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li>Identify the inputs. For each, choose a probability distribution (uniform, normal, triangular, lognormal).</li>
+      <li>Draw N random samples (typically N = 10,000+) from each input distribution.</li>
+      <li>For each sample tuple, compute the NPV with your normal formula.</li>
+      <li>Histogram the resulting N NPVs. Report P10, P50, P90, and the probability of NPV &lt; 0.</li>
+    </ol>
+    <div class="formula" style="margin-top: 10px; font-size: 0.85em;">P(NPV &gt; 0) &nbsp;is the modern, intelligible answer to "should we do this?"</div>
+    <aside class="notes">~6 minutes. Show a 30-line Python snippet if time allows.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Worked output</span></span><span class="right">12 / 20</span></div>
+    <span class="label-tag">A 10,000-trial result</span>
+    <h1>Reading a Monte Carlo result.</h1>
+    <table class="compact">
+      <thead><tr><th>Statistic</th><th class="num" style="text-align:right">Value</th><th>Interpretation</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Mean NPV</td><td class="num" style="text-align:right">+$112K</td><td>Average across 10K worlds.</td></tr>
+        <tr><td class="label">P10 NPV</td><td class="num" style="text-align:right">−$45K</td><td>10% chance of NPV being below this.</td></tr>
+        <tr><td class="label">P90 NPV</td><td class="num" style="text-align:right">+$310K</td><td>10% chance of NPV exceeding this.</td></tr>
+        <tr><td class="label">P(NPV &gt; 0)</td><td class="num" style="text-align:right">76%</td><td>Three-in-four chance of value creation.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">"Mean NPV is $112K with a 24% chance of loss" communicates more than "NPV is $112K." It is also harder to misinterpret.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">13 / 20</span></div>
+    <span class="label-tag">Find your risk attitude</span>
+    <div class="discussion-icon">π</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.95em; margin-top: -6px; line-height: 1.1;">Would you take a 50/50 shot at $1M or a guaranteed $400K?</h2>
+    <p class="lede" style="margin-top: 14px;">Vote first. Then in pairs, discuss: why? What does that reveal about your personal utility curve?</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Now replay: would your answer change if the gamble was a 50/50 at $10M vs $4M guaranteed? Why does the ratio matter so much less?</li>
+      <li>Engineering management often demands risk-averse capital allocation. As an individual contributor, are you more or less risk-tolerant than your manager? Why might that be?</li>
+    </ul>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Software-specific risks —<br>the ones your tree<br>should always have.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Risk catalogue</span></span><span class="right">15 / 20</span></div>
+    <span class="label-tag">Seven categories</span>
+    <h1>A starter taxonomy for software-project risk.</h1>
+    <table class="compact">
+      <thead><tr><th>Category</th><th>Example</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Schedule</td><td>Slip past launch window</td><td>Buffer; scope discipline</td></tr>
+        <tr><td class="label">Scope</td><td>Requirements creep</td><td>Change control; MVP first</td></tr>
+        <tr><td class="label">Technical</td><td>Approach proves infeasible</td><td>Spike / prototype early</td></tr>
+        <tr><td class="label">Personnel</td><td>Key engineer departs</td><td>Knowledge sharing; redundancy</td></tr>
+        <tr><td class="label">Vendor</td><td>SaaS price doubles, vendor pivots</td><td>Multi-vendor; escape clauses</td></tr>
+        <tr><td class="label">Model drift</td><td>LLM behaviour changes mid-contract</td><td>Pinned versions; eval harness</td></tr>
+        <tr><td class="label">Regulatory</td><td>New AI law forces retrofit</td><td>Compliance monitoring; design margin</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">"Model drift" and "regulatory" are the categories most teams underweight in 2026. A model that performs at 92% accuracy today may quietly drift to 86% next quarter.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Estimation bias</span></span><span class="right">16 / 20</span></div>
+    <span class="label-tag">Why our subjective probabilities are usually wrong</span>
+    <h1>Three biases to budget against.</h1>
+    <div class="three-col" style="margin-top: 6px;">
+      <div class="card"><h3>Optimism</h3><p>P10 outcomes routinely come true 25–35% of the time, not 10%. Our pessimistic case is rarely pessimistic enough.</p></div>
+      <div class="card"><h3>Anchoring</h3><p>The first number on the table dominates the rest of the conversation. Estimate independently before sharing.</p></div>
+      <div class="card"><h3>Planning fallacy</h3><p>We systematically underestimate time and effort, even for tasks we've done before.</p></div>
+    </div>
+    <p class="callout">Adjust subjectively for bias. A useful rule of thumb: take your "realistic" estimate, then ask "what would I think if this had to ship in half the time?" Use that as your new pessimistic.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 8</span></span><span class="right">17 / 20</span></div>
+    <h1>Tomorrow: how big <em>is</em> this project, exactly?</h1>
+    <p class="lede">Lectures 8 &amp; 9 turn the right side of our cash-flow models — the costs — into something we can estimate even at proposal stage. Function Points first, COCOMO II second.</p>
+    <p class="callout">Group project briefs are released after Lecture 8. Teams should be forming now.</p>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 9</span></span><span class="right">18 / 20</span></div>
+    <span class="label-tag">Homework 07 — due Thursday 11 June</span>
+    <h1>Add probability to your NPV.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Build a decision tree for a real choice your team is facing (or has faced).</li>
+      <li>Run a 10,000-trial Monte Carlo on the same project. Report mean, P10, P50, P90, P(NPV &gt; 0). Plot the histogram.</li>
+      <li>One paragraph: which uncertainty would you spend $5K of research budget to reduce — and why?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">19 / 20</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li>A decision tree forces you to make assumptions <em>visible</em>. That alone is usually worth the exercise.</li>
+      <li>Monte Carlo turns a single NPV into a distribution. "P(NPV &gt; 0) = 76%" is more honest than a single number.</li>
+      <li>Our subjective probabilities are biased. Build counter-bias into your scenarios; the P10 should hurt.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Seven</span></span><span class="right">20 / 20</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~8 min. Tomorrow: Function Points + group-project brief.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

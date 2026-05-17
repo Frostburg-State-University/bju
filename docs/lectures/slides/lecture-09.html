@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 9 — Cost Estimation II: COCOMO II</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Nine · 11 June 2026</div>
+        <div class="cover-volume">09<span class="small">Lecture Nine</span></div>
+        <h1 class="cover-title">Cost Estimation II —<br><span class="accent">COCOMO II</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">Boehm's empirical model — turn a size estimate into person-months and dollars, with calibration knobs you can defend.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 09 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">11 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF302</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Workshop</div></div>
+        </div>
+        <div class="footnote">Bring your AFP count from yesterday's homework — we convert it to person-months today.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture IX</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 18</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>From AFP to person-months.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>COCOMO 81 → COCOMO II</td><td class="num">10</td></tr>
+        <tr><td class="num">II.</td><td>The COCOMO II equation</td><td class="num">15</td></tr>
+        <tr><td class="num">III.</td><td>Scale factors</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Effort multipliers</td><td class="num">15</td></tr>
+        <tr><td class="num">V.</td><td>Early Design vs Post-Architecture</td><td class="num">10</td></tr>
+        <tr><td class="num">VI.</td><td>Worked example: your group project</td><td class="num">25</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: AI assistance in COCOMO</em></td><td class="num">10</td></tr>
+        <tr><td></td><td><em>HW9, questions</em></td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">COCOMO —<br>twenty years of<br>industry data.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Lineage</span></span><span class="right">04 / 18</span></div>
+    <span class="label-tag">Boehm, 1981 → 2000</span>
+    <h1>From 63 projects to a calibrated model.</h1>
+    <p style="font-size: 0.95em;"><strong>COCOMO 81</strong> (Constructive Cost Model) — Boehm 1981 — fitted an effort-vs-size curve to 63 industrial projects across 3 modes (organic, semi-detached, embedded).</p>
+    <p style="font-size: 0.95em; margin-top: 6px;"><strong>COCOMO II</strong> (2000) — re-calibrated against 161 projects, introduced multiple sub-models (Application Composition, Early Design, Post-Architecture), and modernised the cost drivers for object-oriented and component-based development.</p>
+    <p class="callout">COCOMO II is the de-facto reference model in software-economics literature. Modern variants (Use-Case Points, SLIM, PRICE) exist but typically calibrate similar curves on smaller datasets.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">The equation —<br>a power-law<br>with knobs.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>The equation</span></span><span class="right">06 / 18</span></div>
+    <span class="label-tag">A power-law in size, with multiplicative adjustments</span>
+    <h1>COCOMO II — Post-Architecture form.</h1>
+    <div class="formula" style="font-size: 1.05em;">PM &nbsp;=&nbsp; <em>A</em> &nbsp;×&nbsp; Size<sup><em>E</em></sup> &nbsp;×&nbsp; ∏ EM<sub><em>i</em></sub></div>
+    <p style="font-size: 0.92em; margin-top: 8px;">Where:</p>
+    <ul style="margin-top: 2px; font-size: 0.92em;">
+      <li><strong>PM</strong> — effort in person-months (1 PM ≈ 152 person-hours)</li>
+      <li><strong>A</strong> — calibration constant (default 2.94)</li>
+      <li><strong>Size</strong> — KSLOC (thousands of source lines of code)</li>
+      <li><strong>E</strong> — exponent reflecting <em>economies/diseconomies of scale</em>: E = <em>B</em> + 0.01 × Σ SF</li>
+      <li><strong>B</strong> — base exponent (default 0.91)</li>
+      <li><strong>EM<sub>i</sub></strong> — 17 effort multipliers (each typically 0.7 – 1.4)</li>
+    </ul>
+    <p class="callout">The exponent E typically lands between 1.0 and 1.2 — a slight <em>diseconomy</em> of scale (bigger projects cost disproportionately more).</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Scale factors —<br>five knobs that<br>set the exponent.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>The five</span></span><span class="right">08 / 18</span></div>
+    <span class="label-tag">SF<sub>j</sub> ∈ {Very Low, Low, Nominal, High, Very High, Extra High}</span>
+    <h1>Five scale factors.</h1>
+    <table class="compact">
+      <thead><tr><th>Code</th><th>Factor</th><th>What it captures</th></tr></thead>
+      <tbody>
+        <tr><td class="label">PREC</td><td>Precedentedness</td><td>How much the team has done before something similar</td></tr>
+        <tr><td class="label">FLEX</td><td>Development flexibility</td><td>Freedom to vary specs, processes</td></tr>
+        <tr><td class="label">RESL</td><td>Architecture / risk resolution</td><td>How much architecture work is done up front</td></tr>
+        <tr><td class="label">TEAM</td><td>Team cohesion</td><td>Quality of cross-team collaboration</td></tr>
+        <tr><td class="label">PMAT</td><td>Process maturity</td><td>CMMI level or equivalent</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Higher ratings = lower scale factor values = smaller exponent = LESS diseconomy of scale. A mature team building a precedented system scales gracefully; an unprecedented project with low team cohesion compounds painfully.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Effort multipliers —<br>seventeen<br>multiplicative knobs.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>EM groups</span></span><span class="right">10 / 18</span></div>
+    <span class="label-tag">Seventeen, in four groups</span>
+    <h1>Effort multipliers — the four groups.</h1>
+    <div class="four-col" style="margin-top: 6px;">
+      <div class="card">
+        <h3>Product (5)</h3>
+        <p>RELY · DATA · CPLX · RUSE · DOCU</p>
+      </div>
+      <div class="card">
+        <h3>Platform (3)</h3>
+        <p>TIME · STOR · PVOL</p>
+      </div>
+      <div class="card">
+        <h3>Personnel (6)</h3>
+        <p>ACAP · PCAP · PCON · APEX · PLEX · LTEX</p>
+      </div>
+      <div class="card">
+        <h3>Project (3)</h3>
+        <p>TOOL · SITE · SCED</p>
+      </div>
+    </div>
+    <p style="margin-top: 12px; font-size: 0.92em;">Each EM is rated Very Low → Extra High and translated to a multiplier (≈ 0.71 – 1.43). The product of all 17 EMs forms the second factor in the COCOMO II equation.</p>
+    <p class="callout">The Personnel group has the largest range of impact. Team capability and continuity move the equation more than any other lever.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Two sub-models —<br>match the resolution<br>to the phase.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Early Design vs Post-Architecture</span></span><span class="right">12 / 18</span></div>
+    <span class="label-tag">Different lifecycle phases, different precision</span>
+    <h1>Estimate as well as you can — no better.</h1>
+    <table class="compact">
+      <thead><tr><th>Model</th><th>When</th><th>Inputs</th><th>Precision</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Application Composition</td><td>Pre-spec</td><td>Object points (very rough)</td><td>±50% / 200%</td></tr>
+        <tr><td class="label">Early Design</td><td>Spec exists</td><td>FP / KSLOC + 7 aggregated EMs</td><td>±25% / 50%</td></tr>
+        <tr><td class="label">Post-Architecture</td><td>Architecture exists</td><td>KSLOC + 17 EMs</td><td>±10% / 20%</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">For the group project, use Early Design or Post-Architecture. Don't pretend to precision you can't justify — the rubric rewards defensible assumptions over confident numbers.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Six</div>
+      <div class="divider-number">VI</div>
+      <h2 class="divider-title">A worked example —<br>from your AFP to<br>person-months.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>FP → KSLOC</span></span><span class="right">14 / 18</span></div>
+    <span class="label-tag">Language-specific conversion</span>
+    <h1>Convert AFP to KSLOC.</h1>
+    <p style="font-size: 0.92em;">Multiply AFP by a language conversion factor (lines per FP):</p>
+    <table class="compact">
+      <thead><tr><th>Language</th><th class="num" style="text-align:right">LOC / FP</th></tr></thead>
+      <tbody>
+        <tr><td>C</td><td class="num" style="text-align:right">128</td></tr>
+        <tr><td>Java</td><td class="num" style="text-align:right">53</td></tr>
+        <tr><td>Python</td><td class="num" style="text-align:right">42</td></tr>
+        <tr><td>TypeScript / React</td><td class="num" style="text-align:right">48</td></tr>
+        <tr><td>SQL</td><td class="num" style="text-align:right">21</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 12px; font-size: 0.93em;">A 53-AFP project in Python: 53 × 42 = 2,226 LOC ≈ <strong>2.2 KSLOC</strong>.</p>
+    <aside class="notes">~4 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>Effort calculation</span></span><span class="right">15 / 18</span></div>
+    <span class="label-tag">Three scenarios on the same project</span>
+    <h1>PM under optimistic, nominal, and pessimistic ratings.</h1>
+    <table class="compact">
+      <thead><tr><th>Scenario</th><th class="num" style="text-align:right">E</th><th class="num" style="text-align:right">∏EM</th><th class="num" style="text-align:right">PM</th><th class="num" style="text-align:right">$ @ $18K/PM</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Optimistic</td><td class="num" style="text-align:right">1.03</td><td class="num" style="text-align:right">0.70</td><td class="num" style="text-align:right">4.7</td><td class="num" style="text-align:right">$85K</td></tr>
+        <tr><td class="label">Nominal</td><td class="num" style="text-align:right">1.10</td><td class="num" style="text-align:right">1.00</td><td class="num" style="text-align:right">6.9</td><td class="num" style="text-align:right">$125K</td></tr>
+        <tr><td class="label">Pessimistic</td><td class="num" style="text-align:right">1.17</td><td class="num" style="text-align:right">1.40</td><td class="num" style="text-align:right">10.3</td><td class="num" style="text-align:right">$185K</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">The pessimistic estimate is more than 2× the optimistic. Reporting only the nominal number hides a real decision — funding a project at the optimistic number guarantees a budget overrun if the pessimistic case materialises.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">16 / 18</span></div>
+    <span class="label-tag">A frontier question</span>
+    <div class="discussion-icon">∞</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.9em; margin-top: -6px; line-height: 1.1;">How would <em>you</em> adjust COCOMO II to account for AI-assisted development?</h2>
+    <p class="lede" style="margin-top: 14px;">No agreed answer exists in 2026. In pairs (4 minutes), propose a calibration.</p>
+    <ul style="margin-top: 6px; font-size: 0.92em;">
+      <li>Which EM would you alter? (Hint: TOOL, APEX, PLEX are candidates.)</li>
+      <li>Would you adjust the constant A?</li>
+      <li>Empirical claim to weigh: junior developers +10–30% productivity; senior developers <strong>−19%</strong> due to verification overhead. Where does this hit the equation?</li>
+    </ul>
+    <aside class="notes">
+      No correct answer. The exercise is to surface the model's seams.
+      Foreshadow Lecture 12 (AI productivity). ~10 minutes.
+    </aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 11</span></span><span class="right">17 / 18</span></div>
+    <span class="label-tag">Homework 09 — due Saturday 13 June</span>
+    <h1>Apply COCOMO II to your project.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Use your AFP from HW8 (or recompute). Convert to KSLOC for your project's language.</li>
+      <li>Apply COCOMO II Post-Architecture. List your 5 scale factor ratings and 17 EM ratings with one-sentence justifications each.</li>
+      <li>Report PM under nominal, optimistic, and pessimistic scenarios. Convert to dollars at a defensible PM rate.</li>
+      <li>Compare with your FP-only estimate from HW8. Which is more credible — and why?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Nine</span></span><span class="right">18 / 18</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~6 min. Tomorrow: quality &amp; maintenance economics.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

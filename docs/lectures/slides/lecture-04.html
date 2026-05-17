@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 4 — Cash Flow Analysis &amp; Equivalence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+
+  <style>
+    /* ---------- Lecture-04 additions on top of _shared.css ---------- */
+
+    /* Cash flow diagram (SVG) wrapper */
+    .cfd-wrap {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule-soft);
+      border-radius: 2px;
+      padding: 14px 22px 6px;
+      margin: 8px 0 6px;
+    }
+    .cfd-caption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-mute);
+      margin-bottom: 4px;
+    }
+    .cfd-wrap svg { display: block; width: 100%; height: auto; }
+    .cfd-wrap text {
+      font-family: 'JetBrains Mono', monospace;
+      fill: var(--ink-soft);
+    }
+    .cfd-wrap .cfd-amount.in  { fill: var(--green-dk); font-weight: 600; }
+    .cfd-wrap .cfd-amount.out { fill: var(--crimson);  font-weight: 600; }
+    .cfd-wrap .cfd-axis        { stroke: var(--ink);      stroke-width: 1.4; }
+    .cfd-wrap .cfd-tick        { stroke: var(--ink-mute); stroke-width: 1; }
+    .cfd-wrap .cfd-arrow-in    { stroke: var(--green-dk); stroke-width: 2; }
+    .cfd-wrap .cfd-arrow-out   { stroke: var(--crimson);  stroke-width: 2; }
+
+    /* Formula block — labelled, MathJax-friendly */
+    .formula-block {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule-soft);
+      border-left: 3px solid var(--indigo);
+      padding: 14px 22px 12px;
+      margin: 12px 0;
+      border-radius: 2px;
+    }
+    .formula-block .formula-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--indigo);
+      margin-bottom: 4px;
+    }
+    .formula-block .formula-body {
+      font-size: 1.0em; color: var(--indigo-dk);
+      text-align: center; padding: 6px 0 2px;
+    }
+    .formula-block .formula-note {
+      font-family: 'Crimson Pro', serif; font-style: italic;
+      font-size: 0.82em; color: var(--ink-mute);
+      margin-top: 6px; text-align: center;
+    }
+
+    /* Tighten h1 for slide-dense content */
+    .reveal h1 { font-size: 2.0em; }
+  </style>
+</head>
+
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- =====================  COVER  ===================== -->
+    <section class="cover" data-background="#FAF8F4">
+      <div class="cover-grid">
+        <div class="cover-left">
+          <div class="cover-eyebrow">Lecture Four · 6 June 2026</div>
+          <div class="cover-volume">04<span class="small">Lecture Four</span></div>
+          <h1 class="cover-title">Cash Flow<br>&amp; <span class="accent">Equivalence</span></h1>
+          <div class="cover-rule"></div>
+          <p class="cover-sub">Drawing money in time — and proving when two very different streams are, in fact, <em>worth the same</em>.</p>
+        </div>
+        <div class="cover-right">
+          <div class="cover-meta-row">
+            <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+            <div><div class="label">Session</div><div class="value">No. 04 of 16</div></div>
+            <div><div class="label">Date</div><div class="value">6 June 2026</div></div>
+            <div><div class="label">Room</div><div class="value">SY109</div></div>
+            <div><div class="label">Time</div><div class="value">16:20 – 18:10</div></div>
+            <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          </div>
+          <div class="footnote">Builds on Lecture 3 (PV / FV) · sets up NPV / IRR in Lecture 5.</div>
+        </div>
+      </div>
+      <aside class="notes">
+        Welcome the class back. Two-sentence framing:
+        "Lecture 3 gave us PV and FV of a single sum. Today we generalise to
+        STREAMS — sequences of cash flows that any real software project produces."
+        Tell them today is the heaviest formula day of the course. Promise that
+        once they internalise the four building blocks (single, uniform,
+        arithmetic, geometric), every later lecture is just composition.
+        Set the expectation: we will do four worked examples and one decomposition
+        exercise. Pens out, calculators ready. Bring back your TCO worksheet
+        from Lecture 2 — Sunday's homework will discount it.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  AGENDA  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>Lecture IV</span><span class="dot"></span><span>Agenda</span></span>
+        <span class="right">02 / 31</span>
+      </div>
+      <span class="label-tag">Today's Plan</span>
+      <h1 style="font-size: 1.9em; margin-bottom: 0.35em;">Six movements — four shapes — one principle.</h1>
+      <p class="lede" style="font-size: 1em; margin-bottom: 0.9em;">By the end of today you should be able to <em>draw</em> any project's cash flow, <em>name</em> its pattern, <em>price</em> it, and prove its <em>equivalence</em> to any other.</p>
+
+      <table class="compact">
+        <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+        <tbody>
+          <tr><td class="num">I.</td><td>Cash flow diagrams — a visual language for money in time</td><td class="num">15</td></tr>
+          <tr><td class="num">II.</td><td>The uniform series — annuities, mortgages, SaaS subscriptions</td><td class="num">20</td></tr>
+          <tr><td class="num">III.</td><td>Arithmetic gradient — linear growth and decline</td><td class="num">15</td></tr>
+          <tr><td class="num">IV.</td><td>Geometric gradient — exponential growth, inflation, SaaS ramps</td><td class="num">15</td></tr>
+          <tr><td class="num">V.</td><td>Equivalence — when two different streams are the same thing</td><td class="num">15</td></tr>
+          <tr><td class="num">VI.</td><td>Composition — decomposing real software-project cash flows</td><td class="num">20</td></tr>
+          <tr><td></td><td><em>Discussion, homework, questions</em></td><td class="num">10</td></tr>
+        </tbody>
+      </table>
+      <aside class="notes">
+        Walk the agenda in 90 seconds, not five minutes. Two emphases:
+        (1) Parts I–IV are the four building blocks. Part V is the principle that
+            ties them together. Part VI is the synthesis.
+        (2) If the room only remembers ONE thing from today, it should be that
+            every cash flow can be decomposed into the four shapes — and once
+            decomposed, can be priced with the factors we learn today.
+        Tell them: the in-class exercise lives in Part VI; bring pencils.
+        ~2 minutes total.
+      </aside>
+    </section>
+
+    <!-- =====================  § I DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part One</span><span class="dot"></span><span>Cash flow diagrams</span></span>
+        <span class="right">03</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — One</div>
+        <div class="divider-number">I</div>
+        <h2 class="divider-title">Before you compute a cash flow,<br>you should be able to <em>draw</em> it.</h2>
+        <p class="divider-quote">"The cash flow diagram is to the financial engineer what the free-body diagram is to the mechanical one."<br>— after Park, <em>Contemporary Engineering Economics</em></p>
+      </div>
+      <div class="slide-foot"><span class="course">§ I · Diagrams</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        Set the analogy hard. In mechanics, no engineer would solve a statics
+        problem without first drawing the free-body diagram. In financial
+        engineering, the cash-flow diagram serves the same role: it forces you
+        to make every assumption visible — sign, timing, magnitude — before
+        you ever reach for a formula.
+        ~1 minute, then move on.
+      </aside>
+    </section>
+
+    <!-- =====================  CFD: DEFINITION  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>What &amp; why</span></span>
+        <span class="right">04</span>
+      </div>
+      <span class="label-tag">Working definition</span>
+      <h1>A cash flow diagram is a <em>picture</em> of money in time.</h1>
+
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <p style="font-size: 0.92em;">A <strong>cash flow diagram</strong> (CFD) plots every receipt and every payment of a project on a single time axis, distinguishing each by <em>sign</em>, <em>magnitude</em>, and <em>timing</em>.</p>
+          <p style="font-size: 0.92em;">It is the bridge between a <em>narrative</em> ("we'll pay $100K up front, then receive $40K a year for four years") and a <em>computation</em> (PV, FV, NPV, IRR).</p>
+          <div class="callout" style="font-size: 0.88em;">A CFD does not solve the problem. It makes the problem <em>solvable</em> by forcing every ambiguity onto the page.</div>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 8px;">It records, for each cash flow:</h3>
+          <ul style="font-size: 0.9em;">
+            <li><strong>When</strong> it occurs — end of which period.</li>
+            <li><strong>How much</strong> — in absolute terms.</li>
+            <li><strong>Direction</strong> — into or out of the project.</li>
+            <li><strong>Whose perspective</strong> — buyer, seller, lender, borrower.</li>
+          </ul>
+          <p class="footnote">Change perspective, and every arrow flips.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ I · Diagrams</span><span>04 / 31</span></div>
+      <aside class="notes">
+        Stress the last bullet — perspective. The same contract is a stream of
+        outflows to the customer and inflows to the vendor. Many student
+        mistakes come from drawing one CFD then quietly using it from the
+        opposite perspective halfway through the problem.
+        Anecdote: a student last summer computed the IRR of a SaaS contract
+        from the vendor's perspective, then concluded the *customer* should
+        sign it because the IRR was high. That confusion lives in the CFD;
+        labelling perspective explicitly is the prophylactic.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  CFD: CONVENTIONS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Conventions</span></span>
+        <span class="right">05</span>
+      </div>
+      <span class="label-tag">Four conventions to memorise</span>
+      <h1>The grammar of the diagram.</h1>
+
+      <table class="compact" style="margin-top: 14px;">
+        <thead><tr><th style="width:18%">Convention</th><th>Meaning</th><th style="width:34%">Why it matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="label">Horizontal axis</td>
+            <td>Time, in <em>discrete</em> periods 0, 1, 2, &hellip; , <em>n</em>. Period 0 is "now."</td>
+            <td>Forces you to choose a period (month vs. year); all rates must match it.</td>
+          </tr>
+          <tr>
+            <td class="label">Arrows up</td>
+            <td>Cash <em>into</em> the decision-maker (revenue, savings, salvage).</td>
+            <td>Visual sign convention — green / positive.</td>
+          </tr>
+          <tr>
+            <td class="label">Arrows down</td>
+            <td>Cash <em>out</em> (cost, payment, investment).</td>
+            <td>Visual sign convention — red / negative.</td>
+          </tr>
+          <tr>
+            <td class="label">End-of-period rule</td>
+            <td>Unless stated otherwise, every cash flow occurs at the <em>end</em> of its period.</td>
+            <td>An "annual" cash flow at year 1 means month 12, not month 0.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">Continuous and beginning-of-period conventions exist (annuity-due, continuous compounding) — we will name them when we need them.</p>
+      <div class="slide-foot"><span class="course">§ I · Diagrams</span><span>05 / 31</span></div>
+      <aside class="notes">
+        Hammer the end-of-period rule — it is the single most violated
+        convention in homework. If a textbook says "annual maintenance of $5K
+        starting in year 1," that money lands at t=1 (end of year 1), not at
+        t=0. Most P/A, F/A formulas assume this; using a different timing
+        without adjusting the formula gives wrong answers by a factor of (1+i).
+        Tell them: when in doubt, label the diagram timing explicitly and
+        check it matches the factor's assumption.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  CFD: WORKED EXAMPLE — A REAL DIAGRAM  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Reading a diagram</span></span>
+        <span class="right">06</span>
+      </div>
+      <span class="label-tag">A first picture</span>
+      <h1>A small software project, drawn in full.</h1>
+      <p class="lede" style="font-size: 0.98em;">$100K invested up-front; $40K of net cash flow returned each year for four years. From the investor's perspective.</p>
+
+      <div class="cfd-wrap">
+        <div class="cfd-caption">Cash flow diagram · investor's perspective · annual periods</div>
+        <svg viewBox="0 0 1200 280" xmlns="http://www.w3.org/2000/svg" aria-label="Cash flow diagram of -100 at t=0, +40 at t=1 to t=4">
+          <defs>
+            <marker id="arrInL4" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/>
+            </marker>
+            <marker id="arrOutL4" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#B73239"/>
+            </marker>
+          </defs>
+          <line class="cfd-axis" x1="80" y1="160" x2="1140" y2="160"/>
+          <polygon points="1140,160 1126,153 1126,167" fill="#1A1A2E"/>
+          <text x="1148" y="164" font-size="13">time</text>
+          <g font-size="13">
+            <line class="cfd-tick" x1="180" y1="155" x2="180" y2="165"/><text x="180" y="186" text-anchor="middle">0</text>
+            <line class="cfd-tick" x1="360" y1="155" x2="360" y2="165"/><text x="360" y="186" text-anchor="middle">1</text>
+            <line class="cfd-tick" x1="540" y1="155" x2="540" y2="165"/><text x="540" y="186" text-anchor="middle">2</text>
+            <line class="cfd-tick" x1="720" y1="155" x2="720" y2="165"/><text x="720" y="186" text-anchor="middle">3</text>
+            <line class="cfd-tick" x1="900" y1="155" x2="900" y2="165"/><text x="900" y="186" text-anchor="middle">4 (yr)</text>
+          </g>
+          <line class="cfd-arrow-out" x1="180" y1="60" x2="180" y2="156" marker-end="url(#arrOutL4)"/>
+          <text class="cfd-amount out" x="180" y="48" text-anchor="middle" font-size="18">$100K</text>
+          <g>
+            <line class="cfd-arrow-in" x1="360" y1="160" x2="360" y2="104" marker-end="url(#arrInL4)"/>
+            <text class="cfd-amount in" x="360" y="92" text-anchor="middle" font-size="16">$40K</text>
+            <line class="cfd-arrow-in" x1="540" y1="160" x2="540" y2="104" marker-end="url(#arrInL4)"/>
+            <text class="cfd-amount in" x="540" y="92" text-anchor="middle" font-size="16">$40K</text>
+            <line class="cfd-arrow-in" x1="720" y1="160" x2="720" y2="104" marker-end="url(#arrInL4)"/>
+            <text class="cfd-amount in" x="720" y="92" text-anchor="middle" font-size="16">$40K</text>
+            <line class="cfd-arrow-in" x1="900" y1="160" x2="900" y2="104" marker-end="url(#arrInL4)"/>
+            <text class="cfd-amount in" x="900" y="92" text-anchor="middle" font-size="16">$40K</text>
+          </g>
+          <g font-size="12">
+            <text x="990" y="240" fill="#2E7D32">&#x2191; cash IN</text>
+            <text x="1080" y="240" fill="#B73239">&#x2193; cash OUT</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="two-col" style="margin-top: 8px; gap: 36px;">
+        <div>
+          <p style="font-size: 0.84em; margin: 0;"><strong>Naive total:</strong> &nbsp;&minus;100 + 4&middot;40 = +$60K &mdash; <em>looks like a win</em>.</p>
+        </div>
+        <div>
+          <p style="font-size: 0.84em; margin: 0;"><strong>At i = 10%:</strong> &nbsp;PV of inflows = $126.79K; PV of outflow = $100K; <em>NPV &asymp; +$26.79K</em>.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ I · Diagrams</span><span>06 / 31</span></div>
+      <aside class="notes">
+        Walk the diagram element by element. Point to: (1) the time axis,
+        (2) the single down-arrow at t=0 for the $100K investment, (3) the four
+        equal up-arrows at t=1..4 for the $40K returns. Stress the end-of-period
+        convention — those $40K arrows are at the END of each year.
+        Show the gap between the "naive total" (+$60K) and the proper NPV
+        (~$26.79K) — we will compute the latter formally in Lecture 5. Right
+        now the point is just that the diagram makes the SHAPE visible:
+        one down, four ups, equal magnitude. That shape has a name — it's a
+        uniform series. Foreshadow Part II.
+        ~4 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  CFD: PITFALLS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Common pitfalls</span></span>
+        <span class="right">07</span>
+      </div>
+      <span class="label-tag">What goes wrong</span>
+      <h1>Five mistakes that quietly invalidate a CFD.</h1>
+
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <ol style="font-size: 0.88em;">
+            <li><strong>Mixing perspectives</strong> mid-problem — half the arrows are the customer's, half the vendor's.</li>
+            <li><strong>Mixing periods</strong> — monthly cash flow on a yearly rate. The factor will silently lie.</li>
+            <li><strong>Including sunk costs</strong> — past payments belong in history, not in the diagram.</li>
+          </ol>
+        </div>
+        <div>
+          <ol start="4" style="font-size: 0.88em;">
+            <li><strong>Ignoring opportunity cost</strong> — using your own time "for free" because no cash changes hands.</li>
+            <li><strong>Mis-timing the first cash flow</strong> — an annuity-due at t = 0 looks the same on paper as an ordinary annuity at t = 1, but they differ by a factor of (1+i).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 14px;">When in doubt: write the perspective and the period at the top of the diagram. Two extra words save a wrong answer.</div>
+      <div class="slide-foot"><span class="course">§ I · Diagrams</span><span>07 / 31</span></div>
+      <aside class="notes">
+        Quick check-in: ask the class which of these five they have personally
+        seen in a project. Sunk costs (#3) almost always gets the most hands —
+        "we have already spent $200K, so we should finish" is the canonical
+        sunk-cost fallacy. Remind them that the CFD is a *forward-looking*
+        tool; the past goes in the post-mortem, not in the diagram.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  § II DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Two</span><span class="dot"></span><span>Uniform series</span></span>
+        <span class="right">08</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Two</div>
+        <div class="divider-number">II</div>
+        <h2 class="divider-title">The first shape:<br>the same number,<br>every period.</h2>
+        <p class="divider-quote">Mortgages, leases, salaries, SaaS subscriptions — the world is full of uniform series.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ II · Uniform series</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        Brief transition. The uniform series is the workhorse of personal
+        finance and of operating contracts. If the class only learns ONE
+        family of factors today, this is the family.
+        ~30 seconds.
+      </aside>
+    </section>
+
+    <!-- =====================  UNIFORM SERIES: FOUR FACTORS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Four factors</span></span>
+        <span class="right">09</span>
+      </div>
+      <span class="label-tag">A is the constant cash flow at each period 1 &hellip; n</span>
+      <h1>Four directions, four factors.</h1>
+
+      <table style="margin-top: 10px;">
+        <thead><tr><th style="width:20%">Factor</th><th>Reads as</th><th>Formula</th><th style="width:24%">Used to</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="label">P / A</td>
+            <td>Present value <em>of</em> a uniform series.</td>
+            <td>\( P = A \cdot \dfrac{(1+i)^n - 1}{i\,(1+i)^n} \)</td>
+            <td>Price a stream of equal future payments today.</td>
+          </tr>
+          <tr>
+            <td class="label">F / A</td>
+            <td>Future value <em>of</em> a uniform series.</td>
+            <td>\( F = A \cdot \dfrac{(1+i)^n - 1}{i} \)</td>
+            <td>Project a savings plan or sinking fund.</td>
+          </tr>
+          <tr>
+            <td class="label">A / P</td>
+            <td>Annual equivalent <em>of</em> a present sum.</td>
+            <td>\( A = P \cdot \dfrac{i\,(1+i)^n}{(1+i)^n - 1} \)</td>
+            <td>Convert a loan into level payments.</td>
+          </tr>
+          <tr>
+            <td class="label">A / F</td>
+            <td>Annual equivalent <em>of</em> a future sum.</td>
+            <td>\( A = F \cdot \dfrac{i}{(1+i)^n - 1} \)</td>
+            <td>Set aside equal amounts to hit a target.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">P/A and A/P are reciprocals; F/A and A/F are reciprocals. Memorise one of each pair.</p>
+      <div class="slide-foot"><span class="course">§ II · Uniform series</span><span>09 / 31</span></div>
+      <aside class="notes">
+        Read the table top-to-bottom. For each factor, give a concrete
+        instance students recognise:
+          P/A — pricing a 30-year mortgage to its lump sum today.
+          F/A — projecting a 401(k) at retirement from monthly contributions.
+          A/P — your monthly mortgage payment, given the principal.
+          A/F — saving for a child's college tuition due in 18 years.
+        Stress the reciprocal pairs. In an exam, knowing one of each pair
+        lets you derive the other; no need to memorise four formulas.
+        ~5 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  UNIFORM SERIES: DERIVATION  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Where it comes from</span></span>
+        <span class="right">10</span>
+      </div>
+      <span class="label-tag">A 60-second derivation</span>
+      <h1>P/A is just a geometric series<br>in a smart disguise.</h1>
+
+      <div class="two-col" style="margin-top: 14px; grid-template-columns: 1.1fr 1fr;">
+        <div>
+          <p style="font-size: 0.92em;">Discount each of the <em>n</em> equal payments of <em>A</em> back to today:</p>
+
+          <div class="formula-block">
+            <div class="formula-label">Step 1 — sum of discounted payments</div>
+            <div class="formula-body">\( P = \displaystyle\sum_{t=1}^{n} \dfrac{A}{(1+i)^t} \)</div>
+          </div>
+
+          <div class="formula-block">
+            <div class="formula-label">Step 2 — factor and sum the geometric series</div>
+            <div class="formula-body">\( P = A \cdot \dfrac{1 - (1+i)^{-n}}{i} = A \cdot \dfrac{(1+i)^n - 1}{i\,(1+i)^n} \)</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 8px;">Why this matters</h3>
+          <ul style="font-size: 0.9em;">
+            <li>The formula is not arbitrary — it's the closed form of <em>n</em> single-sum PVs.</li>
+            <li>As <em>n &rarr; &infin;</em>, the factor collapses to <em>1/i</em> — the price of a perpetuity.</li>
+            <li>As <em>i &rarr; 0</em>, the factor collapses to <em>n</em> — undiscounted total.</li>
+          </ul>
+          <p class="footnote">Both limits are useful sanity checks on any spreadsheet answer.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ II · Uniform series</span><span>10 / 31</span></div>
+      <aside class="notes">
+        Don't dwell on the algebra — show it, name it, move on. The pedagogical
+        goal is to *demystify* the factor: it isn't a black box, it's a
+        compressed sum of single-sum PVs from Lecture 3.
+        Two limits are gold:
+          • i &rarr; 0: factor &rarr; n. A perfectly flat world; the stream is
+            just n payments of A.
+          • n &rarr; &infin;: factor &rarr; 1/i. A perpetuity. Worth knowing —
+            the cost of a $100/year subscription forever at 5% is $2,000.
+        These limits are exam-favourite sanity checks.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  UNIFORM SERIES: WORKED EX — P/A  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Worked example · P/A</span></span>
+        <span class="right">11</span>
+      </div>
+      <span class="label-tag">Pricing a stream — P/A</span>
+      <h1>What is a $1,500/month rental promise worth today?</h1>
+
+      <div class="two-col" style="margin-top: 12px; grid-template-columns: 0.95fr 1.05fr;">
+        <div>
+          <p style="font-size: 0.9em;">A landlord receives <strong>$1,500</strong> at the end of each month for the next <strong>five years</strong> (60 months). The opportunity cost of capital is <strong>9%</strong> per year, compounded monthly &mdash; so <em>i = 0.75%</em> per month.</p>
+
+          <div class="formula-block">
+            <div class="formula-label">Apply P/A</div>
+            <div class="formula-body">\( P = 1500 \cdot \dfrac{(1.0075)^{60} - 1}{0.0075 \cdot (1.0075)^{60}} \)</div>
+            <div class="formula-body" style="margin-top: 8px;">\( P \approx 1500 \cdot 48.173 \approx \$72{,}260 \)</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 6px;">What the answer tells you</h3>
+          <ul style="font-size: 0.88em;">
+            <li>The undiscounted total is $90,000 (60 &times; $1,500) &mdash; the time-value gap is <em>$17.7K</em>, about 20%.</li>
+            <li>If a buyer offers $70K cash today to take over the lease, the landlord should refuse &mdash; the stream is worth more.</li>
+            <li>At <em>i = 0</em> (no time-value), the same stream is worth $90K; the gap is entirely the cost of waiting.</li>
+          </ul>
+          <p class="footnote">Always check that <em>i</em> and the period of <em>A</em> are in the same unit. Mixing kills the answer.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ II · Uniform series</span><span>11 / 31</span></div>
+      <aside class="notes">
+        Walk the numbers slowly. The key teaching move: emphasise the unit
+        match. The rent is monthly; we converted the annual 9% to a monthly
+        0.75% before applying the factor. Many wrong answers come from
+        plugging an annual i into a formula with monthly A.
+        Anchor the result: $72K today is the SAME as $1.5K/month for 60
+        months, given 9%/yr. Both numbers represent the same wealth.
+        ~5 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  UNIFORM SERIES: WORKED EX — A/P  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Worked example · A/P</span></span>
+        <span class="right">12</span>
+      </div>
+      <span class="label-tag">Sizing a payment — A/P</span>
+      <h1>Lump-sum server vs. monthly cloud bill.</h1>
+      <p class="lede" style="font-size: 0.98em;">A team can buy a server outright for <strong>$60,000</strong>, or pay a hyperscaler monthly for the same compute. At <em>9%/yr</em> over a 3-year life, what monthly bill would make the two equivalent?</p>
+
+      <div class="two-col" style="margin-top: 8px;">
+        <div>
+          <div class="formula-block">
+            <div class="formula-label">A/P at i = 0.75% per month, n = 36</div>
+            <div class="formula-body">\( A = 60{,}000 \cdot \dfrac{0.0075 \cdot (1.0075)^{36}}{(1.0075)^{36} - 1} \)</div>
+            <div class="formula-body" style="margin-top: 8px;">\( A \approx 60{,}000 \cdot 0.03180 \approx \$1{,}908 \,/\, \text{month} \)</div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h3>How to read the result</h3>
+            <p>Any cloud bill <em>below</em> $1,908/month makes leasing cheaper than owning, ignoring everything else (depreciation, maintenance, salvage).</p>
+            <p style="margin-top: 6px;">A real comparison would add: power, ops, scaling head-room, optionality &mdash; we will layer those in Lecture 11 (Build / Buy / Reuse).</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ II · Uniform series</span><span>12 / 31</span></div>
+      <aside class="notes">
+        Connect this to Lecture 1's build-vs-buy teaser and to Lecture 11.
+        Right now we're just sizing the *equivalent* monthly payment. That's
+        only the first input into the full build-vs-buy decision.
+        Optional extension if time permits: ask the class to compute the
+        equivalent annual amount (use i=9% directly, n=3): A &asymp; $23,700/yr.
+        Same wealth, different units.
+        ~4 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  § III DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Three</span><span class="dot"></span><span>Arithmetic gradient</span></span>
+        <span class="right">13</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Three</div>
+        <div class="divider-number">III</div>
+        <h2 class="divider-title">When the same number<br>becomes the same <em>increment</em>.</h2>
+        <p class="divider-quote">Maintenance costs that creep up by $5K every year are the canonical arithmetic gradient.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ III · Arithmetic gradient</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        Brief transition. The world rarely gives you perfectly flat streams.
+        The next two parts cover the two ways streams TILT — linearly
+        (arithmetic) or proportionally (geometric).
+        ~30 seconds.
+      </aside>
+    </section>
+
+    <!-- =====================  ARITH GRADIENT: THE SHAPE (SVG)  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ III</span><span class="dot"></span><span>The shape</span></span>
+        <span class="right">14</span>
+      </div>
+      <span class="label-tag">A constant additive step</span>
+      <h1>An arithmetic gradient adds G every period.</h1>
+
+      <div class="cfd-wrap">
+        <div class="cfd-caption">A pure arithmetic gradient · base 0 · step G</div>
+        <svg viewBox="0 0 1200 240" xmlns="http://www.w3.org/2000/svg" aria-label="Pure arithmetic gradient: 0, G, 2G, 3G, 4G, 5G">
+          <defs>
+            <marker id="arrInL4G" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/>
+            </marker>
+          </defs>
+          <line class="cfd-axis" x1="80" y1="180" x2="1140" y2="180"/>
+          <polygon points="1140,180 1126,173 1126,187" fill="#1A1A2E"/>
+          <text x="1148" y="184" font-size="13">time</text>
+          <g font-size="13">
+            <line class="cfd-tick" x1="180" y1="175" x2="180" y2="185"/><text x="180" y="206" text-anchor="middle">1</text>
+            <line class="cfd-tick" x1="340" y1="175" x2="340" y2="185"/><text x="340" y="206" text-anchor="middle">2</text>
+            <line class="cfd-tick" x1="500" y1="175" x2="500" y2="185"/><text x="500" y="206" text-anchor="middle">3</text>
+            <line class="cfd-tick" x1="660" y1="175" x2="660" y2="185"/><text x="660" y="206" text-anchor="middle">4</text>
+            <line class="cfd-tick" x1="820" y1="175" x2="820" y2="185"/><text x="820" y="206" text-anchor="middle">5</text>
+            <line class="cfd-tick" x1="980" y1="175" x2="980" y2="185"/><text x="980" y="206" text-anchor="middle">6 (yr)</text>
+          </g>
+          <text class="cfd-amount in" x="180" y="166" text-anchor="middle" font-size="14">0</text>
+          <line class="cfd-arrow-in" x1="340" y1="180" x2="340" y2="158" marker-end="url(#arrInL4G)"/>
+          <text class="cfd-amount in" x="340" y="148" text-anchor="middle" font-size="14">G</text>
+          <line class="cfd-arrow-in" x1="500" y1="180" x2="500" y2="136" marker-end="url(#arrInL4G)"/>
+          <text class="cfd-amount in" x="500" y="126" text-anchor="middle" font-size="14">2G</text>
+          <line class="cfd-arrow-in" x1="660" y1="180" x2="660" y2="114" marker-end="url(#arrInL4G)"/>
+          <text class="cfd-amount in" x="660" y="104" text-anchor="middle" font-size="14">3G</text>
+          <line class="cfd-arrow-in" x1="820" y1="180" x2="820" y2="92" marker-end="url(#arrInL4G)"/>
+          <text class="cfd-amount in" x="820" y="82" text-anchor="middle" font-size="14">4G</text>
+          <line class="cfd-arrow-in" x1="980" y1="180" x2="980" y2="70" marker-end="url(#arrInL4G)"/>
+          <text class="cfd-amount in" x="980" y="60" text-anchor="middle" font-size="14">5G</text>
+        </svg>
+      </div>
+
+      <p style="font-size: 0.88em; margin-top: 10px;">A <strong>pure arithmetic gradient</strong> starts at <em>zero</em> at period 1, grows by a constant <em>G</em> each period, and is rarely a stream you actually receive in isolation &mdash; almost always you see it added to a <em>uniform series base</em> <em>A</em><sub>1</sub>.</p>
+      <div class="slide-foot"><span class="course">§ III · Arithmetic gradient</span><span>14 / 31</span></div>
+      <aside class="notes">
+        Two teaching moves:
+        (1) The pure gradient *starts at zero* at t=1, not at G. This trips
+            everyone up — including me — at first. The first cash flow is at
+            t=2 with value G. The factor P/G is built assuming this timing.
+        (2) Real streams are usually a uniform A *plus* a gradient G. We will
+            decompose one in Part VI.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  ARITH GRADIENT: FACTORS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ III</span><span class="dot"></span><span>P/G and A/G</span></span>
+        <span class="right">15</span>
+      </div>
+      <span class="label-tag">Two factors, two uses</span>
+      <h1>Price the tilt &mdash; or convert it to an equivalent uniform.</h1>
+
+      <div class="formula-block">
+        <div class="formula-label">P / G &mdash; present value of a pure arithmetic gradient</div>
+        <div class="formula-body">\( P_G = G \cdot \dfrac{(1+i)^n - i\,n - 1}{i^{2}\,(1+i)^n} \)</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula-label">A / G &mdash; equivalent uniform-series amount of a gradient</div>
+        <div class="formula-body">\( A_G = G \cdot \left[\,\dfrac{1}{i} - \dfrac{n}{(1+i)^n - 1}\,\right] \)</div>
+        <div class="formula-note">"A flat series of A<sub>G</sub> per period is worth the same as a gradient stepping by G."</div>
+      </div>
+
+      <p style="font-size: 0.88em; margin-top: 10px;">For a stream that <em>starts</em> at <em>A</em><sub>1</sub> at period 1 and grows by <em>G</em> per period, the PV is the <em>sum of two pieces</em>: a uniform series of <em>A</em><sub>1</sub> (use P/A) plus a pure gradient of <em>G</em> (use P/G).</p>
+      <div class="slide-foot"><span class="course">§ III · Arithmetic gradient</span><span>15 / 31</span></div>
+      <aside class="notes">
+        Don't ask the class to memorise P/G. Tell them: factor tables exist
+        for a reason — look them up. What they MUST remember is the
+        decomposition rule on the last line: an "increasing arithmetic
+        stream" = "flat base" + "pure gradient." Combine P/A and P/G.
+        A/G is most useful when comparing a gradient to a competing flat
+        contract: convert the gradient to its equivalent uniform, then
+        compare apples to apples.
+        ~4 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  ARITH GRADIENT: WORKED EX  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ III</span><span class="dot"></span><span>Worked example</span></span>
+        <span class="right">16</span>
+      </div>
+      <span class="label-tag">Rising maintenance cost</span>
+      <h1>Year 1: $20K. Then $5K more every year, for six years.</h1>
+
+      <div class="two-col" style="margin-top: 10px;">
+        <div>
+          <p style="font-size: 0.9em;">A legacy system costs <strong>$20K</strong> to maintain in year 1, and that cost grows by <strong>$5K</strong> per year through year 6. At <em>i = 8%</em>, what is the PV of the maintenance burden?</p>
+
+          <div class="formula-block">
+            <div class="formula-label">Decompose: uniform $20K base + pure gradient G = $5K</div>
+            <div class="formula-body" style="font-size: 0.94em;">\( P = 20K \cdot (P/A, 8\%, 6) + 5K \cdot (P/G, 8\%, 6) \)</div>
+            <div class="formula-body" style="margin-top: 6px; font-size: 0.94em;">\( P \approx 20K \cdot 4.6229 + 5K \cdot 10.523 \)</div>
+            <div class="formula-body" style="margin-top: 6px;">\( P \approx \$92{,}460 + \$52{,}615 \approx \$145{,}080 \)</div>
+          </div>
+        </div>
+        <div>
+          <div class="card accent">
+            <h3>Why this matters for software economics</h3>
+            <p>Almost every long-lived system has a <em>creeping maintenance gradient</em> &mdash; the codebase ages, dependencies decay, the team rotates. Quoting only year-1 cost <em>($20K)</em> understates the lifetime burden by <em>more than seven times</em>.</p>
+          </div>
+          <p class="footnote">A 60% increase in <em>year-1 cost</em> over six years is roughly an 8%/yr arithmetic gradient on $20K base &mdash; not unusual in practice.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ III · Arithmetic gradient</span><span>16 / 31</span></div>
+      <aside class="notes">
+        Take the calculation step by step. Walk students through the
+        decomposition: "the stream is 20, 25, 30, 35, 40, 45 — that's a flat
+        20 plus a pure gradient that goes 0, 5, 10, 15, 20, 25."
+        Stress the policy implication: if a vendor quotes only year-1
+        maintenance, the long-term burden is much larger. This is exactly
+        the kind of analysis that earns engineers a seat in budget meetings.
+        ~5 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  § IV DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Four</span><span class="dot"></span><span>Geometric gradient</span></span>
+        <span class="right">17</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Four</div>
+        <div class="divider-number">IV</div>
+        <h2 class="divider-title">When the same number<br>becomes the same <em>percentage</em>.</h2>
+        <p class="divider-quote">Inflation, SaaS price escalators, salary bands, AI token spend &mdash; the modern economy runs on geometric gradients.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ IV · Geometric gradient</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        Transition. If the arithmetic gradient is the gentle linear creep,
+        the geometric gradient is the compounding ramp — and almost everything
+        in the modern software business is geometric. Cloud cost, headcount,
+        token consumption, ARR.
+        ~30 seconds.
+      </aside>
+    </section>
+
+    <!-- =====================  GEO GRADIENT: THE SHAPE (SVG)  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ IV</span><span class="dot"></span><span>The shape</span></span>
+        <span class="right">18</span>
+      </div>
+      <span class="label-tag">A constant proportional step</span>
+      <h1>A geometric gradient grows by a constant factor (1+g).</h1>
+
+      <div class="cfd-wrap">
+        <div class="cfd-caption">Geometric gradient · base A<sub>1</sub> · rate g per period</div>
+        <svg viewBox="0 0 1200 240" xmlns="http://www.w3.org/2000/svg" aria-label="Geometric gradient: A1, A1(1+g), A1(1+g)^2, ...">
+          <defs>
+            <marker id="arrInL4Geo" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2E7D32"/>
+            </marker>
+          </defs>
+          <line class="cfd-axis" x1="80" y1="180" x2="1140" y2="180"/>
+          <polygon points="1140,180 1126,173 1126,187" fill="#1A1A2E"/>
+          <text x="1148" y="184" font-size="13">time</text>
+          <g font-size="13">
+            <line class="cfd-tick" x1="180" y1="175" x2="180" y2="185"/><text x="180" y="206" text-anchor="middle">1</text>
+            <line class="cfd-tick" x1="340" y1="175" x2="340" y2="185"/><text x="340" y="206" text-anchor="middle">2</text>
+            <line class="cfd-tick" x1="500" y1="175" x2="500" y2="185"/><text x="500" y="206" text-anchor="middle">3</text>
+            <line class="cfd-tick" x1="660" y1="175" x2="660" y2="185"/><text x="660" y="206" text-anchor="middle">4</text>
+            <line class="cfd-tick" x1="820" y1="175" x2="820" y2="185"/><text x="820" y="206" text-anchor="middle">5</text>
+            <line class="cfd-tick" x1="980" y1="175" x2="980" y2="185"/><text x="980" y="206" text-anchor="middle">6 (yr)</text>
+          </g>
+          <line class="cfd-arrow-in" x1="180" y1="180" x2="180" y2="140" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="180" y="130" text-anchor="middle" font-size="13">A&#x2081;</text>
+          <line class="cfd-arrow-in" x1="340" y1="180" x2="340" y2="126" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="340" y="116" text-anchor="middle" font-size="13">A&#x2081;(1+g)</text>
+          <line class="cfd-arrow-in" x1="500" y1="180" x2="500" y2="110" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="500" y="100" text-anchor="middle" font-size="13">A&#x2081;(1+g)&#xB2;</text>
+          <line class="cfd-arrow-in" x1="660" y1="180" x2="660" y2="92" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="660" y="82" text-anchor="middle" font-size="13">A&#x2081;(1+g)&#xB3;</text>
+          <line class="cfd-arrow-in" x1="820" y1="180" x2="820" y2="72" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="820" y="62" text-anchor="middle" font-size="13">A&#x2081;(1+g)&#x2074;</text>
+          <line class="cfd-arrow-in" x1="980" y1="180" x2="980" y2="50" marker-end="url(#arrInL4Geo)"/>
+          <text class="cfd-amount in" x="980" y="40" text-anchor="middle" font-size="13">A&#x2081;(1+g)&#x2075;</text>
+        </svg>
+      </div>
+
+      <p style="font-size: 0.88em; margin-top: 10px;">In a geometric series, each period's cash flow is <em>(1+g)</em> times the previous. <em>g &gt; 0</em> is a ramp; <em>g &lt; 0</em> is a decay (declining licence renewal, for example).</p>
+      <div class="slide-foot"><span class="course">§ IV · Geometric gradient</span><span>18 / 31</span></div>
+      <aside class="notes">
+        Contrast visually with the arithmetic gradient from two slides ago.
+        Arithmetic adds the SAME AMOUNT each period; geometric multiplies by
+        the SAME FACTOR. The geometric one grows much faster for large n —
+        the classic exponential outpaces the classic linear.
+        Negative g matters too: declining maintenance cost (because the system
+        gets retired piece by piece) is a geometric DECAY. The same formula
+        handles both signs.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  GEO GRADIENT: FORMULA  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ IV</span><span class="dot"></span><span>Closed form</span></span>
+        <span class="right">19</span>
+      </div>
+      <span class="label-tag">One factor &mdash; two cases</span>
+      <h1>One formula, two regimes: i &ne; g and i = g.</h1>
+
+      <div class="formula-block">
+        <div class="formula-label">Case 1 &mdash; i &ne; g</div>
+        <div class="formula-body">\( P = A_1 \cdot \dfrac{1 - \left(\dfrac{1+g}{1+i}\right)^{n}}{i - g} \)</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="formula-label">Case 2 &mdash; i = g (degenerate)</div>
+        <div class="formula-body">\( P = A_1 \cdot \dfrac{n}{1+i} \)</div>
+        <div class="formula-note">The growth exactly cancels the discount: each year's PV is the same constant.</div>
+      </div>
+
+      <div class="callout" style="margin-top: 8px;">Mnemonic: define <em>i*</em> = (i &minus; g)/(1 + g), then a geometric stream with growth <em>g</em> and rate <em>i</em> is just a flat stream with rate <em>i*</em>. P/A with <em>i*</em> gives the answer.</div>
+      <div class="slide-foot"><span class="course">§ IV · Geometric gradient</span><span>19 / 31</span></div>
+      <aside class="notes">
+        The "i*" mnemonic is the most useful single trick on the slide. It
+        reduces the geometric case to a uniform-series case students already
+        know. Especially valuable in an exam — they only need P/A in muscle
+        memory.
+        For Case 2 (i = g), stress that this is a special case to know exists,
+        not one they will see often. But when it occurs (e.g., growth ~ inflation
+        baked into discount rate), the limit formula avoids 0/0.
+        ~4 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  GEO GRADIENT: WORKED EX — SAAS (SYLLABUS)  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ IV</span><span class="dot"></span><span>Worked example · SaaS</span></span>
+        <span class="right">20</span>
+      </div>
+      <span class="label-tag">The syllabus problem</span>
+      <h1>A SaaS subscription growing 10% per year, for five years.</h1>
+
+      <div class="two-col" style="margin-top: 10px;">
+        <div>
+          <p style="font-size: 0.92em;">Year-1 payment <strong>$24,000</strong>; annual price escalator <strong>g = 10%</strong>; discount rate <strong>i = 9%</strong>; term <em>n = 5</em>. What is the PV of the five-year payment stream?</p>
+
+          <div class="formula-block">
+            <div class="formula-label">Apply Case 1 &mdash; i &ne; g</div>
+            <div class="formula-body" style="font-size: 0.95em;">\( P = 24{,}000 \cdot \dfrac{1 - \left(\dfrac{1.10}{1.09}\right)^{5}}{0.09 - 0.10} \)</div>
+            <div class="formula-body" style="margin-top: 6px; font-size: 0.95em;">\( P = 24{,}000 \cdot \dfrac{1 - 1.0462}{-0.01} = 24{,}000 \cdot 4.6243 \)</div>
+            <div class="formula-body" style="margin-top: 6px;">\( P \approx \$110{,}983 \)</div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h3>Sanity check &mdash; the i* trick</h3>
+            <p style="font-size: 0.84em;">Effective rate <em>i* = (0.09 &minus; 0.10) / 1.10 &asymp; &minus;0.91%</em>. P/A factor for <em>n = 5</em> at <em>i* &asymp; &minus;0.91%</em> &asymp; <em>5.139</em>; times $24K &times; (1/1.10) &asymp; <em>$112K</em>. Close to the closed form, modulo rounding.</p>
+          </div>
+          <div class="card accent" style="margin-top: 10px;">
+            <h3>Vendor's framing vs. customer's truth</h3>
+            <p style="font-size: 0.84em;">The vendor quotes "$24K with a modest 10% annual increase" &mdash; the customer commits to a stream whose undiscounted total is $146.5K, and whose PV at 9% is $111K. <em>Both numbers are real</em>, and only the diagram reveals the gap.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ IV · Geometric gradient</span><span>20 / 31</span></div>
+      <aside class="notes">
+        This is the syllabus problem — students should leave today able to
+        solve it cold. Walk it slowly. Note specifically:
+        (1) i and g are both *annual*; periods match. Good.
+        (2) g > i here, so the numerator term (1.10/1.09)^5 > 1, hence the
+            numerator is negative; divided by (0.09 - 0.10) = -0.01, also
+            negative; quotient is positive. Sign checks matter.
+        (3) Result $110.98K is BELOW the undiscounted total of
+            24 + 26.4 + 29.04 + 31.94 + 35.14 = $146.5K. The gap ($35.5K) is
+            the time-value of waiting up to 5 years for the later (larger)
+            payments.
+        Ask: "Would you sign this contract? What additional facts would you
+        want before you do?"
+        ~6 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  § V DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Five</span><span class="dot"></span><span>Equivalence</span></span>
+        <span class="right">21</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Five</div>
+        <div class="divider-number">V</div>
+        <h2 class="divider-title">Two streams are <em>equivalent</em><br>when they share the same PV<br>at the same rate.</h2>
+        <p class="divider-quote">Every financial decision in this course is, at root, an equivalence statement.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ V · Equivalence</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        This is the conceptual heart of the lecture. The mechanics of P/A,
+        P/G etc. exist so that we can speak about equivalence rigorously.
+        Tell the class: when we say "this loan is worth $X today" or "the
+        NPV of this project is positive" — every such statement is a claim
+        of equivalence.
+        ~30 seconds.
+      </aside>
+    </section>
+
+    <!-- =====================  EQUIVALENCE: DEFINITION  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ V</span><span class="dot"></span><span>Definition</span></span>
+        <span class="right">22</span>
+      </div>
+      <span class="label-tag">The central principle</span>
+      <h1>Equivalence is what gives "<em>worth the same</em>" a precise meaning.</h1>
+
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <p style="font-size: 0.92em;">Two cash-flow streams <em>X</em> and <em>Y</em> are <strong>equivalent</strong> at interest rate <em>i</em> if</p>
+          <div class="formula-block">
+            <div class="formula-body">\( PV_i(X) = PV_i(Y) \)</div>
+          </div>
+          <p style="font-size: 0.88em;">Equivalence is &mdash; in this strong sense &mdash; the only meaningful definition of "same value" between two streams that occur at different times.</p>
+        </div>
+        <div>
+          <h3 style="margin-bottom: 8px;">Three properties</h3>
+          <ul style="font-size: 0.88em;">
+            <li><strong>Rate-dependent.</strong> Equivalence at 5% is not equivalence at 10%.</li>
+            <li><strong>Symmetric &amp; transitive.</strong> If X &equiv; Y and Y &equiv; Z (at the same i), then X &equiv; Z.</li>
+            <li><strong>Additive.</strong> If X<sub>1</sub> &equiv; Y<sub>1</sub> and X<sub>2</sub> &equiv; Y<sub>2</sub>, then X<sub>1</sub>+X<sub>2</sub> &equiv; Y<sub>1</sub>+Y<sub>2</sub>.</li>
+          </ul>
+          <p class="footnote">Additivity is what makes <em>decomposition</em> (Part VI) work.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ V · Equivalence</span><span>22 / 31</span></div>
+      <aside class="notes">
+        Spend time on the rate-dependence point. A common student error is to
+        think equivalence is a property of the streams alone. It isn't — it's
+        a three-way relation: stream X, stream Y, AND rate i. Change i and
+        equivalence can flip.
+        Additivity is the mathematical justification for what we'll do in
+        Part VI: split any messy real stream into clean shapes, price each,
+        add them up.
+        ~4 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  EQUIVALENCE: WORKED EX  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ V</span><span class="dot"></span><span>Worked example</span></span>
+        <span class="right">23</span>
+      </div>
+      <span class="label-tag">A lump sum vs. an annuity</span>
+      <h1>$10,000 today &mdash; or $2,400 a year for five years?</h1>
+
+      <table class="compact" style="margin-top: 12px;">
+        <thead><tr><th>Discount rate <em>i</em></th><th class="num" style="text-align:right">PV of $10K today</th><th class="num" style="text-align:right">PV of $2,400 &times; 5 yrs</th><th>Which wins?</th></tr></thead>
+        <tbody>
+          <tr><td class="label">0%</td><td class="num" style="text-align:right">$10,000</td><td class="num" style="text-align:right">$12,000</td><td>Annuity</td></tr>
+          <tr><td class="label">4%</td><td class="num" style="text-align:right">$10,000</td><td class="num" style="text-align:right">$10,683</td><td>Annuity</td></tr>
+          <tr><td class="label" style="color: var(--indigo-dk);"><strong>6.40%</strong></td><td class="num" style="text-align:right"><strong>$10,000</strong></td><td class="num" style="text-align:right"><strong>$10,000</strong></td><td><em>Equivalent</em></td></tr>
+          <tr><td class="label">8%</td><td class="num" style="text-align:right">$10,000</td><td class="num" style="text-align:right">$9,582</td><td>Lump sum</td></tr>
+          <tr><td class="label">12%</td><td class="num" style="text-align:right">$10,000</td><td class="num" style="text-align:right">$8,651</td><td>Lump sum</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top: 14px; font-size: 0.9em;">The two streams are equivalent <em>at exactly one rate</em>: <em>i &asymp; 6.40%</em>. Below it, the annuity is worth more; above it, the lump sum is. <em>The rate is the deciding fact.</em></p>
+      <div class="slide-foot"><span class="course">§ V · Equivalence</span><span>23 / 31</span></div>
+      <aside class="notes">
+        Walk the table top to bottom. The rate at which equivalence holds —
+        6.40% here — is exactly the IRR of the annuity-vs-lump-sum
+        difference. (We'll formalise IRR in Lecture 5; today we can name it.)
+        Lottery-style example: a lottery winner offered "lump sum vs. 30-year
+        annuity" implicitly faces the same question, at much larger scale.
+        Whether to take the lump sum depends entirely on what discount rate
+        they personally use (their opportunity cost of capital, after-tax).
+        ~5 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  § VI DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Six</span><span class="dot"></span><span>Composition</span></span>
+        <span class="right">24</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Six</div>
+        <div class="divider-number">VI</div>
+        <h2 class="divider-title">Real cash flows aren't<br>clean &mdash; but they're always<br>a <em>sum</em> of clean pieces.</h2>
+      </div>
+      <div class="slide-foot"><span class="course">§ VI · Composition</span><span>Lecture Four</span></div>
+      <aside class="notes">
+        Transition. Tell the class the last 20 minutes are the most important:
+        we put the four shapes together. This is how every real project's
+        cash-flow analysis gets done — by decomposing a messy stream into
+        clean pieces, pricing each, adding them up.
+        ~30 seconds.
+      </aside>
+    </section>
+
+    <!-- =====================  COMPOSITION: FOUR PIECES  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>The toolkit</span></span>
+        <span class="right">25</span>
+      </div>
+      <span class="label-tag">Every cash flow is a sum of these four</span>
+      <h1>Four shapes, all the financial world.</h1>
+
+      <div class="four-col" style="margin-top: 18px;">
+        <div class="card">
+          <h3>Single sum</h3>
+          <p>One payment, one period. Up-front investment, salvage value, one-time bonus.</p>
+          <p class="footnote" style="margin-top: 8px;">Factor: <em>P/F, F/P</em></p>
+        </div>
+        <div class="card">
+          <h3>Uniform series</h3>
+          <p>The same amount, every period. Subscriptions, loan payments, salaries.</p>
+          <p class="footnote" style="margin-top: 8px;">Factor: <em>P/A, A/P, F/A, A/F</em></p>
+        </div>
+        <div class="card">
+          <h3>Arithmetic gradient</h3>
+          <p>Constant additive step. Maintenance creep, ramping headcount, depreciating savings.</p>
+          <p class="footnote" style="margin-top: 8px;">Factor: <em>P/G, A/G</em></p>
+        </div>
+        <div class="card accent">
+          <h3>Geometric gradient</h3>
+          <p>Constant proportional step. SaaS escalators, inflation, exponential growth or decay.</p>
+          <p class="footnote" style="margin-top: 8px;">Factor: <em>closed-form (1+g)/(1+i)</em></p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top: 20px;">Decomposition rule &mdash; <em>by additivity of equivalence</em>: split the stream into clean pieces &middot; price each at the same <em>i</em> &middot; sum the PVs.</div>
+      <div class="slide-foot"><span class="course">§ VI · Composition</span><span>25 / 31</span></div>
+      <aside class="notes">
+        This is the slide students should photograph. Four shapes, four
+        factor families. Once they recognise these shapes in a project
+        narrative, the rest is mechanical.
+        ~3 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  COMPOSITION: WORKED EX  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>Worked example · SaaS contract</span></span>
+        <span class="right">26</span>
+      </div>
+      <span class="label-tag">An enterprise software contract, decomposed</span>
+      <h1>Three shapes, one PV.</h1>
+      <p class="lede" style="font-size: 0.96em;">Year 0: implementation fee of <em>$30K</em>. Years 1–5: base subscription of <em>$48K</em>, with annual escalator <em>g = 6%</em>. Year 3: one-time professional-services credit of <em>+$10K</em>. <em>i = 9%</em>.</p>
+
+      <table class="compact" style="margin-top: 6px;">
+        <thead><tr><th>Piece</th><th>Shape</th><th>Factor</th><th class="num" style="text-align:right">PV at i = 9%</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="label">Implementation at t=0</td>
+            <td>Single sum (outflow)</td>
+            <td class="num">P/F &times; 1</td>
+            <td class="num" style="text-align:right">&minus;$30,000</td>
+          </tr>
+          <tr>
+            <td class="label">Subscription, A&#x2081;=$48K, g=6%, n=5</td>
+            <td>Geometric gradient (outflow)</td>
+            <td class="num">closed form</td>
+            <td class="num" style="text-align:right">&minus;$201,690</td>
+          </tr>
+          <tr>
+            <td class="label">PS credit at t=3</td>
+            <td>Single sum (inflow)</td>
+            <td class="num">P/F, 9%, 3</td>
+            <td class="num" style="text-align:right">+$7,722</td>
+          </tr>
+          <tr style="background: var(--paper-warm);">
+            <td class="label"><strong>Total contract PV (customer's perspective)</strong></td>
+            <td></td>
+            <td></td>
+            <td class="num" style="text-align:right"><strong>&minus;$223,968</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top: 12px; font-size: 0.88em;">Same numbers, different framing: the vendor's "<em>$30K + $48K/yr (with a small 6% increase)</em>" pitch is a present-day commitment of <strong>roughly $224K</strong>. That is the number that belongs in the comparison with the in-house alternative.</p>
+      <div class="slide-foot"><span class="course">§ VI · Composition</span><span>26 / 31</span></div>
+      <aside class="notes">
+        Walk the table row by row. Show:
+        Row 1: outflow at t=0, no discounting needed, &minus;$30K.
+        Row 2: geometric gradient. Use the i* trick:
+          i* = (0.09 - 0.06) / 1.06 &asymp; 2.83%.
+          P/A at i*=2.83%, n=5 &asymp; 4.5733. Times $48K &times; (1/1.06)
+          &asymp; $207K. Or use closed form directly. Either way, ~$201–207K.
+        Row 3: single sum +$10K at t=3 discounted by 1.09^3 = 1.295; +$7.72K.
+        Total: roughly &minus;$224K.
+        Punchline: the vendor's narrative ("$30K + $48K/yr") hides $224K of
+        present-day commitment. Decomposition is what reveals the truth.
+        ~7 minutes including the calculation.
+      </aside>
+    </section>
+
+    <!-- =====================  CHEAT SHEET  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>Cheat sheet</span></span>
+        <span class="right">27</span>
+      </div>
+      <span class="label-tag">One slide to carry forward</span>
+      <h1>The factor map.</h1>
+
+      <table class="compact" style="margin-top: 8px;">
+        <thead><tr><th>Convert</th><th>From</th><th>To</th><th>Factor</th><th>Formula</th></tr></thead>
+        <tbody>
+          <tr><td class="label">Single &rarr; PV</td><td>F at t=n</td><td>P at t=0</td><td class="num">P/F</td><td class="num">1 / (1+i)<sup>n</sup></td></tr>
+          <tr><td class="label">Single &rarr; FV</td><td>P at t=0</td><td>F at t=n</td><td class="num">F/P</td><td class="num">(1+i)<sup>n</sup></td></tr>
+          <tr><td class="label">Uniform &rarr; PV</td><td>A &times; n</td><td>P</td><td class="num">P/A</td><td class="num">[(1+i)<sup>n</sup>&minus;1] / [i(1+i)<sup>n</sup>]</td></tr>
+          <tr><td class="label">PV &rarr; Uniform</td><td>P</td><td>A &times; n</td><td class="num">A/P</td><td class="num">i(1+i)<sup>n</sup> / [(1+i)<sup>n</sup>&minus;1]</td></tr>
+          <tr><td class="label">Uniform &rarr; FV</td><td>A &times; n</td><td>F</td><td class="num">F/A</td><td class="num">[(1+i)<sup>n</sup>&minus;1] / i</td></tr>
+          <tr><td class="label">FV &rarr; Uniform</td><td>F</td><td>A &times; n</td><td class="num">A/F</td><td class="num">i / [(1+i)<sup>n</sup>&minus;1]</td></tr>
+          <tr><td class="label">Arith. gradient &rarr; PV</td><td>0, G, 2G, &hellip; ,(n&minus;1)G</td><td>P</td><td class="num">P/G</td><td class="num">[(1+i)<sup>n</sup>&minus;in&minus;1] / [i&sup2;(1+i)<sup>n</sup>]</td></tr>
+          <tr><td class="label">Geo. gradient &rarr; PV</td><td>A<sub>1</sub>, A<sub>1</sub>(1+g), &hellip;</td><td>P</td><td class="num">closed form</td><td class="num">A<sub>1</sub>&middot;[1&minus;((1+g)/(1+i))<sup>n</sup>] / (i&minus;g)</td></tr>
+        </tbody>
+      </table>
+
+      <p class="footnote" style="margin-top: 12px;">Allowed on the final exam: one A4 cheat sheet, written by you. This table is a reasonable first draft.</p>
+      <div class="slide-foot"><span class="course">§ VI · Composition</span><span>27 / 31</span></div>
+      <aside class="notes">
+        Tell the class: this slide is the lecture compressed to one page.
+        Photograph it. Reproduce it on their own cheat sheet for the final.
+        Note that they should ALSO add: continuous compounding formula
+        (Lecture 3), and a small worked example of the geometric "i* trick."
+        ~2 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  DISCUSSION  ===================== -->
+    <section class="discussion">
+      <div class="slide-meta">
+        <span class="left"><span>Discussion</span><span class="dot"></span><span>Three prompts</span></span>
+        <span class="right">28</span>
+      </div>
+      <span class="label-tag">Open floor &mdash; 10 minutes</span>
+      <h1>Three questions for the room.</h1>
+
+      <ol style="margin-top: 24px; font-size: 1.02em;">
+        <li>Recall one financial commitment from your own life &mdash; a loan, lease, subscription, salary band. Which of the four shapes does it fit? Was that <em>shape</em> transparent at the time you signed?</li>
+        <li>In a software project you have worked on, where did the cash flows <em>depart</em> from a clean pattern &mdash; a support spike at month six, a license renegotiation at year two, a sudden cloud bill? How would you have decomposed it <em>in advance</em>?</li>
+        <li>Why might a vendor <em>prefer</em> to quote a geometric ramp rather than a lump sum, <em>even when the equivalent PVs are identical</em>? What does the answer say about how budgets &mdash; not finance &mdash; actually get decided?</li>
+      </ol>
+      <div class="slide-foot"><span class="course">Discussion</span><span>28 / 31</span></div>
+      <aside class="notes">
+        Open the floor. Aim for 4–5 voices. If the room is shy, start with
+        Q1 — everyone has signed a loan or a subscription.
+        On Q2 — the goal is to surface the gap between textbook patterns
+        and reality. The answer is almost always: "we didn't model it
+        in advance; we ate the surprise later." That gap is exactly what
+        this course is meant to close. Tie back to the TCO worksheet from
+        Lecture 2: identify any line items that are secretly gradients.
+        On Q3 — the deep answer is psychological: a quoted $48K/yr feels
+        smaller than an equivalent $224K lump sum, even when they are
+        the same wealth. Budget-holders sign per-year; CFOs sign per-PV.
+        That asymmetry is exploited routinely in enterprise sales.
+        Do NOT moderate too tightly. Let students disagree. ~10 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  HOMEWORK  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 5</span></span>
+        <span class="right">29</span>
+      </div>
+      <span class="label-tag">Homework 04 &mdash; due Sunday 7 June, before class</span>
+      <h1>Decompose, then price.</h1>
+
+      <ol style="margin-top: 20px;">
+        <li><strong>Decomposition.</strong> For each of three real-world cash-flow patterns &mdash; (a) a front-loaded data-migration project, (b) a ramping SaaS subscription with a $5K loyalty rebate in year 3, (c) a declining license-maintenance contract &mdash; draw the cash-flow diagram, identify the shapes, and write the PV expression as a sum of standard factors. Numerical PV not required.</li>
+        <li><strong>Equivalence.</strong> Solve the four equivalence problems on the handout. For each, draw both streams, state <em>i</em>, and show the equivalence at that rate (or compute the rate at which they become equivalent).</li>
+        <li><strong>Reflection (&frac12; page).</strong> Choose one decomposition above and explain &mdash; in plain English &mdash; how the diagram would change the way the decision-maker should talk about the contract internally.</li>
+      </ol>
+
+      <div class="callout" style="margin-top: 18px;">Submit as a single PDF to <code>/submissions/HW4/&lt;your-name&gt;.pdf</code>. Late: &minus;10%/day, three-day max.</div>
+      <div class="slide-foot"><span class="course">Homework 04</span><span>29 / 31</span></div>
+      <aside class="notes">
+        Stress that the *reflection* in #3 is where the learning consolidates.
+        Mechanically computing a PV is rote — explaining what the PV does to
+        a stakeholder conversation is the actual skill we are building.
+        Lecture 5 (tomorrow) will use these decompositions to compute NPV,
+        IRR, payback, PI. If anyone falls behind on this homework, NPV will
+        feel much harder than it should.
+        ~2 minutes.
+      </aside>
+    </section>
+
+    <!-- =====================  RECAP / PULLQUOTE  ===================== -->
+    <section class="pullquote">
+      <div class="slide-meta">
+        <span class="left"><span>Recap</span><span class="dot"></span><span>One sentence</span></span>
+        <span class="right">30</span>
+      </div>
+      <blockquote>
+        Every project cash flow is some combination of <em>single sums, uniform series, arithmetic gradients,</em> and <em>geometric gradients</em>; once you can decompose, you can price &mdash; and once you can price, you can prove equivalence.
+      </blockquote>
+      <cite>— the whole lecture, in one line</cite>
+      <div class="slide-foot"><span class="course">Lecture Four · Recap</span><span>30 / 31</span></div>
+      <aside class="notes">
+        Read slowly. Pause. Say: "If today's 110 minutes leaves you with this
+        one sentence in long-term memory, the lecture was worth your time."
+        Then segue into Q&amp;A.
+        ~1 minute.
+      </aside>
+    </section>
+
+    <!-- =====================  END  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>End</span><span class="dot"></span><span>Lecture Four</span></span>
+        <span class="right">31</span>
+      </div>
+      <div class="end">
+        <div class="ampersand">&amp;</div>
+        <h2>Questions &amp; conversation.</h2>
+        <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics &middot; Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+      </div>
+      <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen &middot; FSU 2026</span></div>
+      <aside class="notes">
+        Thank the class. Remind them: office hours after class today; Lecture 5
+        is tomorrow same time (16:20, SY109) on Investment Decisions &mdash; NPV,
+        IRR, payback, PI &mdash; and will *use* today's factors to resolve the
+        Lecture 1 build-vs-buy teaser. Reading: Park, Chapter 5.
+        Field questions until the period ends. ~10 minutes for Q&amp;A.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: false,
+    controls: true,
+    progress: true,
+    width: 1440,
+    height: 900,
+    margin: 0.04,
+    center: false,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ],
+    mathjax3: {
+      tex: { inlineMath: [['\\(','\\)']] },
+      svg: { fontCache: 'global' }
+    }
+  });
+</script>
+</body>
+</html>
