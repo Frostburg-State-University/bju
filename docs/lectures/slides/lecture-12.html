@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 12 — AI Topic I: Estimation &amp; Productivity Disruption</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Twelve · 14 June 2026</div>
+        <div class="cover-volume">12<span class="small">Lecture Twelve</span></div>
+        <h1 class="cover-title">AI Topic I —<br>Estimation &amp;<br><span class="accent">Productivity</span> Disruption</h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">What changes about software economics when machines write much of the code — and what stubbornly doesn't.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 12 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">14 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">SY109</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Empirics</div></div>
+        </div>
+        <div class="footnote">First of two AI lectures. Today: estimation. Tomorrow: token economics &amp; ROI.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture XII</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 20</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>Re-calibrating SEE for the AI era.</h1>
+    <p class="lede">Lectures 1–11 were the canon — written before LLMs. Today we ask what survives, what breaks, and what's new.</p>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>Why classical estimation breaks under AI assistance</td><td class="num">15</td></tr>
+        <tr><td class="num">II.</td><td>The productivity paradox: junior +10–30%, senior −19%</td><td class="num">20</td></tr>
+        <tr><td class="num">III.</td><td>New productivity metrics for AI-augmented teams</td><td class="num">20</td></tr>
+        <tr><td class="num">IV.</td><td>Adapting COCOMO II for AI assistance</td><td class="num">15</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: stress-test productivity claims</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Real case study: AI coding tool ROI in a 50-person org</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW12, questions</em></td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Why classical<br>estimation breaks.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>What breaks</span></span><span class="right">04 / 20</span></div>
+    <span class="label-tag">Three classical assumptions, three failures</span>
+    <h1>Three pillars, all wobbling.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:25%">Classical assumption</th><th>Why it breaks under AI assistance</th></tr></thead>
+      <tbody>
+        <tr><td class="label">LOC ≈ effort</td><td>AI generates working code in minutes that would have taken hours. The LOC-to-PM curve is no longer stable.</td></tr>
+        <tr><td class="label">FP ≈ scope</td><td>Function Points still measure scope correctly, but the <em>conversion</em> from FP to KSLOC, and from KSLOC to PM, has changed.</td></tr>
+        <tr><td class="label">COCOMO calibration</td><td>The model was calibrated against 161 projects from a non-AI era. Effort multipliers (TOOL, APEX, PLEX) no longer span the right range.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">Function Points still count the system's <em>specification</em> correctly. The downstream conversion to effort is what needs recalibration.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Hidden costs</span></span><span class="right">05 / 20</span></div>
+    <span class="label-tag">The new effort categories AI introduces</span>
+    <h1>What AI assistance moves, not removes.</h1>
+    <p style="font-size: 0.95em;">AI doesn't eliminate effort — it <em>relocates</em> it. Classical models miss these new categories:</p>
+    <ul style="margin-top: 6px; font-size: 0.93em;">
+      <li><strong>Prompt engineering</strong> — crafting the prompts that drive code generation.</li>
+      <li><strong>Verification</strong> — reading, testing, and validating generated code.</li>
+      <li><strong>Integration overhead</strong> — fitting generated snippets into real architectures.</li>
+      <li><strong>Drift management</strong> — re-validating outputs as model versions change.</li>
+      <li><strong>Hallucination triage</strong> — catching plausible-looking but incorrect AI output.</li>
+    </ul>
+    <p class="callout">A senior engineer can spend more time verifying AI output than they would have spent writing the code by hand. This is the <em>verification overhead</em> — the central puzzle of today's lecture.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">The productivity paradox —<br>different effects for<br>different engineers.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Empirical data</span></span><span class="right">07 / 20</span></div>
+    <span class="label-tag">2026 productivity benchmarks</span>
+    <h1>One tool, three populations, three answers.</h1>
+    <table>
+      <thead><tr><th>Population</th><th class="num" style="text-align:right">Productivity delta</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Junior developers (0–2 yrs)</td><td class="num" style="text-align:right"><strong>+10 to +30%</strong></td><td>AI fills knowledge gaps; reduces idle research time.</td></tr>
+        <tr><td class="label">Mid-level (3–6 yrs)</td><td class="num" style="text-align:right"><strong>+5 to +15%</strong></td><td>AI accelerates boilerplate; modest verification cost.</td></tr>
+        <tr><td class="label">Senior (7+ yrs)</td><td class="num" style="text-align:right"><strong>−19%</strong></td><td>Verification overhead exceeds time saved on routine code.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.92em; margin-top: 12px;">Source: 2026 enterprise studies (Larridin Benchmarks; Exceeds.ai productivity paradox report). The senior slowdown is reproducible — not a statistical fluke.</p>
+    <p class="callout">"AI raises team productivity" is a true headline that hides a within-team rearrangement: AI lifts your junior staff and slows your senior staff. If your team is half senior, your headline gain is much smaller than the vendor claims.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Why seniors slow down</span></span><span class="right">08 / 20</span></div>
+    <span class="label-tag">Verification overhead in detail</span>
+    <h1>The senior engineer's tax.</h1>
+    <p style="font-size: 0.93em;">A senior engineer doesn't <em>accept</em> AI output the way a junior does. They:</p>
+    <ul style="margin-top: 4px; font-size: 0.92em;">
+      <li>Read every generated line to confirm correctness.</li>
+      <li>Mentally check for security and performance issues the AI may have missed.</li>
+      <li>Verify the suggested approach matches the system's architecture.</li>
+      <li>Run extra tests because trust is not yet earned.</li>
+    </ul>
+    <p style="font-size: 0.93em; margin-top: 8px;">For a routine task, this verification can take longer than typing the code from memory would have. The net effect is negative — until the engineer either skips verification (risky) or learns to use AI on tasks where it has the most leverage (rarely the routine ones).</p>
+    <p class="callout">The economic question is not "should we adopt AI tools?" but "for <em>which tasks</em>, by <em>which engineers</em>, with what <em>verification protocol</em>?"</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">New metrics —<br>what to measure<br>when LOC is no longer trustworthy.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Outcome metrics</span></span><span class="right">10 / 20</span></div>
+    <span class="label-tag">Five replacement candidates</span>
+    <h1>From LOC to outcomes.</h1>
+    <table class="compact">
+      <thead><tr><th>Metric</th><th>What it captures</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td class="label">PR-to-production cycle time</td><td>Speed from commit to deployment.</td><td>Cycle-time gaming.</td></tr>
+        <tr><td class="label">Defect-free deploy frequency</td><td>Reliable changes per period.</td><td>Encourages small, safe changes.</td></tr>
+        <tr><td class="label">Customer-visible features shipped</td><td>Value delivered.</td><td>Defining "feature" is hard.</td></tr>
+        <tr><td class="label">Tickets resolved per engineer</td><td>Concrete progress on backlog.</td><td>Penalises hard problems.</td></tr>
+        <tr><td class="label">Engineer-reported flow time</td><td>Subjective effectiveness.</td><td>Self-report bias.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">No single replacement for LOC works alone. Use 2–3 metrics together, and re-evaluate quarterly — Goodhart's law applies fast.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Adapting COCOMO II —<br>which knobs to turn.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Effort multiplier adjustment</span></span><span class="right">12 / 20</span></div>
+    <span class="label-tag">A proposed re-calibration</span>
+    <h1>The three EMs to modify.</h1>
+    <table class="compact">
+      <thead><tr><th>Effort Multiplier</th><th>Classical range</th><th>Proposed AI-era range</th></tr></thead>
+      <tbody>
+        <tr><td class="label">TOOL — Tool support</td><td class="num">0.78 – 1.17</td><td class="num">0.65 – 1.10 (better tools, narrower range)</td></tr>
+        <tr><td class="label">APEX — Application experience</td><td class="num">0.81 – 1.22</td><td class="num">0.70 – 1.30 (AI fills gaps; widens range)</td></tr>
+        <tr><td class="label">PLEX — Platform experience</td><td class="num">0.85 – 1.19</td><td class="num">0.75 – 1.20 (same direction)</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.93em; margin-top: 12px;">A possible <em>new</em> EM might be added: <strong>AIUSE</strong> — effective use of AI assistance — rated by team practice. Calibration data not yet sufficient; this is a research direction, not a recommendation.</p>
+    <p class="callout">Adjust EMs, but keep the model's <em>structure</em>. The power-law in size and the scale factors still describe reality. The AI era changes coefficients, not equations.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">13 / 20</span></div>
+    <span class="label-tag">A vendor claim, stress-tested</span>
+    <div class="discussion-icon">⚖</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.85em; margin-top: -6px; line-height: 1.1;">Vendor X claims their AI tool delivers <em>"55% productivity gains"</em>. Where would you push back?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 min), interrogate the claim. What are the five questions you must ask before believing it?</p>
+    <ul style="margin-top: 6px; font-size: 0.9em;">
+      <li><strong>Sample.</strong> Junior-heavy team? Tasks selected for AI strengths?</li>
+      <li><strong>Metric.</strong> LOC/hour? PRs merged? Self-reported?</li>
+      <li><strong>Counterfactual.</strong> Compared to what — last quarter, without AI, or a control group?</li>
+      <li><strong>Duration.</strong> One-week pilot or a full quarter? Was the novelty boost still in play?</li>
+      <li><strong>Hidden costs.</strong> Verification time, integration overhead, model-drift re-work — included?</li>
+    </ul>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">A case study —<br>real adoption,<br>real numbers.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Case study</span></span><span class="right">15 / 20</span></div>
+    <span class="label-tag">A 50-engineer SaaS company adopts AI coding tools (2026 data)</span>
+    <h1>Mid-market SaaS — full ROI analysis.</h1>
+    <table class="compact">
+      <thead><tr><th>Item</th><th class="num" style="text-align:right">Per year</th></tr></thead>
+      <tbody>
+        <tr><td>Licences (50 × $25/mo)</td><td class="num" style="text-align:right">−$15,000</td></tr>
+        <tr><td>Token spend (50 × $80/mo avg)</td><td class="num" style="text-align:right">−$48,000</td></tr>
+        <tr><td>Adoption / training (one-time, year 1)</td><td class="num" style="text-align:right">−$24,000</td></tr>
+        <tr><td>Productivity gain — juniors (15 × +20% × $90K)</td><td class="num" style="text-align:right">+$270,000</td></tr>
+        <tr><td>Productivity gain — mid (20 × +10% × $130K)</td><td class="num" style="text-align:right">+$260,000</td></tr>
+        <tr><td>Productivity LOSS — seniors (15 × −19% × $180K)</td><td class="num" style="text-align:right">−$513,000</td></tr>
+        <tr><td><strong>Net Year 1</strong></td><td class="num" style="text-align:right"><strong>−$70,000</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">A naive headline of "55% productivity" would have projected $500K+ in gains. Disaggregated by seniority, the project is <em>negative</em> in year 1. Year 2 may turn positive once seniors adapt their workflow.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Mitigations</span></span><span class="right">16 / 20</span></div>
+    <span class="label-tag">How to make the senior tax shrink</span>
+    <h1>Closing the senior productivity gap.</h1>
+    <ul style="margin-top: 6px; font-size: 0.93em;">
+      <li><strong>Restrict AI to leveraged tasks</strong> — code review preparation, doc generation, exploratory prototyping. Avoid on critical-path security or performance code.</li>
+      <li><strong>Build verification habits</strong> — automated tests of AI output, prompt templates with built-in invariant checks.</li>
+      <li><strong>Pair seniors with juniors</strong> — junior uses AI, senior verifies. Captures both populations' strengths.</li>
+      <li><strong>Track outcomes, not lines</strong> — measure features shipped and defects avoided, not LOC.</li>
+    </ul>
+    <p class="callout">Year-2 ROI typically turns positive once teams build deliberate AI-usage patterns. Year-1 ROI is mostly a measure of <em>change-management quality</em>, not tool quality.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Bridge</span><span class="dot"></span><span>To Lecture 13</span></span><span class="right">17 / 20</span></div>
+    <h1>Tomorrow: the cost side of AI products.</h1>
+    <p class="lede">Today we looked at how AI changes the <em>cost of building</em> software. Tomorrow we look at how AI changes the <em>cost of running</em> it — tokens, caching, agent multipliers, payback periods.</p>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 14</span></span><span class="right">18 / 20</span></div>
+    <span class="label-tag">Homework 12 — due Tuesday 16 June</span>
+    <h1>An honest AI ROI memo.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Build a year-1 ROI model for adopting an AI coding tool at a hypothetical 30-person company. Disaggregate by seniority — at least three buckets.</li>
+      <li>Identify the breakeven assumption (the one input that, if it changed, would flip the sign).</li>
+      <li>One paragraph: what change-management investment would you propose alongside the tool, and what's its NPV?</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">19 / 20</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>Function Points</strong> still measure scope correctly. Downstream conversions need re-calibration.</li>
+      <li>The productivity paradox: <strong>juniors faster, seniors slower</strong>. Headline gains hide redistribution.</li>
+      <li>The right question is not "should we adopt AI?" but <strong>"for which tasks, by which engineers, with what verification protocol?"</strong></li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Twelve</span></span><span class="right">20 / 20</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">Q&amp;A ~8 min. Tomorrow: token economics.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>

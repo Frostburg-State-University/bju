@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 13 — AI Topic II: Token Economics &amp; Project ROI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="cover" data-background="#FAF8F4">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="cover-eyebrow">Lecture Thirteen · 15 June 2026</div>
+        <div class="cover-volume">13<span class="small">Lecture Thirteen</span></div>
+        <h1 class="cover-title">AI Topic II —<br>Token Economics<br>&amp; <span class="accent">Project ROI</span></h1>
+        <div class="cover-rule"></div>
+        <p class="cover-sub">When the cost of running software is dominated by the cost of <em>thinking</em>. Tokens, caching, agents, and the new unit economics.</p>
+      </div>
+      <div class="cover-right">
+        <div class="cover-meta-row">
+          <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+          <div><div class="label">Session</div><div class="value">No. 13 of 16</div></div>
+          <div><div class="label">Date</div><div class="value">15 June 2026</div></div>
+          <div><div class="label">Room</div><div class="value">YF108</div></div>
+          <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+          <div><div class="label">Format</div><div class="value">Lecture + Course recap</div></div>
+        </div>
+        <div class="footnote">Last content lecture before student presentations. The final exam is built from these 13 sessions.</div>
+      </div>
+    </div>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Lecture XIII</span><span class="dot"></span><span>Agenda</span></span><span class="right">02 / 22</span></div>
+    <span class="label-tag">Today's Plan</span>
+    <h1>The cost stack of an AI product.</h1>
+    <table class="compact">
+      <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+      <tbody>
+        <tr><td class="num">I.</td><td>The token cost stack — input / output / cached</td><td class="num">15</td></tr>
+        <tr><td class="num">II.</td><td>The 2026 LLM pricing landscape</td><td class="num">10</td></tr>
+        <tr><td class="num">III.</td><td>Agent cost multipliers (3–10× a chatbot)</td><td class="num">15</td></tr>
+        <tr><td class="num">IV.</td><td>Caching strategies (40–90% savings)</td><td class="num">20</td></tr>
+        <tr><td class="num">—</td><td><em>Discussion: which caching tier wins for your project?</em></td><td class="num">10</td></tr>
+        <tr><td class="num">V.</td><td>Payback periods by industry (4.1mo / 6.7mo / 9.3mo)</td><td class="num">15</td></tr>
+        <tr><td class="num">VI.</td><td>Course wrap-up &amp; final-exam preview</td><td class="num">20</td></tr>
+        <tr><td></td><td><em>HW13, questions</em></td><td class="num">5</td></tr>
+      </tbody>
+    </table>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — One</div>
+      <div class="divider-number">I</div>
+      <h2 class="divider-title">Token economics —<br>per-call cost as<br>the new unit of analysis.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ I</span><span class="dot"></span><span>Token anatomy</span></span><span class="right">04 / 22</span></div>
+    <span class="label-tag">Three token types, three prices</span>
+    <h1>A single LLM call has three cost components.</h1>
+    <table>
+      <thead><tr><th>Type</th><th>What it is</th><th>Relative cost (2026)</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Input tokens</td><td>Everything you send to the model: system prompt, user message, context, tool definitions.</td><td class="num">1× base</td></tr>
+        <tr><td class="label">Output tokens</td><td>Everything the model generates: response, tool calls, reasoning traces.</td><td class="num">3–5× input</td></tr>
+        <tr><td class="label">Cached input tokens</td><td>Input tokens already seen, served from the model's cache.</td><td class="num">0.1× input</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.93em; margin-top: 12px;">Output tokens are 3–5× more expensive than input tokens because generation is inherently more compute-intensive than reading. Cached input is ~90% cheaper than fresh input.</p>
+    <p class="callout">The cost structure rewards <em>short outputs, structured outputs, and repeated prompts</em>. Your model's pricing is the boundary of your product economics.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Two</div>
+      <div class="divider-number">II</div>
+      <h2 class="divider-title">The 2026 pricing landscape —<br>shop before<br>you commit.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ II</span><span class="dot"></span><span>Vendor pricing</span></span><span class="right">06 / 22</span></div>
+    <span class="label-tag">$ per million tokens, mid-2026</span>
+    <h1>The major models, side by side.</h1>
+    <table>
+      <thead><tr><th>Model</th><th class="num" style="text-align:right">Input $/MTok</th><th class="num" style="text-align:right">Output $/MTok</th><th class="num" style="text-align:right">Cached input</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Claude Opus 4.7</td><td class="num" style="text-align:right">$15</td><td class="num" style="text-align:right">$75</td><td class="num" style="text-align:right">$1.50</td></tr>
+        <tr><td class="label">Claude Sonnet 4.6</td><td class="num" style="text-align:right">$3</td><td class="num" style="text-align:right">$15</td><td class="num" style="text-align:right">$0.30</td></tr>
+        <tr><td class="label">GPT-4o</td><td class="num" style="text-align:right">$2.50</td><td class="num" style="text-align:right">$10</td><td class="num" style="text-align:right">$1.25</td></tr>
+        <tr><td class="label">GPT-4o mini</td><td class="num" style="text-align:right">$0.15</td><td class="num" style="text-align:right">$0.60</td><td class="num" style="text-align:right">$0.075</td></tr>
+        <tr><td class="label">Gemini 2.5 Pro</td><td class="num" style="text-align:right">$3.50</td><td class="num" style="text-align:right">$10.50</td><td class="num" style="text-align:right">$0.50</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">The cheapest model is often only ~6% the price of the flagship. Choose model by task difficulty, not brand — many production agents mix tiers.</p>
+    <aside class="notes">~5 minutes. Note: prices fluctuate.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Three</div>
+      <div class="divider-number">III</div>
+      <h2 class="divider-title">Agent multipliers —<br>why one user request<br>becomes ten LLM calls.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Agent fan-out</span></span><span class="right">08 / 22</span></div>
+    <span class="label-tag">Why agents cost what they cost</span>
+    <h1>One user task → 3 to 10 LLM calls.</h1>
+    <table class="compact">
+      <thead><tr><th>Task phase</th><th>Typical calls</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Planning</td><td class="num">1–2</td><td>Decompose user request into sub-steps.</td></tr>
+        <tr><td class="label">Tool selection / arg-building</td><td class="num">1–3</td><td>Choose APIs, generate parameters.</td></tr>
+        <tr><td class="label">Execution &amp; iteration</td><td class="num">2–5</td><td>Run tool, inspect result, decide next step.</td></tr>
+        <tr><td class="label">Verification</td><td class="num">1–2</td><td>Re-check the answer; self-correct.</td></tr>
+        <tr><td class="label">Response synthesis</td><td class="num">1</td><td>Generate user-facing answer.</td></tr>
+        <tr><td class="label"><strong>Typical total</strong></td><td class="num"><strong>6–13</strong></td><td>Per user task.</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">An unconstrained agent task can cost <strong>$5–8</strong>. Budgets that quote per-token cost without accounting for fan-out are wrong by an order of magnitude.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ III</span><span class="dot"></span><span>Cost build-up</span></span><span class="right">09 / 22</span></div>
+    <span class="label-tag">A worked example</span>
+    <h1>One user task — Claude Sonnet 4.6 — full cost.</h1>
+    <table class="compact">
+      <thead><tr><th>Call</th><th class="num" style="text-align:right">Input tokens</th><th class="num" style="text-align:right">Output tokens</th><th class="num" style="text-align:right">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>Plan</td><td class="num" style="text-align:right">5,000</td><td class="num" style="text-align:right">500</td><td class="num" style="text-align:right">$0.0225</td></tr>
+        <tr><td>Tool #1 (read docs)</td><td class="num" style="text-align:right">12,000</td><td class="num" style="text-align:right">200</td><td class="num" style="text-align:right">$0.0390</td></tr>
+        <tr><td>Tool #2 (search)</td><td class="num" style="text-align:right">8,000</td><td class="num" style="text-align:right">400</td><td class="num" style="text-align:right">$0.0300</td></tr>
+        <tr><td>Iterate (3 calls)</td><td class="num" style="text-align:right">30,000</td><td class="num" style="text-align:right">1,200</td><td class="num" style="text-align:right">$0.1080</td></tr>
+        <tr><td>Verify</td><td class="num" style="text-align:right">10,000</td><td class="num" style="text-align:right">300</td><td class="num" style="text-align:right">$0.0345</td></tr>
+        <tr><td>Synthesize</td><td class="num" style="text-align:right">12,000</td><td class="num" style="text-align:right">800</td><td class="num" style="text-align:right">$0.0480</td></tr>
+        <tr><td><strong>Total per task</strong></td><td class="num" style="text-align:right"><strong>77,000</strong></td><td class="num" style="text-align:right"><strong>3,400</strong></td><td class="num" style="text-align:right"><strong>$0.282</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">For 100,000 tasks/month: $28,200. Multiply by 12 months: $338K/year, just on inference. Caching can cut this by 70%.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Four</div>
+      <div class="divider-number">IV</div>
+      <h2 class="divider-title">Caching —<br>where 40–90%<br>of savings hide.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Three cache tiers</span></span><span class="right">11 / 22</span></div>
+    <span class="label-tag">Different ideas, different savings</span>
+    <h1>The three caching tiers in production.</h1>
+    <div class="three-col" style="margin-top: 6px;">
+      <div class="card">
+        <h3>① Prompt cache</h3>
+        <p>Reuse identical input prefixes (system prompt + context). 80–90% cost cut on cached tokens. Provider-managed.</p>
+      </div>
+      <div class="card">
+        <h3>② Semantic cache</h3>
+        <p>Reuse responses for <em>similar</em> requests. Embedding-based matching. 40–70% savings on cacheable workloads.</p>
+      </div>
+      <div class="card">
+        <h3>③ KV cache reuse</h3>
+        <p>Reuse the attention key/value state across decode steps. Provider-internal. 75% latency cut.</p>
+      </div>
+    </div>
+    <p class="callout">Stack them — they compose. Teams that implement all three see 70–90% production cost reduction relative to a naive implementation.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ IV</span><span class="dot"></span><span>Cache hit rates</span></span><span class="right">12 / 22</span></div>
+    <span class="label-tag">What hit rate can you achieve?</span>
+    <h1>Hit rate by workload pattern.</h1>
+    <table class="compact">
+      <thead><tr><th>Workload</th><th class="num" style="text-align:right">Typical cache hit %</th><th>Cost reduction</th></tr></thead>
+      <tbody>
+        <tr><td>Customer support — repeated FAQs</td><td class="num" style="text-align:right">60–80%</td><td>50–70%</td></tr>
+        <tr><td>Code assistant — repeated codebase context</td><td class="num" style="text-align:right">70–90%</td><td>60–80%</td></tr>
+        <tr><td>Search / chat — unique queries</td><td class="num" style="text-align:right">15–30%</td><td>10–25%</td></tr>
+        <tr><td>Document analysis — long shared prefix</td><td class="num" style="text-align:right">85–95%</td><td>70–85%</td></tr>
+        <tr><td>Agentic workflow — repeated planning prompts</td><td class="num" style="text-align:right">60–80%</td><td>50–70%</td></tr>
+      </tbody>
+    </table>
+    <p class="callout">An honest budget pessimistically assumes the lower bound. If your workload happens to be highly cacheable, you'll be pleasantly surprised; if it isn't, you won't have over-promised.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="discussion">
+    <div class="slide-meta"><span class="left"><span>Discussion</span><span class="dot"></span><span>10 minutes</span></span><span class="right">13 / 22</span></div>
+    <span class="label-tag">Which cache for your project?</span>
+    <div class="discussion-icon">⚡</div>
+    <h2 style="font-family: 'Fraunces', serif; font-weight: 350; font-size: 1.85em; margin-top: -6px; line-height: 1.1;">Which caching tier would give <em>your</em> project the largest savings — and how would you measure?</h2>
+    <p class="lede" style="margin-top: 14px;">In pairs (4 min), categorise your project's workload. Estimate hit rate. Compute monthly savings if implemented.</p>
+    <ul style="margin-top: 6px; font-size: 0.9em;">
+      <li>What fraction of your requests share a long input prefix? → prompt cache opportunity.</li>
+      <li>Could two requests safely share the same response? → semantic cache opportunity.</li>
+      <li>What experiment would prove the hit-rate assumption before committing engineering effort?</li>
+    </ul>
+    <aside class="notes">~10 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Five</div>
+      <div class="divider-number">V</div>
+      <h2 class="divider-title">Payback periods —<br>industry data,<br>2026.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Industry benchmarks</span></span><span class="right">15 / 22</span></div>
+    <span class="label-tag">Where AI pays back fastest</span>
+    <h1>Median payback period by use case.</h1>
+    <table>
+      <thead><tr><th>Use case</th><th class="num" style="text-align:right">Median payback</th><th>Why fast / slow</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Customer support</td><td class="num" style="text-align:right"><strong>4.1 mo</strong></td><td>High labor-cost displacement, narrow domain.</td></tr>
+        <tr><td class="label">Marketing operations</td><td class="num" style="text-align:right"><strong>6.7 mo</strong></td><td>Volume work, low criticality.</td></tr>
+        <tr><td class="label">Sales enablement</td><td class="num" style="text-align:right"><strong>7.5 mo</strong></td><td>Conversion lift offsets cost.</td></tr>
+        <tr><td class="label">Engineering productivity</td><td class="num" style="text-align:right"><strong>9.3 mo</strong></td><td>Senior-engineer verification overhead.</td></tr>
+        <tr><td class="label">Compliance / legal</td><td class="num" style="text-align:right"><strong>14 mo</strong></td><td>High accuracy bar; many false positives to triage.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.92em; margin-top: 12px;">Source: 2026 cross-industry surveys (VentureBeat 1,100-engineer-and-CTO study; Digital Applied 100+ ROI data points).</p>
+    <p class="callout">For your group project: an AI feature with payback &gt; 18 months is rarely funded. If yours lands there, find ways to halve the cost or double the value.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ V</span><span class="dot"></span><span>Mid-market case</span></span><span class="right">16 / 22</span></div>
+    <span class="label-tag">A concrete payback computation</span>
+    <h1>A 9-month payback example.</h1>
+    <p style="font-size: 0.93em;">Hypothetical SaaS company, 8,000 monthly support tickets, $18.40 average resolution cost. Deploy an AI support agent.</p>
+    <table class="compact">
+      <thead><tr><th>Item</th><th class="num" style="text-align:right">Monthly</th></tr></thead>
+      <tbody>
+        <tr><td>Tickets deflected (34%)</td><td class="num" style="text-align:right">2,720</td></tr>
+        <tr><td>Resolution cost saved (2,720 × $12.20)</td><td class="num" style="text-align:right">+$33,184</td></tr>
+        <tr><td>AI infrastructure (tokens + observability)</td><td class="num" style="text-align:right">−$3,800</td></tr>
+        <tr><td><strong>Monthly net</strong></td><td class="num" style="text-align:right"><strong>+$29,384</strong></td></tr>
+        <tr><td>One-time build cost</td><td class="num" style="text-align:right">$72,000</td></tr>
+        <tr><td><strong>Simple payback</strong></td><td class="num" style="text-align:right"><strong>2.5 months</strong></td></tr>
+        <tr><td><strong>Discounted payback @ 12%</strong></td><td class="num" style="text-align:right"><strong>2.6 months</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="callout">When AI pays back fast, it's almost always because it displaces high-marginal-cost labour at high volume. When it pays back slowly, it's usually because a human still has to verify each output.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section class="divider">
+    <div class="divider-content">
+      <div class="divider-roman">Part — Six</div>
+      <div class="divider-number">VI</div>
+      <h2 class="divider-title">Course wrap-up —<br>thirteen sessions<br>in five lines.</h2>
+    </div>
+    <aside class="notes">~15 seconds.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>Course recap</span></span><span class="right">18 / 22</span></div>
+    <span class="label-tag">What you now know</span>
+    <h1>The course, in five lines.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li>Every software decision is an economic decision. Boehm's seven steps apply at any scale.</li>
+      <li>Cost lives in a <em>fixed/variable × direct/indirect × non-recurring/recurring</em> cell, across five lifecycle phases. 60–80% lives <em>after</em> launch.</li>
+      <li>Time value of money is the calculus of comparison. NPV is the verdict; IRR, payback, PI are the footnotes.</li>
+      <li>Sensitivity tells you which assumption to research; risk analysis tells you the probability of being wrong.</li>
+      <li>The AI era changes the <em>coefficients</em>, not the <em>equations</em>. Same Boehm framework, recalibrated for tokens, verification, and a re-allocated productivity curve.</li>
+    </ol>
+    <p class="callout">If you walk away with only those five lines, you can defend any software decision in any room you'll enter for the next decade.</p>
+    <aside class="notes">~6 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>§ VI</span><span class="dot"></span><span>Final exam preview</span></span><span class="right">19 / 22</span></div>
+    <span class="label-tag">Lecture 16, Thursday 18 June</span>
+    <h1>What's on the exam.</h1>
+    <table class="compact">
+      <thead><tr><th>Section</th><th>Points</th><th>Material</th></tr></thead>
+      <tbody>
+        <tr><td>Multiple choice / short answer</td><td class="num">20</td><td>Definitions, frameworks, intuitions from all 13 lectures.</td></tr>
+        <tr><td>Computation</td><td class="num">50</td><td>PV/FV, NPV/IRR, equivalence, sensitivity, FP, COCOMO II.</td></tr>
+        <tr><td>Integrative case</td><td class="num">30</td><td>A realistic project — full economic analysis, including AI cost.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 0.93em; margin-top: 12px;">Closed book; one A4 cheat sheet (single-sided) permitted; non-programmable calculator.</p>
+    <aside class="notes">~5 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Homework</span><span class="dot"></span><span>Final preparation</span></span><span class="right">20 / 22</span></div>
+    <span class="label-tag">Homework 13 — final group-project polish</span>
+    <h1>Get your slides ready.</h1>
+    <ol style="margin-top: 6px;">
+      <li>Finalise group-project presentation. Required slides: scope, FP/COCOMO estimate, cash flow + 2 alternatives, NPV/IRR/payback/PI, sensitivity, AI-cost dimension (bonus), recommendation.</li>
+      <li>Rehearse — 12 min talk + 5 min Q&amp;A + 3 min peer evaluation.</li>
+      <li>Submit final project report PDF to <code>/submissions/PROJECT/&lt;team-name&gt;/</code> before tomorrow's class.</li>
+    </ol>
+    <aside class="notes">~3 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>Recap</span><span class="dot"></span><span>What to remember</span></span><span class="right">21 / 22</span></div>
+    <h1>What today bought you.</h1>
+    <ol style="margin-top: 6px; font-size: 0.95em;">
+      <li><strong>Token cost</strong> = input + output (3–5× input) + caching. Output tokens dominate.</li>
+      <li><strong>Agents fan out</strong> 3–10×. Per-call cost ≠ per-task cost.</li>
+      <li><strong>Caching</strong> is the highest-ROI optimisation. 40–90% in production is standard, not exceptional.</li>
+      <li><strong>Payback</strong> depends on how much human labour you displace, and how cheaply.</li>
+    </ol>
+    <aside class="notes">~2 minutes.</aside>
+  </section>
+
+  <section>
+    <div class="slide-meta"><span class="left"><span>End</span><span class="dot"></span><span>Lecture Thirteen · End of Content</span></span><span class="right">22 / 22</span></div>
+    <div class="end">
+      <div class="ampersand">&amp;</div>
+      <h2>Questions &amp; conversation.</h2>
+      <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+    </div>
+    <aside class="notes">End of teaching content. Q&amp;A. Next: presentations Tue/Wed, final Thu.</aside>
+  </section>
+
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: false, controls: true, progress: true,
+    width: 1440, height: 900, margin: 0.04, center: false,
+    transition: 'fade', backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ]
+  });
+</script>
+</body>
+</html>
