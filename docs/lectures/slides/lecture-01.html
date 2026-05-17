@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Dr. Zhijiang Chen">
+  <title>Lecture 1 — Introduction to Software Engineering Economics</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Crimson+Pro:ital,wght@0,300..700;1,400..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <style>
+    :root {
+      --ink:        #1A1A2E;
+      --ink-soft:   #4A4A5E;
+      --ink-mute:   #7A7A8A;
+      --paper:      #FAF8F4;
+      --paper-warm: #F3EFE6;
+      --rule:       #D4CFC3;
+      --rule-soft:  #E8E3D5;
+      --indigo:     #3F51B5;
+      --indigo-dk:  #283593;
+      --indigo-lt:  #E8EAF6;
+      --crimson:    #B73239;
+    }
+
+    html, body { background: var(--paper); }
+
+    .reveal {
+      font-family: 'Crimson Pro', 'Georgia', serif;
+      font-size: 30px;
+      color: var(--ink);
+      font-feature-settings: "kern", "liga", "calt", "onum";
+    }
+
+    .reveal .slides { text-align: left; }
+
+    .reveal .slides section {
+      padding: 70px 90px 60px;
+      box-sizing: border-box;
+      height: 100%;
+    }
+
+    /* ---------- Typography ---------- */
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Fraunces', 'Crimson Pro', serif;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      text-transform: none;
+      margin: 0 0 0.55em;
+      line-height: 1.1;
+    }
+    .reveal h1 { font-size: 2.4em; font-weight: 400; font-variation-settings: "SOFT" 30; }
+    .reveal h2 { font-size: 1.65em; font-weight: 450; }
+    .reveal h3 { font-size: 1.15em; font-weight: 500; color: var(--ink-soft); }
+
+    .reveal p, .reveal li { line-height: 1.5; }
+    .reveal p { margin: 0 0 0.7em; }
+    .reveal ul, .reveal ol { margin: 0.2em 0 0.6em 1.2em; }
+    .reveal ul li { list-style: none; position: relative; padding-left: 1.3em; margin-bottom: 0.35em; }
+    .reveal ul li::before {
+      content: ""; position: absolute; left: 0; top: 0.62em;
+      width: 0.85em; height: 1px; background: var(--indigo);
+    }
+    .reveal ol { list-style-type: none; counter-reset: ord; padding-left: 0; }
+    .reveal ol li {
+      counter-increment: ord;
+      padding-left: 2.3em;
+      margin-bottom: 0.45em;
+      position: relative;
+    }
+    .reveal ol li::before {
+      content: counter(ord, decimal-leading-zero);
+      position: absolute; left: 0; top: 0.05em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6em; color: var(--indigo); font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .reveal em { color: var(--indigo-dk); font-style: italic; }
+    .reveal strong { font-weight: 600; color: var(--ink); }
+
+    code, .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8em;
+    }
+
+    /* ---------- Editorial frame ---------- */
+    .slide-meta {
+      position: absolute; top: 32px; left: 90px; right: 90px;
+      display: flex; justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      pointer-events: none;
+    }
+    .slide-meta .left  { display: flex; gap: 24px; align-items: center; }
+    .slide-meta .right { display: flex; gap: 24px; align-items: center; }
+    .slide-meta .dot   {
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--indigo);
+      vertical-align: middle; margin: 0 2px 3px;
+    }
+
+    .slide-foot {
+      position: absolute; bottom: 28px; left: 90px; right: 90px;
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-mute);
+      border-top: 1px solid var(--rule-soft);
+      padding-top: 10px;
+      pointer-events: none;
+    }
+    .slide-foot .course { color: var(--ink-soft); font-weight: 500; }
+
+    /* ---------- Title slide ---------- */
+    .cover {
+      background:
+        radial-gradient(circle at 80% 10%, rgba(63,81,181,0.07), transparent 40%),
+        linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
+    }
+    .cover-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      height: 100%;
+      align-items: end;
+      padding: 80px 90px;
+    }
+    .cover-left { align-self: start; padding-top: 40px; }
+    .cover-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--indigo); margin-bottom: 24px;
+    }
+    .cover-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 350;
+      font-size: 3.6em;
+      font-variation-settings: "SOFT" 40;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin: 0 0 0.3em;
+    }
+    .cover-title .accent { color: var(--indigo); font-style: italic; font-weight: 400; }
+    .cover-rule {
+      width: 80px; height: 2px; background: var(--indigo); margin: 36px 0 28px;
+    }
+    .cover-sub {
+      font-family: 'Crimson Pro', serif; font-style: italic;
+      font-size: 1.15em; color: var(--ink-soft); max-width: 26em; line-height: 1.45;
+    }
+    .cover-right {
+      align-self: end;
+      border-top: 1px solid var(--rule);
+      padding-top: 30px;
+    }
+    .cover-meta-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px;
+      margin-bottom: 22px;
+    }
+    .cover-meta-row .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-mute); margin-bottom: 4px;
+    }
+    .cover-meta-row .value {
+      font-family: 'Fraunces', serif; font-weight: 400;
+      font-size: 1.05em; color: var(--ink);
+    }
+    .cover-volume {
+      font-family: 'Fraunces', serif;
+      font-size: 7.2em; font-weight: 200;
+      font-variation-settings: "SOFT" 80, "opsz" 144;
+      color: var(--indigo);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+      margin-bottom: 16px;
+    }
+    .cover-volume .small {
+      font-size: 0.18em; vertical-align: top;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--ink-mute); margin-left: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      display: inline-block; padding-top: 12px;
+    }
+
+    /* ---------- Section divider ---------- */
+    .divider {
+      background:
+        linear-gradient(135deg, var(--indigo) 0%, var(--indigo-dk) 100%);
+      color: var(--paper);
+    }
+    .divider .slide-meta,
+    .divider .slide-foot { color: rgba(250,248,244,0.55); border-color: rgba(250,248,244,0.2); }
+    .divider .slide-meta .dot { background: var(--paper); }
+    .divider-content {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      height: 100%;
+    }
+    .divider-roman {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; letter-spacing: 0.4em;
+      color: rgba(250,248,244,0.6);
+      margin-bottom: 30px;
+      text-transform: uppercase;
+    }
+    .divider-number {
+      font-family: 'Fraunces', serif;
+      font-weight: 200;
+      font-variation-settings: "SOFT" 60, "opsz" 144;
+      font-size: 11em;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: var(--paper);
+      margin-bottom: 0;
+    }
+    .divider-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 350;
+      font-size: 2.4em;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+      margin: 8px 0 22px;
+      max-width: 18em;
+    }
+    .divider-title em { color: rgba(255,255,255,0.85); font-style: italic; }
+    .divider-quote {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 1.05em;
+      color: rgba(250,248,244,0.7);
+      max-width: 26em;
+      border-left: 2px solid rgba(250,248,244,0.4);
+      padding-left: 18px;
+    }
+
+    /* ---------- Pull quote slide ---------- */
+    .pullquote {
+      display: flex; flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      padding: 80px 140px;
+    }
+    .pullquote blockquote {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 350;
+      font-size: 2.3em;
+      line-height: 1.18;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      border: none; margin: 0 0 30px;
+      padding: 0;
+    }
+    .pullquote blockquote::before {
+      content: "“";
+      font-family: 'Fraunces', serif;
+      font-size: 3em; line-height: 0.6;
+      color: var(--indigo);
+      display: block;
+      margin-bottom: 0.1em;
+    }
+    .pullquote cite {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--ink-mute);
+      font-style: normal;
+    }
+
+    /* ---------- Tables ---------- */
+    .reveal table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0 14px;
+      font-feature-settings: "tnum", "lnum";
+    }
+    .reveal table thead th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 500;
+      text-align: left;
+      padding: 10px 18px 10px 0;
+      border-bottom: 1.5px solid var(--ink);
+      vertical-align: bottom;
+    }
+    .reveal table tbody td {
+      padding: 12px 18px 12px 0;
+      border-bottom: 1px solid var(--rule-soft);
+      vertical-align: top;
+      color: var(--ink);
+      font-size: 0.8em;
+      line-height: 1.42;
+    }
+    .reveal table tbody td.num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72em;
+      color: var(--ink-soft);
+    }
+    .reveal table tbody td.label {
+      font-weight: 600; white-space: nowrap;
+    }
+    .reveal table.compact tbody td { padding: 8px 14px 8px 0; font-size: 0.75em; }
+
+    /* ---------- Layout helpers ---------- */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr; gap: 50px;
+      align-items: start;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr; gap: 36px;
+      align-items: start;
+    }
+    .four-col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); gap: 28px;
+      align-items: start;
+    }
+
+    .label-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--indigo);
+      margin-bottom: 14px;
+    }
+
+    .lede {
+      font-family: 'Crimson Pro', serif;
+      font-style: italic;
+      font-size: 1.18em;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      max-width: 28em;
+      margin: 0 0 1.2em;
+    }
+
+    .footnote {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-mute);
+      letter-spacing: 0.05em;
+      margin-top: 16px;
+    }
+
+    /* ---------- Card / box ---------- */
+    .card {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule-soft);
+      padding: 22px 26px;
+      border-radius: 2px;
+    }
+    .card h3 { margin-bottom: 12px; font-size: 1em; color: var(--indigo-dk); }
+    .card p, .card ul li { font-size: 0.85em; line-height: 1.42; }
+
+    .callout {
+      border-left: 3px solid var(--indigo);
+      padding: 4px 0 4px 24px;
+      margin: 12px 0;
+      color: var(--ink-soft);
+      font-style: italic;
+      font-size: 0.92em;
+    }
+
+    /* ---------- Venn-ish intersection ---------- */
+    .venn {
+      position: relative; width: 720px; height: 460px;
+      margin: 30px auto 0;
+    }
+    .venn .ring {
+      position: absolute;
+      border: 1.5px solid var(--indigo);
+      background: rgba(63,81,181,0.06);
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+    }
+    .venn .r1 { top: 0;   left: 40px;  border-color: var(--indigo); }
+    .venn .r2 { top: 0;   left: 320px; border-color: var(--crimson); background: rgba(183,50,57,0.06); }
+    .venn .r3 { top: 90px; left: 180px; border-color: var(--ink); background: rgba(26,26,46,0.05); }
+    .venn .lbl {
+      position: absolute; font-family: 'Fraunces', serif;
+      font-weight: 500; font-size: 0.85em;
+      letter-spacing: -0.01em; text-align: center;
+    }
+    .venn .lbl-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55em; color: var(--ink-mute);
+      letter-spacing: 0.18em; text-transform: uppercase;
+      display: block; margin-top: 4px;
+    }
+    .venn .l1 { top: 30px;   left: 80px;  color: var(--indigo-dk); }
+    .venn .l2 { top: 30px;   left: 430px; color: var(--crimson); }
+    .venn .l3 { top: 380px; left: 240px; color: var(--ink); }
+    .venn .center {
+      position: absolute; top: 200px; left: 290px;
+      width: 140px; text-align: center;
+      font-family: 'Fraunces', serif; font-weight: 500;
+      font-size: 0.95em; color: var(--ink);
+    }
+
+    /* ---------- Course-roadmap ---------- */
+    .roadmap {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 18px;
+      border-top: 2px solid var(--ink);
+    }
+    .roadmap .col { padding: 18px 22px 12px; border-right: 1px solid var(--rule-soft); }
+    .roadmap .col:last-child { border-right: none; }
+    .roadmap .week-no {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--indigo); margin-bottom: 4px;
+    }
+    .roadmap .week-name {
+      font-family: 'Fraunces', serif; font-size: 1.08em; font-weight: 500;
+      margin-bottom: 10px; color: var(--ink); line-height: 1.15;
+    }
+    .roadmap .week-list { list-style: none; padding: 0; margin: 0; }
+    .roadmap .week-list li {
+      font-size: 0.78em; padding: 5px 0;
+      border-bottom: 1px dotted var(--rule-soft);
+      color: var(--ink-soft); list-style: none;
+      padding-left: 0;
+    }
+    .roadmap .week-list li::before { display: none; }
+    .roadmap .week-list li .num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85em;
+      color: var(--indigo); margin-right: 8px;
+    }
+
+    /* ---------- Stat / number callout ---------- */
+    .big-stat {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "SOFT" 70;
+      font-weight: 250;
+      font-size: 5.5em;
+      line-height: 1;
+      color: var(--indigo);
+      letter-spacing: -0.04em;
+    }
+    .big-stat .unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.16em; color: var(--ink-mute);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      vertical-align: top; margin-left: 8px;
+      padding-top: 1.6em; display: inline-block;
+    }
+
+    /* ---------- Final / Q&A slide ---------- */
+    .end {
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      height: 100%; text-align: center;
+    }
+    .end .ampersand {
+      font-family: 'Fraunces', serif; font-weight: 200;
+      font-style: italic;
+      font-variation-settings: "SOFT" 90;
+      font-size: 16em; line-height: 1;
+      color: var(--indigo);
+      letter-spacing: -0.08em;
+    }
+    .end h2 {
+      font-family: 'Fraunces', serif; font-weight: 400;
+      font-size: 2em; margin-top: -20px;
+    }
+    .end .sig {
+      font-family: 'Crimson Pro', serif; font-style: italic;
+      font-size: 1em; color: var(--ink-mute);
+      margin-top: 24px; letter-spacing: 0.02em;
+    }
+
+    /* ---------- Progress bar ---------- */
+    .reveal .progress {
+      background: var(--rule-soft);
+      height: 3px;
+      color: var(--indigo);
+    }
+    .reveal .progress span { background: var(--indigo); }
+
+    /* ---------- Slide number ---------- */
+    .reveal .slide-number {
+      background: transparent;
+      color: var(--ink-mute);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      bottom: 12px; right: 16px;
+    }
+
+    /* ---------- MathJax / formulas ---------- */
+    mjx-container { font-size: 0.95em !important; color: var(--indigo-dk) !important; }
+  </style>
+</head>
+
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- =====================  COVER  ===================== -->
+    <section class="cover" data-background="#FAF8F4">
+      <div class="cover-grid">
+        <div class="cover-left">
+          <div class="cover-eyebrow">Frostburg State University · Summer 2026</div>
+          <div class="cover-volume">01<span class="small">Lecture One</span></div>
+          <h1 class="cover-title">Software<br>Engineering<br><span class="accent">Economics</span></h1>
+          <div class="cover-rule"></div>
+          <p class="cover-sub">An introduction to the discipline that asks not <em>can we build it</em>, but <em>should we</em> — and at what cost.</p>
+        </div>
+        <div class="cover-right">
+          <div class="cover-meta-row">
+            <div><div class="label">Instructor</div><div class="value">Dr. Zhijiang Chen</div></div>
+            <div><div class="label">Session</div><div class="value">No. 01 of 16</div></div>
+            <div><div class="label">Date</div><div class="value">3 June 2026</div></div>
+            <div><div class="label">Room</div><div class="value">YF302</div></div>
+            <div><div class="label">Duration</div><div class="value">110 minutes</div></div>
+            <div><div class="label">Format</div><div class="value">Lecture &amp; Discussion</div></div>
+          </div>
+          <div class="footnote">A course in fourteen lectures · two presentations · one examination.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================  AGENDA  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>Lecture I</span><span class="dot"></span><span>Agenda</span></span>
+        <span class="right">02</span>
+      </div>
+      <span class="label-tag">Today's Plan</span>
+      <h1>Six movements,<br>one motivation.</h1>
+      <p class="lede">By the end of this session you should know what software engineering economics <em>is</em>, why a working engineer should care, and how the next sixteen sessions will unfold.</p>
+
+      <table class="compact">
+        <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
+        <tbody>
+          <tr><td class="num">I.</td><td>What is software engineering economics?</td><td class="num">15</td></tr>
+          <tr><td class="num">II.</td><td>Why every engineer needs economic literacy</td><td class="num">15</td></tr>
+          <tr><td class="num">III.</td><td>Boehm's seven-step framework</td><td class="num">20</td></tr>
+          <tr><td class="num">IV.</td><td>The decisions economics informs</td><td class="num">15</td></tr>
+          <tr><td class="num">V.</td><td>A motivating example: Build or Buy?</td><td class="num">15</td></tr>
+          <tr><td class="num">VI.</td><td>Course roadmap, expectations, assessment</td><td class="num">20</td></tr>
+          <tr><td></td><td><em>Discussion, homework, questions</em></td><td class="num">10</td></tr>
+        </tbody>
+      </table>
+      <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen · FSU 2026</span></div>
+    </section>
+
+    <!-- =====================  § I DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part One</span><span class="dot"></span><span>Definition</span></span>
+        <span class="right">03</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — One</div>
+        <div class="divider-number">I</div>
+        <h2 class="divider-title">What <em>is</em> software<br>engineering economics?</h2>
+        <p class="divider-quote">"Every software decision is, in the end, an economic decision."<br>— after Barry W. Boehm, 1981</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ I · Definition</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  DEFINITION  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Definition</span></span>
+        <span class="right">04</span>
+      </div>
+      <span class="label-tag">Working Definition</span>
+      <h1>An applied discipline at the<br>intersection of three fields.</h1>
+
+      <div class="two-col" style="margin-top: 30px;">
+        <div>
+          <p>Software Engineering Economics applies the methods of economic analysis to decisions about the <em>development, acquisition, evolution,</em> and <em>operation</em> of software systems.</p>
+          <p>It was systematised in <strong>1981</strong> by <strong>Barry W. Boehm</strong> in the eponymous textbook — the same volume that gave us the original COCOMO model.</p>
+          <div class="callout">For the working engineer, it answers a single recurring question:<br><strong>given scarce resources, what should we build, and how?</strong></div>
+        </div>
+        <div class="venn">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+          <div class="lbl l1">Software<br>Engineering<span class="lbl-sub">the craft</span></div>
+          <div class="lbl l2">Engineering<br>Economics<span class="lbl-sub">the calculus</span></div>
+          <div class="lbl l3">Management<br>Science<span class="lbl-sub">the organisation</span></div>
+          <div class="center">SEE</div>
+        </div>
+      </div>
+
+      <div class="slide-foot"><span class="course">§ I · Definition</span><span>04 / 38</span></div>
+    </section>
+
+    <!-- =====================  RESOURCES  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Resources at stake</span></span>
+        <span class="right">05</span>
+      </div>
+      <span class="label-tag">Scarce by Definition</span>
+      <h1>What economists count, and what software engineers usually don't.</h1>
+
+      <table>
+        <thead><tr><th style="width: 16%">Resource</th><th>What it is</th><th>How software people under-count it</th></tr></thead>
+        <tbody>
+          <tr><td class="label">Money</td><td>Budget, op-ex, licences, infra.</td><td>Spreadsheets hide the long tail of run-time cost.</td></tr>
+          <tr><td class="label">Time</td><td>Calendar weeks, engineer hours, compute seconds.</td><td>Optimism bias on every estimate ever made.</td></tr>
+          <tr><td class="label">People</td><td>Engineers, designers, PMs, support.</td><td>Counting heads, ignoring context-switching cost.</td></tr>
+          <tr><td class="label">Compute</td><td>CPU, GPU, memory, bandwidth, <em>tokens</em>.</td><td>"Free" until the first cloud bill arrives.</td></tr>
+          <tr><td class="label">Attention</td><td>Cognitive load on users <em>and on engineers</em>.</td><td>Treated as infinite; in fact the binding constraint.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">— Tokens, GPU-time, and inference-latency are 2020s additions to a canon written in 1981.</p>
+      <div class="slide-foot"><span class="course">§ I · Definition</span><span>05 / 38</span></div>
+    </section>
+
+    <!-- =====================  PULL QUOTE  ===================== -->
+    <section class="pullquote">
+      <div class="slide-meta">
+        <span class="left"><span>§ I</span><span class="dot"></span><span>Working definition</span></span>
+        <span class="right">06</span>
+      </div>
+      <blockquote>
+        Software engineering economics is the study of <em>how to make good software decisions</em> when resources are scarce.
+      </blockquote>
+      <cite>— working definition for this course</cite>
+      <div class="slide-foot"><span class="course">§ I · Definition</span><span>06 / 38</span></div>
+    </section>
+
+    <!-- =====================  § II DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Two</span><span class="dot"></span><span>Motivation</span></span>
+        <span class="right">07</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Two</div>
+        <div class="divider-number">II</div>
+        <h2 class="divider-title">Why should <em>you</em>,<br>a software engineer,<br>care about economics?</h2>
+        <p class="divider-quote">"Engineers are not paid to write code. They are paid to deliver value."</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ II · Motivation</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  HIDDEN QUESTIONS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Hidden questions</span></span>
+        <span class="right">08</span>
+      </div>
+      <span class="label-tag">Every technical question is also an economic one</span>
+      <h1>Translate the question.</h1>
+
+      <table>
+        <thead><tr><th style="width:48%">The technical question</th><th>The hidden economic question</th></tr></thead>
+        <tbody>
+          <tr><td>Should we refactor this module?</td><td>Is the future cost saving worth the present rework?</td></tr>
+          <tr><td>Microservices, or monolith?</td><td>Which architecture minimises five-year total cost of ownership?</td></tr>
+          <tr><td>Should we adopt this new framework?</td><td>Does the productivity gain exceed migration cost?</td></tr>
+          <tr><td>Build it, or buy a SaaS product?</td><td>Which alternative has the better Net Present Value?</td></tr>
+          <tr><td>How much testing is enough?</td><td>What level of defect risk are we economically willing to accept?</td></tr>
+          <tr><td>Should we adopt an AI coding assistant?</td><td>Does the productivity gain cover licence + token + verification cost?</td></tr>
+        </tbody>
+      </table>
+      <div class="slide-foot"><span class="course">§ II · Motivation</span><span>08 / 38</span></div>
+    </section>
+
+    <!-- =====================  PITFALLS  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ II</span><span class="dot"></span><span>Common pitfalls</span></span>
+        <span class="right">09</span>
+      </div>
+      <span class="label-tag">What happens without the economic lens</span>
+      <h1>Four ways smart engineers<br>optimise the wrong thing.</h1>
+
+      <div class="four-col" style="margin-top: 28px;">
+        <div class="card">
+          <h3>Local beauty</h3>
+          <p>Polishing one module while the system around it loses money.</p>
+        </div>
+        <div class="card">
+          <h3>Premature scale</h3>
+          <p>Engineering for users that may never arrive — burning capital that revenue can't yet justify.</p>
+        </div>
+        <div class="card">
+          <h3>False economy</h3>
+          <p>Saving a small effort now, paying a large cost later. The "five-minute fix" that fossilises.</p>
+        </div>
+        <div class="card">
+          <h3>Sunk-cost loyalty</h3>
+          <p>Continuing a failing initiative <em>because</em> it has consumed so much already.</p>
+        </div>
+      </div>
+
+      <p class="lede" style="margin-top: 36px;">This course gives you the vocabulary and the discipline to recognise — and resist — each of these in your own work.</p>
+      <div class="slide-foot"><span class="course">§ II · Motivation</span><span>09 / 38</span></div>
+    </section>
+
+    <!-- =====================  § III DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Three</span><span class="dot"></span><span>Framework</span></span>
+        <span class="right">10</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Three</div>
+        <div class="divider-number">III</div>
+        <h2 class="divider-title">Boehm's seven steps —<br>the spine of <em>every</em><br>economic analysis.</h2>
+        <p class="divider-quote">A discipline so general that it works for a $10K tooling decision and a $10M platform investment alike.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ III · Framework</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  7 STEPS OVERVIEW  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ III</span><span class="dot"></span><span>The seven steps</span></span>
+        <span class="right">11</span>
+      </div>
+      <span class="label-tag">Boehm, 1981 — Chapter 1</span>
+      <h1>A discipline of <em>seven</em> moves.</h1>
+
+      <table>
+        <thead><tr><th style="width: 6%">#</th><th>Activity</th><th>Example, in the AI age</th></tr></thead>
+        <tbody>
+          <tr><td class="num">01</td><td class="label">Establish objectives</td><td>"Reduce ticket resolution time by 30% in 12 months."</td></tr>
+          <tr><td class="num">02</td><td class="label">Identify alternatives</td><td>Hire more agents · deploy an AI assistant · outsource.</td></tr>
+          <tr><td class="num">03</td><td class="label">Define assumptions & constraints</td><td>Budget &lt; $500K; PII cannot leave the cluster.</td></tr>
+          <tr><td class="num">04</td><td class="label">Build cost models</td><td>Estimate ticket volume, labour cost, token spend, ramp time.</td></tr>
+          <tr><td class="num">05</td><td class="label">Evaluate quantitatively</td><td>Compute NPV, IRR, payback for each option.</td></tr>
+          <tr><td class="num">06</td><td class="label">Sensitivity &amp; risk</td><td>What if volume grows 50%? if API prices rise 30%?</td></tr>
+          <tr><td class="num">07</td><td class="label">Iterate &amp; decide</td><td>Choose, document, set review checkpoints.</td></tr>
+        </tbody>
+      </table>
+      <div class="slide-foot"><span class="course">§ III · Framework</span><span>11 / 38</span></div>
+    </section>
+
+    <!-- =====================  FRAMEWORK IN PRACTICE  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ III</span><span class="dot"></span><span>In practice</span></span>
+        <span class="right">12</span>
+      </div>
+      <span class="label-tag">A note on rigour</span>
+      <h1>Rigid in <em>form</em>,<br>flexible in <em>application</em>.</h1>
+
+      <div class="two-col">
+        <div>
+          <h3>What stays constant</h3>
+          <ul>
+            <li>Every analysis is anchored to an explicit <em>objective</em>.</li>
+            <li>Alternatives are compared on the <em>same basis</em>.</li>
+            <li>Assumptions are written down — so the next engineer can check them.</li>
+            <li>The decision is documented, not just made.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>What changes with context</h3>
+          <ul>
+            <li>The <em>depth</em> of each step — back-of-envelope for tooling, full Monte-Carlo for platforms.</li>
+            <li>The <em>units</em> — dollars, engineer-weeks, latency milliseconds, tokens-per-task.</li>
+            <li>The <em>stakeholders</em> — engineers, finance, legal, customers.</li>
+          </ul>
+          <p class="footnote">We will return to this framework in <em>every</em> remaining lecture.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ III · Framework</span><span>12 / 38</span></div>
+    </section>
+
+    <!-- =====================  § IV DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Four</span><span class="dot"></span><span>Decisions</span></span>
+        <span class="right">13</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Four</div>
+        <div class="divider-number">IV</div>
+        <h2 class="divider-title">A map of the decisions<br>this discipline can <em>actually</em> help with.</h2>
+      </div>
+      <div class="slide-foot"><span class="course">§ IV · Decisions</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  DECISION MAP  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ IV</span><span class="dot"></span><span>Decision map</span></span>
+        <span class="right">14</span>
+      </div>
+      <span class="label-tag">Where SEE shows up</span>
+      <h1>Five families, one toolbox.</h1>
+
+      <div class="two-col" style="margin-top: 22px;">
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <h3>① Project decisions</h3>
+            <p>Should we start? How big will it be? How risky? <br><em>Tools: NPV, payback, COCOMO II, Monte Carlo.</em></p>
+          </div>
+          <div class="card" style="margin-bottom: 16px;">
+            <h3>② Architecture decisions</h3>
+            <p>Build vs. buy vs. open source vs. SaaS. Monolith, microservices, serverless. <br><em>Tools: TCO comparison, VBSE.</em></p>
+          </div>
+          <div class="card">
+            <h3>③ Quality decisions</h3>
+            <p>How much testing, review, observability? Pay technical debt now or later? <br><em>Tools: defect-cost curve, debt modeling.</em></p>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom: 16px;">
+            <h3>④ Operations &amp; lifecycle</h3>
+            <p>When to retire, when to rewrite, when to leave it alone. <br><em>Tools: maintenance economics, rewrite-break-even.</em></p>
+          </div>
+          <div class="card" style="background: var(--indigo-lt); border-color: var(--indigo);">
+            <h3 style="color: var(--indigo-dk)">⑤ AI-era decisions <span style="font-family: 'JetBrains Mono', monospace; font-size:0.55em; letter-spacing: 0.2em; color: var(--indigo); margin-left:8px;">NEW</span></h3>
+            <p>Self-host vs. API · adopt AI coding assistant · price an AI-powered product. <br><em>Tools: token economics, productivity ROI, unit economics.</em></p>
+          </div>
+          <p class="footnote">Lectures 12 &amp; 13 are dedicated to family ⑤.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ IV · Decisions</span><span>14 / 38</span></div>
+    </section>
+
+    <!-- =====================  § V DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Five</span><span class="dot"></span><span>Worked example</span></span>
+        <span class="right">15</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Five</div>
+        <div class="divider-number">V</div>
+        <h2 class="divider-title">A motivating example —<br>build it ourselves,<br>or buy a SaaS?</h2>
+        <p class="divider-quote">We will not yet solve this. We will solve it together in Lecture V.</p>
+      </div>
+      <div class="slide-foot"><span class="course">§ V · Worked example</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  EXAMPLE SETUP  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ V</span><span class="dot"></span><span>Build vs. buy</span></span>
+        <span class="right">16</span>
+      </div>
+      <span class="label-tag">A small but real decision</span>
+      <h1>Adding search to a product.</h1>
+      <p class="lede">Two equally plausible alternatives, very different cash-flow shapes. Without the time value of money, you cannot tell them apart.</p>
+
+      <table>
+        <thead><tr><th>Alternative</th><th class="num" style="text-align:right">One-time cost</th><th class="num" style="text-align:right">Annual op cost</th><th class="num" style="text-align:right">Useful life</th></tr></thead>
+        <tbody>
+          <tr><td class="label">A. Build in-house with Elasticsearch</td><td class="num" style="text-align:right">$&nbsp;120,000</td><td class="num" style="text-align:right">$&nbsp;30,000</td><td class="num" style="text-align:right">5 years</td></tr>
+          <tr><td class="label">B. Subscribe to a SaaS search vendor</td><td class="num" style="text-align:right">$&nbsp;20,000</td><td class="num" style="text-align:right">$&nbsp;80,000</td><td class="num" style="text-align:right">5 years</td></tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top: 24px;">At an opportunity cost of capital of <strong>10%</strong>, which alternative is cheaper in present-value terms?</p>
+
+      <div class="callout">The "right" answer depends on the <em>time value of money</em> — a concept we will formalise in Lecture III and apply rigorously in Lecture V.</div>
+      <div class="slide-foot"><span class="course">§ V · Worked example</span><span>16 / 38</span></div>
+    </section>
+
+    <!-- =====================  IN-CLASS POLL  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ V</span><span class="dot"></span><span>In-class poll</span></span>
+        <span class="right">17</span>
+      </div>
+      <span class="label-tag">Quick — gut response only</span>
+      <h1>Without computing<br>a single number:</h1>
+      <p class="lede" style="font-size: 1.5em; margin-top: 30px;">Which alternative would <em>you</em> recommend — and what is the single biggest factor driving your gut?</p>
+
+      <div class="two-col" style="margin-top: 50px;">
+        <div class="card" style="text-align:center; padding: 36px;">
+          <div class="big-stat">A<span class="unit">build</span></div>
+          <p style="margin-top: 18px;">Heavy upfront, light run-time.</p>
+        </div>
+        <div class="card" style="text-align:center; padding: 36px;">
+          <div class="big-stat">B<span class="unit">buy</span></div>
+          <p style="margin-top: 18px;">Light upfront, heavy run-time.</p>
+        </div>
+      </div>
+
+      <p class="footnote" style="margin-top: 36px;">We will revisit your gut in Lecture V — with numbers. Try not to flip your vote between now and then.</p>
+      <div class="slide-foot"><span class="course">§ V · Worked example</span><span>17 / 38</span></div>
+    </section>
+
+    <!-- =====================  § VI DIVIDER  ===================== -->
+    <section class="divider">
+      <div class="slide-meta">
+        <span class="left"><span>Part Six</span><span class="dot"></span><span>The course</span></span>
+        <span class="right">18</span>
+      </div>
+      <div class="divider-content">
+        <div class="divider-roman">Part — Six</div>
+        <div class="divider-number">VI</div>
+        <h2 class="divider-title">What you will learn —<br>and what you will be<br>asked to <em>produce</em>.</h2>
+      </div>
+      <div class="slide-foot"><span class="course">§ VI · Course</span><span>Lecture One</span></div>
+    </section>
+
+    <!-- =====================  COURSE MAP  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>The roadmap</span></span>
+        <span class="right">19</span>
+      </div>
+      <span class="label-tag">Sixteen sessions, three weeks</span>
+      <h1>The shape of the term.</h1>
+
+      <div class="roadmap">
+        <div class="col">
+          <div class="week-no">Week 14 · Jun 3–7</div>
+          <div class="week-name">Foundations of<br>Engineering Economics</div>
+          <ul class="week-list">
+            <li><span class="num">01</span>Introduction</li>
+            <li><span class="num">02</span>Cost concepts &amp; lifecycle</li>
+            <li><span class="num">03</span>Time value of money</li>
+            <li><span class="num">04</span>Cash flow &amp; equivalence</li>
+            <li><span class="num">05</span>Investment decisions</li>
+          </ul>
+        </div>
+        <div class="col">
+          <div class="week-no">Week 15 · Jun 8–14</div>
+          <div class="week-name">Decision Methods,<br>Estimation &amp; Strategy</div>
+          <ul class="week-list">
+            <li><span class="num">06</span>Break-even &amp; sensitivity</li>
+            <li><span class="num">07</span>Risk &amp; decision</li>
+            <li><span class="num">08</span>Estimation I — size, FP</li>
+            <li><span class="num">09</span>Estimation II — COCOMO II</li>
+            <li><span class="num">10</span>Quality &amp; maintenance</li>
+            <li><span class="num">11</span>Build / buy / reuse · VBSE</li>
+            <li><span class="num">12</span>AI · estimation impact</li>
+          </ul>
+        </div>
+        <div class="col">
+          <div class="week-no">Week 16 · Jun 15–18</div>
+          <div class="week-name">AI Economics,<br>Presentations &amp; Final</div>
+          <ul class="week-list">
+            <li><span class="num">13</span>AI · token economics &amp; ROI</li>
+            <li><span class="num">14</span>Student presentations I</li>
+            <li><span class="num">15</span>Student presentations II</li>
+            <li><span class="num">16</span>Final examination</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="footnote" style="margin-top: 28px;">Each lecture page on the course site carries: objectives · key formulas · worked examples · in-class exercises · homework.</p>
+      <div class="slide-foot"><span class="course">§ VI · Course</span><span>19 / 38</span></div>
+    </section>
+
+    <!-- =====================  ASSESSMENT  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>Assessment</span></span>
+        <span class="right">20</span>
+      </div>
+      <span class="label-tag">How you will be graded</span>
+      <h1>Four ways the course<br>measures your learning.</h1>
+
+      <div class="two-col" style="margin-top: 28px;">
+        <div>
+          <table>
+            <thead><tr><th>Component</th><th class="num" style="text-align:right">Weight</th></tr></thead>
+            <tbody>
+              <tr><td>Participation &amp; in-class quizzes</td><td class="num" style="text-align:right">15%</td></tr>
+              <tr><td>Homework assignments (~6)</td><td class="num" style="text-align:right">25%</td></tr>
+              <tr><td>Group project &amp; presentation</td><td class="num" style="text-align:right">30%</td></tr>
+              <tr><td>Final exam (closed book)</td><td class="num" style="text-align:right">30%</td></tr>
+              <tr><td><strong>Total</strong></td><td class="num" style="text-align:right"><strong>100%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Grading scale</h3>
+          <table class="compact">
+            <tbody>
+              <tr><td class="label">A</td><td class="num">90 +</td></tr>
+              <tr><td class="label">B</td><td class="num">80 – 89</td></tr>
+              <tr><td class="label">C</td><td class="num">70 – 79</td></tr>
+              <tr><td class="label">D</td><td class="num">60 – 69</td></tr>
+              <tr><td class="label">F</td><td class="num">below 60</td></tr>
+            </tbody>
+          </table>
+          <p class="footnote">Late work: −10% per day, three-day maximum.</p>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ VI · Course</span><span>20 / 38</span></div>
+    </section>
+
+    <!-- =====================  GROUP PROJECT  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>Group project</span></span>
+        <span class="right">21</span>
+      </div>
+      <span class="label-tag">The capstone — 30% of your grade</span>
+      <h1>A full economic analysis,<br>defended before peers.</h1>
+
+      <div class="two-col">
+        <div>
+          <h3>Required content</h3>
+          <ol>
+            <li>Project description and scope.</li>
+            <li>Cost estimate (Function Points or COCOMO II), with assumptions.</li>
+            <li>Cash-flow forecast and ≥ 2 alternatives.</li>
+            <li>NPV, IRR, payback, PI for each.</li>
+            <li>Sensitivity or risk analysis.</li>
+            <li><em>Bonus:</em> AI-cost dimension (tokens, productivity).</li>
+            <li>Recommendation with stakeholder rationale.</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Logistics</h3>
+          <ul>
+            <li>Teams of 3 – 4.</li>
+            <li>Briefs released <em>Lecture 8 · 10 Jun</em>.</li>
+            <li>Presentations in <em>Lectures 14 &amp; 15</em>.</li>
+            <li>12 min talk · 5 min Q&amp;A · 3 min peer eval.</li>
+            <li>Reports due before the final exam.</li>
+          </ul>
+          <div class="callout" style="margin-top: 16px;">Teams self-select after Lecture 5 — choose collaborators carefully.</div>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ VI · Course</span><span>21 / 38</span></div>
+    </section>
+
+    <!-- =====================  READING  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>§ VI</span><span class="dot"></span><span>Reading</span></span>
+        <span class="right">22</span>
+      </div>
+      <span class="label-tag">Books and papers</span>
+      <h1>What's on the shelf.</h1>
+
+      <div class="two-col" style="margin-top: 18px;">
+        <div>
+          <h3>Required</h3>
+          <ul>
+            <li><strong>Boehm, B. W.</strong> (1981). <em>Software Engineering Economics.</em> Prentice Hall — the foundation.</li>
+            <li><strong>Boehm, B. W., et al.</strong> (2000). <em>Software Cost Estimation with COCOMO II.</em> Prentice Hall.</li>
+            <li>Selected articles on Value-Based SE and AI economics (linked in each lecture).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Recommended</h3>
+          <ul>
+            <li><strong>Park, C. S.</strong> <em>Contemporary Engineering Economics</em> — for the engineering-economics canon.</li>
+            <li><strong>Erdogmus, H., Favaro, J., Halling, M.</strong> (2004). "Valuation of software initiatives under uncertainty."</li>
+            <li>2026 industry reports on LLM cost, prompt caching, AI coding productivity — linked in Lectures 12 &amp; 13.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-foot"><span class="course">§ VI · Course</span><span>22 / 38</span></div>
+    </section>
+
+    <!-- =====================  DISCUSSION  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>Discussion</span><span class="dot"></span><span>Three prompts</span></span>
+        <span class="right">23</span>
+      </div>
+      <span class="label-tag">Open floor — 10 minutes</span>
+      <h1>Three questions for the room.</h1>
+
+      <ol style="margin-top: 30px; font-size: 1.05em;">
+        <li>Recall a software decision you have made or witnessed. Was <em>any</em> economic analysis performed — and if not, what was used instead?</li>
+        <li>What is the "cost" — to the team, the user, the company — of (a) good code shipped late, vs. (b) average code shipped on time?</li>
+        <li>Which of Boehm's seven steps do real engineering teams most often <em>skip</em> — and why?</li>
+      </ol>
+      <div class="slide-foot"><span class="course">Discussion</span><span>23 / 38</span></div>
+    </section>
+
+    <!-- =====================  HOMEWORK  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>Homework</span><span class="dot"></span><span>Due Lecture 3</span></span>
+        <span class="right">24</span>
+      </div>
+      <span class="label-tag">Homework 01 — due Friday 5 June, before class</span>
+      <h1>Apply the framework.</h1>
+
+      <ol style="margin-top: 24px;">
+        <li>Read <strong>Boehm (1981), Chapter 1</strong>, and write a one-page reflection on which of Boehm's claims have aged well — and which have been overtaken by the AI era.</li>
+        <li>Identify one decision from your current job or last group project that, in retrospect, would have benefited from Boehm's seven steps. In <strong>1–2 pages</strong>, walk through the seven steps <em>as if you were making the decision today</em>.</li>
+      </ol>
+
+      <div class="callout" style="margin-top: 22px;">Submit as a single PDF to the course Git repository, in <code>/submissions/HW1/&lt;your-name&gt;.pdf</code>. Late submissions: −10%/day.</div>
+      <div class="slide-foot"><span class="course">Homework 01</span><span>24 / 38</span></div>
+    </section>
+
+    <!-- =====================  END  ===================== -->
+    <section>
+      <div class="slide-meta">
+        <span class="left"><span>End</span><span class="dot"></span><span>Lecture One</span></span>
+        <span class="right">25</span>
+      </div>
+      <div class="end">
+        <div class="ampersand">&amp;</div>
+        <h2>Questions &amp; conversation.</h2>
+        <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
+      </div>
+      <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen · FSU 2026</span></div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: false,
+    controls: true,
+    progress: true,
+    width: 1440,
+    height: 900,
+    margin: 0.04,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    plugins: [ RevealNotes, RevealMath.MathJax3 ],
+    mathjax3: {
+      tex: { inlineMath: [['\\(','\\)']] },
+      svg: { fontCache: 'global' }
+    }
+  });
+</script>
+</body>
+</html>
