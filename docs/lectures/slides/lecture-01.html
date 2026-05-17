@@ -568,6 +568,16 @@
           <div class="footnote">A course in fourteen lectures · two presentations · one examination.</div>
         </div>
       </div>
+      <aside class="notes">
+        Welcome the class. Introduce yourself briefly: 30 seconds — name, what you do
+        outside teaching, why you're excited to teach this course this summer.
+        Ask the room to keep two questions in mind for the next 110 minutes:
+        (1) "What software decision in my own life would I have made differently
+        if I had known what's in this course?" and (2) "Where am I most likely
+        to use this material in the next six months?". Set a relaxed tone —
+        this is a quantitative course but every formula has a story behind it.
+        ~3 minutes.
+      </aside>
     </section>
 
     <!-- =====================  AGENDA  ===================== -->
@@ -592,6 +602,14 @@
           <tr><td></td><td><em>Discussion, homework, questions</em></td><td class="num">10</td></tr>
         </tbody>
       </table>
+      <aside class="notes">
+        Walk the agenda quickly — 90 seconds, not five minutes. Emphasise two things:
+        (1) we WILL run a poll in Part V; come back from any mental wandering by then.
+        (2) Parts I–IV are conceptual; Part V is concrete; Part VI is logistics.
+        Tell them the seven-step framework in Part III is the spine of every later
+        lecture. If they only retain one thing today, retain that.
+        ~2 minutes total.
+      </aside>
     </section>
 
     <!-- =====================  § I DIVIDER  ===================== -->
@@ -607,6 +625,14 @@
         <p class="divider-quote">"Every software decision is, in the end, an economic decision."<br>— after Barry W. Boehm, 1981</p>
       </div>
       <div class="slide-foot"><span class="course">§ I · Definition</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Pause on the quote. Ask the class: do you agree? Has anyone ever made a
+        software decision that was NOT, at root, an economic decision?
+        Even the most "purely technical" choices — language, framework, library —
+        are economic: they trade off engineer time, future maintenance, hiring
+        difficulty. Set this up as the central claim of the course.
+        ~1 minute, then move on.
+      </aside>
     </section>
 
     <!-- =====================  DEFINITION  ===================== -->
@@ -636,6 +662,17 @@
       </div>
 
       <div class="slide-foot"><span class="course">§ I · Definition</span><span>04 / 38</span></div>
+      <aside class="notes">
+        Define SEE in your own words; do not just read the slide. Anchor the
+        definition with Barry Boehm — show a slide-image of the 1981 textbook
+        cover if you have it, or just say it's the same person who later gave
+        us COCOMO and the Spiral Model.
+        Walk the Venn deliberately: software engineering is the craft, engineering
+        economics is the calculus (PV, IRR, etc., which we will learn), management
+        science is the organisational dimension (stakeholders, incentives).
+        SEE lives in the intersection — and most engineers only stand in one circle.
+        ~4 minutes.
+      </aside>
     </section>
 
     <!-- =====================  RESOURCES  ===================== -->
@@ -660,6 +697,15 @@
 
       <p class="footnote">— Tokens, GPU-time, and inference-latency are 2020s additions to a canon written in 1981.</p>
       <div class="slide-foot"><span class="course">§ I · Definition</span><span>05 / 38</span></div>
+      <aside class="notes">
+        Take the five resources one at a time. For each, give a concrete
+        anecdote: e.g., a colleague who under-counted "people" because the
+        on-call rota cost was buried in a separate budget line; an AI startup
+        whose first cloud bill was 20× the projection because they didn't
+        prompt-cache. Emphasise the last row: ATTENTION. Engineers' cognitive
+        bandwidth is the most under-priced resource in modern software.
+        ~5 minutes.
+      </aside>
     </section>
 
     <!-- =====================  PULL QUOTE  ===================== -->
@@ -673,6 +719,13 @@
       </blockquote>
       <cite>— working definition for this course</cite>
       <div class="slide-foot"><span class="course">§ I · Definition</span><span>06 / 38</span></div>
+      <aside class="notes">
+        Read the quote slowly. Pause. Restate: "good decisions, scarce resources."
+        Tell the class this single sentence is the entire course. Everything
+        else — formulas, models, cases — is in service of making *good
+        decisions* about software when *resources are scarce*.
+        ~1 minute.
+      </aside>
     </section>
 
     <!-- =====================  § II DIVIDER  ===================== -->
@@ -688,6 +741,13 @@
         <p class="divider-quote">"Engineers are not paid to write code. They are paid to deliver value."</p>
       </div>
       <div class="slide-foot"><span class="course">§ II · Motivation</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Provocation line. Some students will push back internally — that's fine,
+        let them. Tell them: a beautiful codebase that no one uses is worth zero.
+        A messy codebase that prints money is worth a great deal. The job is to
+        deliver value; code is the *medium*, not the *end*.
+        ~1 minute, then advance.
+      </aside>
     </section>
 
     <!-- =====================  HIDDEN QUESTIONS  ===================== -->
@@ -711,6 +771,16 @@
         </tbody>
       </table>
       <div class="slide-foot"><span class="course">§ II · Motivation</span><span>08 / 38</span></div>
+      <aside class="notes">
+        Don't read every row. Pick three favourites and go deeper.
+        Recommended: refactor question (PV of future savings), build-vs-buy
+        (we'll work this in Part V), and AI coding assistant (verification
+        overhead is the hidden cost most teams miss).
+        Ask the class: "Has anyone been in a meeting where a question on the
+        left was asked but the question on the right was the *actual* decision
+        criterion?" Almost everyone has.
+        ~6 minutes.
+      </aside>
     </section>
 
     <!-- =====================  PITFALLS  ===================== -->
@@ -743,6 +813,18 @@
 
       <p class="lede" style="margin-top: 36px;">This course gives you the vocabulary and the discipline to recognise — and resist — each of these in your own work.</p>
       <div class="slide-foot"><span class="course">§ II · Motivation</span><span>09 / 38</span></div>
+      <aside class="notes">
+        For each pitfall, give ONE short story. Suggested:
+        • Local beauty — the team that spent three sprints unit-testing a module
+          that was deprecated six months later.
+        • Premature scale — the startup that built a Kubernetes cluster for 50 users.
+        • False economy — the "five-minute" datetime-as-string hack that took
+          a year to unwind.
+        • Sunk cost — the abandoned migration we kept funding because "we've
+          already paid for the licences."
+        Ask the room: which one have YOU done in the last 12 months?
+        ~5 minutes.
+      </aside>
     </section>
 
     <!-- =====================  § III DIVIDER  ===================== -->
@@ -758,6 +840,13 @@
         <p class="divider-quote">A discipline so general that it works for a $10K tooling decision and a $10M platform investment alike.</p>
       </div>
       <div class="slide-foot"><span class="course">§ III · Framework</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Set up the framework as the "muscle memory" of the course. Tell them:
+        when in doubt for the next eight weeks — return to these seven steps.
+        Boehm's framework is older than most of the languages they use, but
+        it has aged better than any of them.
+        ~45 seconds.
+      </aside>
     </section>
 
     <!-- =====================  7 STEPS OVERVIEW  ===================== -->
@@ -782,6 +871,17 @@
         </tbody>
       </table>
       <div class="slide-foot"><span class="course">§ III · Framework</span><span>11 / 38</span></div>
+      <aside class="notes">
+        Walk all seven steps, but spend most time on 1, 3 and 6 — the ones
+        engineering teams most often skip.
+        STEP 1 (objectives): teams jump to alternatives before agreeing on the goal.
+        STEP 3 (assumptions): unwritten assumptions are the source of most
+          post-launch arguments.
+        STEP 6 (sensitivity): "what if I'm wrong about this number?" is the
+          most valuable question in the framework.
+        Use the AI customer-service example as the running narrative.
+        ~10 minutes.
+      </aside>
     </section>
 
     <!-- =====================  FRAMEWORK IN PRACTICE  ===================== -->
@@ -814,6 +914,16 @@
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ III · Framework</span><span>12 / 38</span></div>
+      <aside class="notes">
+        Reinforce that the framework is not a bureaucracy. Many students will
+        push back: "this is overkill for a small decision." The answer is that
+        the SHAPE stays the same, the DEPTH varies. For a small decision the
+        whole framework might fit on a napkin in 10 minutes; for a major
+        platform decision it might take a quarter. The discipline is the same.
+        Tell them homework #1 asks them to apply this to one decision from
+        their own work — make it a real one.
+        ~3 minutes.
+      </aside>
     </section>
 
     <!-- =====================  § IV DIVIDER  ===================== -->
@@ -828,6 +938,11 @@
         <h2 class="divider-title">A map of the decisions<br>this discipline can <em>actually</em> help with.</h2>
       </div>
       <div class="slide-foot"><span class="course">§ IV · Decisions</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Brief transition. Tell the class the next slide is a map of where SEE
+        actually lives in real engineering organisations — five families.
+        ~30 seconds.
+      </aside>
     </section>
 
     <!-- =====================  DECISION MAP  ===================== -->
@@ -867,6 +982,16 @@
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ IV · Decisions</span><span>14 / 38</span></div>
+      <aside class="notes">
+        Visit each family briefly. Spend more time on ⑤ (AI-era) since it is
+        the family most engineers can't yet evaluate. Quick numbers to drop:
+        • An unconstrained AI agent can cost $5–8 per software task.
+        • Prompt caching cuts cost by 40–90%.
+        • Median payback for AI in customer service is ~4 months;
+          in engineering it is ~9 months.
+        Promise we will quantify all of this in Lectures 12 and 13.
+        ~8 minutes total.
+      </aside>
     </section>
 
     <!-- =====================  § V DIVIDER  ===================== -->
@@ -882,6 +1007,12 @@
         <p class="divider-quote">We will not yet solve this. We will solve it together in Lecture V.</p>
       </div>
       <div class="slide-foot"><span class="course">§ V · Worked example</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Transition into the example. Tell them this is the FIRST glimpse of what
+        we will do every week — economic analysis of a concrete software choice.
+        The point today is to feel the question, not solve it.
+        ~30 seconds.
+      </aside>
     </section>
 
     <!-- =====================  EXAMPLE SETUP  ===================== -->
@@ -906,6 +1037,18 @@
 
       <div class="callout">The "right" answer depends on the <em>time value of money</em> — a concept we will formalise in Lecture III and apply rigorously in Lecture V.</div>
       <div class="slide-foot"><span class="course">§ V · Worked example</span><span>16 / 38</span></div>
+      <aside class="notes">
+        Read the two alternatives slowly. Make sure everyone sees the cash-flow
+        shapes are different even though the totals over 5 years are similar:
+          A = 120 + 5·30 = $270K
+          B = 20  + 5·80 = $420K
+        On total-dollars alone, A "wins" by a lot. So why is this even a
+        decision? Because money has time value — $1 today is worth more than
+        $1 in three years. We'll discount the streams in Lecture V.
+        Ask: "Does the simple total-dollars view make you uncomfortable?"
+        Good — it should. That discomfort is what NPV resolves.
+        ~5 minutes.
+      </aside>
     </section>
 
     <!-- =====================  IN-CLASS POLL  ===================== -->
@@ -931,6 +1074,15 @@
 
       <p class="footnote" style="margin-top: 18px;">We will revisit your gut in Lecture V — with numbers. Try not to flip your vote between now and then.</p>
       <div class="slide-foot"><span class="course">§ V · Worked example</span><span>17 / 38</span></div>
+      <aside class="notes">
+        Actually run the poll. Hands up for A, then for B, then "undecided."
+        Count and WRITE THE NUMBERS on the board / save them — we will compare
+        with the post-NPV vote in Lecture V.
+        After the count, call on 2–3 students to defend their vote in one
+        sentence. Listen for words like "future," "subscription," "lock-in,"
+        "ownership" — those are exactly the intuitions NPV will formalise.
+        ~5 minutes.
+      </aside>
     </section>
 
     <!-- =====================  § VI DIVIDER  ===================== -->
@@ -945,6 +1097,12 @@
         <h2 class="divider-title">What you will learn —<br>and what you will be<br>asked to <em>produce</em>.</h2>
       </div>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>Lecture One</span></div>
+      <aside class="notes">
+        Shift gears. Tell the class: the rest of today is logistics — schedule,
+        assessment, project, reading, homework. If they have to step out, this
+        is the worst time to do it because they will miss the project brief.
+        ~30 seconds.
+      </aside>
     </section>
 
     <!-- =====================  COURSE MAP  ===================== -->
@@ -995,6 +1153,16 @@
 
       <p class="footnote" style="margin-top: 28px;">Each lecture page on the course site carries: objectives · key formulas · worked examples · in-class exercises · homework.</p>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>19 / 38</span></div>
+      <aside class="notes">
+        Walk left-to-right through the three weeks.
+        Week 14: foundations — the calculus of money in time.
+        Week 15: applied — estimation, risk, strategic decisions, plus the
+          first AI lecture.
+        Week 16: AI economics deep dive + project presentations + final.
+        Point out the course site URL on the footer. Tell them every lecture
+        page already has homework and references — they can read ahead.
+        ~4 minutes.
+      </aside>
     </section>
 
     <!-- =====================  ASSESSMENT  ===================== -->
@@ -1034,6 +1202,16 @@
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>20 / 38</span></div>
+      <aside class="notes">
+        Read the weights. Emphasise:
+        • Participation is 15% — it is more than they may expect. Show up,
+          contribute, and you start with a buffer.
+        • Project is 30% — non-trivial. Start choosing teammates today.
+        • Final is 30%, closed-book except for a one-page cheat sheet.
+        Late policy: be strict and humane. After 3 days, zero. Communicate early
+        if life happens.
+        ~3 minutes.
+      </aside>
     </section>
 
     <!-- =====================  GROUP PROJECT  ===================== -->
@@ -1071,6 +1249,16 @@
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>21 / 38</span></div>
+      <aside class="notes">
+        Walk through the seven required content items. Emphasise that this is
+        a complete economic analysis — not just a cost table, but a story with
+        a recommendation.
+        On teams: encourage mixing experience levels. A team where everyone
+        comes from the same job tends to inherit blind spots.
+        The bonus (AI-cost) is genuinely a bonus — don't force it in if it
+        doesn't fit. If the project is an AI product, it's the centrepiece.
+        ~4 minutes.
+      </aside>
     </section>
 
     <!-- =====================  READING  ===================== -->
@@ -1101,6 +1289,14 @@
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>22 / 38</span></div>
+      <aside class="notes">
+        Boehm (1981) — Chapter 1 is essential. Tell the class they can find
+        a scanned copy in the library reserve. Park is the gentlest entry to
+        engineering economics if Boehm's notation feels heavy.
+        The 2026 reports change quickly — links on the course site will be
+        kept fresh.
+        ~2 minutes.
+      </aside>
     </section>
 
     <!-- =====================  DISCUSSION  ===================== -->
@@ -1118,6 +1314,14 @@
         <li>Which of Boehm's seven steps do real engineering teams most often <em>skip</em> — and why?</li>
       </ol>
       <div class="slide-foot"><span class="course">Discussion</span><span>23 / 38</span></div>
+      <aside class="notes">
+        Open the floor. Aim for 4–5 voices. If the room is shy, start with
+        question #2 — it always gets responses because everyone has a horror
+        story.
+        Do NOT moderate too tightly; let students disagree. The goal is to
+        surface intuitions that the rest of the course will sharpen.
+        ~10 minutes.
+      </aside>
     </section>
 
     <!-- =====================  HOMEWORK  ===================== -->
@@ -1136,6 +1340,13 @@
 
       <div class="callout" style="margin-top: 22px;">Submit as a single PDF to the course Git repository, in <code>/submissions/HW1/&lt;your-name&gt;.pdf</code>. Late submissions: −10%/day.</div>
       <div class="slide-foot"><span class="course">Homework 01</span><span>24 / 38</span></div>
+      <aside class="notes">
+        Stress that #2 should be a REAL decision from their life — not invented.
+        The reflection writing is where they internalise the framework.
+        Show them how to submit via Git. Anyone unfamiliar with Git: come to
+        office hours; do not let submission mechanics cost you a grade.
+        ~2 minutes.
+      </aside>
     </section>
 
     <!-- =====================  END  ===================== -->
@@ -1150,6 +1361,13 @@
         <p class="sig">Dr. Zhijiang Chen<br>Software Engineering Economics · Summer 2026<br><span class="mono" style="font-size: 0.7em;">frostburg-state-university.github.io/bju</span></p>
       </div>
       <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen · FSU 2026</span></div>
+      <aside class="notes">
+        Thank the class. Remind them: office hours after class today,
+        Lecture 2 is tomorrow same time on cost concepts and lifecycle cost.
+        Field questions until the period ends. If any individual question
+        threatens to monopolise the room, take it offline.
+        ~10 minutes for Q&amp;A.
+      </aside>
     </section>
 
   </div>
