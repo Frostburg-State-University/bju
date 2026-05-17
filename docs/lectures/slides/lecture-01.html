@@ -39,9 +39,45 @@
     .reveal .slides { text-align: left; }
 
     .reveal .slides section {
-      padding: 70px 90px 60px;
+      padding: 90px 90px 80px;
       box-sizing: border-box;
       height: 100%;
+      position: relative;
+    }
+
+    /* ---------- Global header / footer banner (every slide) ---------- */
+    .reveal .slides section::before {
+      content: "Beijing Jiaotong University  ·  Summer 2026";
+      position: absolute;
+      top: 22px; left: 90px; right: 90px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      text-align: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule-soft);
+      pointer-events: none;
+    }
+    .reveal .slides section::after {
+      content: "Dr. Zhijiang Chen";
+      position: absolute;
+      bottom: 20px; left: 90px; right: 90px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      text-align: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--rule-soft);
+      pointer-events: none;
+    }
+    .reveal .slides section.divider::before,
+    .reveal .slides section.divider::after {
+      color: rgba(250,248,244,0.6);
+      border-color: rgba(250,248,244,0.22);
     }
 
     /* ---------- Typography ---------- */
@@ -91,10 +127,10 @@
 
     /* ---------- Editorial frame ---------- */
     .slide-meta {
-      position: absolute; top: 32px; left: 90px; right: 90px;
+      position: absolute; top: 64px; left: 90px; right: 90px;
       display: flex; justify-content: space-between;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      font-size: 10.5px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--ink-mute);
@@ -109,13 +145,12 @@
     }
 
     .slide-foot {
-      position: absolute; bottom: 28px; left: 90px; right: 90px;
+      position: absolute; bottom: 62px; left: 90px; right: 90px;
       display: flex; justify-content: space-between; align-items: baseline;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; letter-spacing: 0.18em;
+      font-size: 10.5px; letter-spacing: 0.18em;
       text-transform: uppercase; color: var(--ink-mute);
-      border-top: 1px solid var(--rule-soft);
-      padding-top: 10px;
+      padding-top: 8px;
       pointer-events: none;
     }
     .slide-foot .course { color: var(--ink-soft); font-weight: 500; }
@@ -127,21 +162,21 @@
         linear-gradient(180deg, var(--paper) 0%, var(--paper-warm) 100%);
     }
     .cover-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px;
       height: 100%;
-      align-items: end;
-      padding: 80px 90px;
+      align-items: stretch;
+      padding: 0;
     }
-    .cover-left { align-self: start; padding-top: 40px; }
+    .cover-left { align-self: center; }
     .cover-eyebrow {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--indigo); margin-bottom: 24px;
+      font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--indigo); margin-bottom: 18px;
     }
     .cover-title {
       font-family: 'Fraunces', serif;
       font-weight: 350;
-      font-size: 3.6em;
+      font-size: 2.7em;
       font-variation-settings: "SOFT" 40;
       line-height: 1.02;
       letter-spacing: -0.025em;
@@ -150,45 +185,45 @@
     }
     .cover-title .accent { color: var(--indigo); font-style: italic; font-weight: 400; }
     .cover-rule {
-      width: 80px; height: 2px; background: var(--indigo); margin: 36px 0 28px;
+      width: 68px; height: 2px; background: var(--indigo); margin: 22px 0 18px;
     }
     .cover-sub {
       font-family: 'Crimson Pro', serif; font-style: italic;
-      font-size: 1.15em; color: var(--ink-soft); max-width: 26em; line-height: 1.45;
+      font-size: 1.02em; color: var(--ink-soft); max-width: 22em; line-height: 1.42;
     }
     .cover-right {
-      align-self: end;
-      border-top: 1px solid var(--rule);
-      padding-top: 30px;
+      align-self: center;
+      border-left: 1px solid var(--rule);
+      padding-left: 38px;
     }
     .cover-meta-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px;
-      margin-bottom: 22px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
+      margin-bottom: 18px;
     }
     .cover-meta-row .label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--ink-mute); margin-bottom: 4px;
+      font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-mute); margin-bottom: 3px;
     }
     .cover-meta-row .value {
       font-family: 'Fraunces', serif; font-weight: 400;
-      font-size: 1.05em; color: var(--ink);
+      font-size: 0.95em; color: var(--ink);
     }
     .cover-volume {
       font-family: 'Fraunces', serif;
-      font-size: 7.2em; font-weight: 200;
+      font-size: 4.4em; font-weight: 200;
       font-variation-settings: "SOFT" 80, "opsz" 144;
       color: var(--indigo);
       line-height: 0.9;
-      letter-spacing: -0.06em;
-      margin-bottom: 16px;
+      letter-spacing: -0.05em;
+      margin-bottom: 10px;
     }
     .cover-volume .small {
-      font-size: 0.18em; vertical-align: top;
+      font-size: 0.2em; vertical-align: top;
       letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--ink-mute); margin-left: 12px;
+      color: var(--ink-mute); margin-left: 10px;
       font-family: 'JetBrains Mono', monospace;
-      display: inline-block; padding-top: 12px;
+      display: inline-block; padding-top: 10px;
     }
 
     /* ---------- Section divider ---------- */
@@ -515,7 +550,7 @@
     <section class="cover" data-background="#FAF8F4">
       <div class="cover-grid">
         <div class="cover-left">
-          <div class="cover-eyebrow">Frostburg State University · Summer 2026</div>
+          <div class="cover-eyebrow">Lecture One · 3 June 2026</div>
           <div class="cover-volume">01<span class="small">Lecture One</span></div>
           <h1 class="cover-title">Software<br>Engineering<br><span class="accent">Economics</span></h1>
           <div class="cover-rule"></div>
@@ -539,11 +574,11 @@
     <section>
       <div class="slide-meta">
         <span class="left"><span>Lecture I</span><span class="dot"></span><span>Agenda</span></span>
-        <span class="right">02</span>
+        <span class="right">02 / 25</span>
       </div>
       <span class="label-tag">Today's Plan</span>
-      <h1>Six movements,<br>one motivation.</h1>
-      <p class="lede">By the end of this session you should know what software engineering economics <em>is</em>, why a working engineer should care, and how the next sixteen sessions will unfold.</p>
+      <h1 style="font-size: 1.9em; margin-bottom: 0.35em;">Six movements, one motivation.</h1>
+      <p class="lede" style="font-size: 1em; margin-bottom: 0.9em;">By the end of today you should know what software engineering economics <em>is</em>, why an engineer should care, and how the next sixteen sessions will unfold.</p>
 
       <table class="compact">
         <thead><tr><th style="width:5%">§</th><th>Topic</th><th style="width:14%">Minutes</th></tr></thead>
@@ -557,7 +592,6 @@
           <tr><td></td><td><em>Discussion, homework, questions</em></td><td class="num">10</td></tr>
         </tbody>
       </table>
-      <div class="slide-foot"><span class="course">Software Engineering Economics</span><span>Chen · FSU 2026</span></div>
     </section>
 
     <!-- =====================  § I DIVIDER  ===================== -->
