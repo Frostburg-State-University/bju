@@ -13,6 +13,13 @@ room: YF302
     **Date:** Thursday, 2026-06-04 &nbsp;·&nbsp; **Time:** 16:20–18:10 &nbsp;·&nbsp; **Room:** YF302
     **Instructor:** Dr. Zhijiang Chen
 
+[**▶ Open the lecture slides — 110-minute web deck**](slides/lecture-02.html){ .md-button .md-button--primary target="_blank" }
+
+!!! tip "Using the slide deck"
+    The slides are a self-contained web presentation (Reveal.js, no install). Keyboard shortcuts: **F** for full-screen, **S** for speaker view, **Esc** for slide overview, **arrow keys** to navigate. Designed for a single 110-minute session.
+
+---
+
 ## Learning Objectives
 
 1. Distinguish **fixed vs. variable**, **direct vs. indirect**, and **recurring vs. non-recurring** costs in software projects.
