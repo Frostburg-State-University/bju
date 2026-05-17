@@ -38,15 +38,14 @@
 
     .reveal .slides { text-align: left; }
 
-    .reveal .slides section {
+    .reveal .slides > section {
       padding: 90px 90px 80px;
       box-sizing: border-box;
       height: 100%;
-      position: relative;
     }
 
     /* ---------- Global header / footer banner (every slide) ---------- */
-    .reveal .slides section::before {
+    .reveal .slides > section::before {
       content: "Beijing Jiaotong University  ·  Summer 2026";
       position: absolute;
       top: 22px; left: 90px; right: 90px;
@@ -60,7 +59,7 @@
       border-bottom: 1px solid var(--rule-soft);
       pointer-events: none;
     }
-    .reveal .slides section::after {
+    .reveal .slides > section::after {
       content: "Dr. Zhijiang Chen";
       position: absolute;
       bottom: 20px; left: 90px; right: 90px;
@@ -74,8 +73,8 @@
       border-top: 1px solid var(--rule-soft);
       pointer-events: none;
     }
-    .reveal .slides section.divider::before,
-    .reveal .slides section.divider::after {
+    .reveal .slides > section.divider::before,
+    .reveal .slides > section.divider::after {
       color: rgba(250,248,244,0.6);
       border-color: rgba(250,248,244,0.22);
     }
@@ -1167,6 +1166,7 @@
     width: 1440,
     height: 900,
     margin: 0.04,
+    center: false,
     transition: 'fade',
     transitionSpeed: 'default',
     backgroundTransition: 'fade',
