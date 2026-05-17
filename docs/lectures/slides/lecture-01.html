@@ -39,7 +39,7 @@
     .reveal .slides { text-align: left; }
 
     .reveal .slides > section {
-      padding: 90px 90px 80px;
+      padding: 70px 80px 60px;
       box-sizing: border-box;
       height: 100%;
     }
@@ -48,28 +48,28 @@
     .reveal .slides > section::before {
       content: "Beijing Jiaotong University  ·  Summer 2026";
       position: absolute;
-      top: 22px; left: 90px; right: 90px;
+      top: 16px; left: 80px; right: 80px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 10px;
       letter-spacing: 0.32em;
       text-transform: uppercase;
       color: var(--ink-mute);
       text-align: center;
-      padding-bottom: 12px;
+      padding-bottom: 8px;
       border-bottom: 1px solid var(--rule-soft);
       pointer-events: none;
     }
     .reveal .slides > section::after {
       content: "Dr. Zhijiang Chen";
       position: absolute;
-      bottom: 20px; left: 90px; right: 90px;
+      bottom: 14px; left: 80px; right: 80px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 10px;
       letter-spacing: 0.32em;
       text-transform: uppercase;
       color: var(--ink-mute);
       text-align: center;
-      padding-top: 12px;
+      padding-top: 8px;
       border-top: 1px solid var(--rule-soft);
       pointer-events: none;
     }
@@ -126,10 +126,10 @@
 
     /* ---------- Editorial frame ---------- */
     .slide-meta {
-      position: absolute; top: 64px; left: 90px; right: 90px;
+      position: absolute; top: 48px; left: 80px; right: 80px;
       display: flex; justify-content: space-between;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 10px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--ink-mute);
@@ -144,12 +144,12 @@
     }
 
     .slide-foot {
-      position: absolute; bottom: 62px; left: 90px; right: 90px;
+      position: absolute; bottom: 44px; left: 80px; right: 80px;
       display: flex; justify-content: space-between; align-items: baseline;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px; letter-spacing: 0.18em;
+      font-size: 10px; letter-spacing: 0.18em;
       text-transform: uppercase; color: var(--ink-mute);
-      padding-top: 8px;
+      padding-top: 6px;
       pointer-events: none;
     }
     .slide-foot .course { color: var(--ink-soft); font-weight: 500; }
@@ -410,39 +410,40 @@
 
     /* ---------- Venn-ish intersection ---------- */
     .venn {
-      position: relative; width: 720px; height: 460px;
-      margin: 30px auto 0;
+      position: relative; width: 520px; height: 360px;
+      margin: 0 auto 0;
     }
     .venn .ring {
       position: absolute;
       border: 1.5px solid var(--indigo);
       background: rgba(63,81,181,0.06);
-      width: 360px; height: 360px;
+      width: 260px; height: 260px;
       border-radius: 50%;
       mix-blend-mode: multiply;
     }
-    .venn .r1 { top: 0;   left: 40px;  border-color: var(--indigo); }
-    .venn .r2 { top: 0;   left: 320px; border-color: var(--crimson); background: rgba(183,50,57,0.06); }
-    .venn .r3 { top: 90px; left: 180px; border-color: var(--ink); background: rgba(26,26,46,0.05); }
+    .venn .r1 { top: 0;   left: 30px;  border-color: var(--indigo); }
+    .venn .r2 { top: 0;   left: 230px; border-color: var(--crimson); background: rgba(183,50,57,0.06); }
+    .venn .r3 { top: 70px; left: 130px; border-color: var(--ink); background: rgba(26,26,46,0.05); }
     .venn .lbl {
       position: absolute; font-family: 'Fraunces', serif;
-      font-weight: 500; font-size: 0.85em;
+      font-weight: 500; font-size: 0.72em;
       letter-spacing: -0.01em; text-align: center;
+      line-height: 1.15;
     }
     .venn .lbl-sub {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.55em; color: var(--ink-mute);
       letter-spacing: 0.18em; text-transform: uppercase;
-      display: block; margin-top: 4px;
+      display: block; margin-top: 3px;
     }
-    .venn .l1 { top: 30px;   left: 80px;  color: var(--indigo-dk); }
-    .venn .l2 { top: 30px;   left: 430px; color: var(--crimson); }
-    .venn .l3 { top: 380px; left: 240px; color: var(--ink); }
+    .venn .l1 { top: 22px;  left: 50px;  color: var(--indigo-dk); }
+    .venn .l2 { top: 22px;  left: 320px; color: var(--crimson); }
+    .venn .l3 { top: 300px; left: 175px; color: var(--ink); }
     .venn .center {
-      position: absolute; top: 200px; left: 290px;
-      width: 140px; text-align: center;
+      position: absolute; top: 150px; left: 210px;
+      width: 100px; text-align: center;
       font-family: 'Fraunces', serif; font-weight: 500;
-      font-size: 0.95em; color: var(--ink);
+      font-size: 0.85em; color: var(--ink);
     }
 
     /* ---------- Course-roadmap ---------- */
@@ -615,13 +616,13 @@
         <span class="right">04</span>
       </div>
       <span class="label-tag">Working Definition</span>
-      <h1>An applied discipline at the<br>intersection of three fields.</h1>
+      <h1 style="font-size: 1.8em; margin-bottom: 0.4em;">An applied discipline at the intersection of three fields.</h1>
 
-      <div class="two-col" style="margin-top: 30px;">
+      <div class="two-col" style="margin-top: 18px; grid-template-columns: 1fr 0.95fr;">
         <div>
-          <p>Software Engineering Economics applies the methods of economic analysis to decisions about the <em>development, acquisition, evolution,</em> and <em>operation</em> of software systems.</p>
-          <p>It was systematised in <strong>1981</strong> by <strong>Barry W. Boehm</strong> in the eponymous textbook — the same volume that gave us the original COCOMO model.</p>
-          <div class="callout">For the working engineer, it answers a single recurring question:<br><strong>given scarce resources, what should we build, and how?</strong></div>
+          <p style="font-size: 0.92em;">Software Engineering Economics applies the methods of economic analysis to decisions about the <em>development, acquisition, evolution,</em> and <em>operation</em> of software systems.</p>
+          <p style="font-size: 0.92em;">It was systematised in <strong>1981</strong> by <strong>Barry W. Boehm</strong> in the eponymous textbook — the same volume that gave us the original COCOMO model.</p>
+          <div class="callout" style="font-size: 0.85em;">For the working engineer, it answers one recurring question:<br><strong>given scarce resources, what should we build — and how?</strong></div>
         </div>
         <div class="venn">
           <div class="ring r1"></div>
@@ -836,33 +837,33 @@
         <span class="right">14</span>
       </div>
       <span class="label-tag">Where SEE shows up</span>
-      <h1>Five families, one toolbox.</h1>
+      <h1 style="font-size: 1.8em; margin-bottom: 0.35em;">Five families, one toolbox.</h1>
 
-      <div class="two-col" style="margin-top: 22px;">
+      <div class="two-col" style="margin-top: 14px; gap: 32px;">
         <div>
-          <div class="card" style="margin-bottom: 16px;">
-            <h3>① Project decisions</h3>
-            <p>Should we start? How big will it be? How risky? <br><em>Tools: NPV, payback, COCOMO II, Monte Carlo.</em></p>
+          <div class="card" style="margin-bottom: 10px; padding: 14px 18px;">
+            <h3 style="margin-bottom: 6px; font-size: 0.95em;">① Project decisions</h3>
+            <p style="font-size: 0.8em; margin: 0;">Should we start? How big? How risky? <em>NPV, payback, COCOMO II, Monte Carlo.</em></p>
           </div>
-          <div class="card" style="margin-bottom: 16px;">
-            <h3>② Architecture decisions</h3>
-            <p>Build vs. buy vs. open source vs. SaaS. Monolith, microservices, serverless. <br><em>Tools: TCO comparison, VBSE.</em></p>
+          <div class="card" style="margin-bottom: 10px; padding: 14px 18px;">
+            <h3 style="margin-bottom: 6px; font-size: 0.95em;">② Architecture decisions</h3>
+            <p style="font-size: 0.8em; margin: 0;">Build vs. buy vs. SaaS · monolith vs. microservices. <em>TCO, VBSE.</em></p>
           </div>
-          <div class="card">
-            <h3>③ Quality decisions</h3>
-            <p>How much testing, review, observability? Pay technical debt now or later? <br><em>Tools: defect-cost curve, debt modeling.</em></p>
+          <div class="card" style="padding: 14px 18px;">
+            <h3 style="margin-bottom: 6px; font-size: 0.95em;">③ Quality decisions</h3>
+            <p style="font-size: 0.8em; margin: 0;">Testing, review, observability; technical debt now or later. <em>Defect-cost curve.</em></p>
           </div>
         </div>
         <div>
-          <div class="card" style="margin-bottom: 16px;">
-            <h3>④ Operations &amp; lifecycle</h3>
-            <p>When to retire, when to rewrite, when to leave it alone. <br><em>Tools: maintenance economics, rewrite-break-even.</em></p>
+          <div class="card" style="margin-bottom: 10px; padding: 14px 18px;">
+            <h3 style="margin-bottom: 6px; font-size: 0.95em;">④ Operations &amp; lifecycle</h3>
+            <p style="font-size: 0.8em; margin: 0;">Retire, rewrite, or leave alone. <em>Maintenance economics, rewrite break-even.</em></p>
           </div>
-          <div class="card" style="background: var(--indigo-lt); border-color: var(--indigo);">
-            <h3 style="color: var(--indigo-dk)">⑤ AI-era decisions <span style="font-family: 'JetBrains Mono', monospace; font-size:0.55em; letter-spacing: 0.2em; color: var(--indigo); margin-left:8px;">NEW</span></h3>
-            <p>Self-host vs. API · adopt AI coding assistant · price an AI-powered product. <br><em>Tools: token economics, productivity ROI, unit economics.</em></p>
+          <div class="card" style="background: var(--indigo-lt); border-color: var(--indigo); padding: 14px 18px;">
+            <h3 style="color: var(--indigo-dk); margin-bottom: 6px; font-size: 0.95em;">⑤ AI-era decisions <span style="font-family: 'JetBrains Mono', monospace; font-size:0.55em; letter-spacing: 0.2em; color: var(--indigo); margin-left:8px;">NEW</span></h3>
+            <p style="font-size: 0.8em; margin: 0;">Self-host vs. API · AI coding assistant · pricing AI products. <em>Token economics, productivity ROI.</em></p>
           </div>
-          <p class="footnote">Lectures 12 &amp; 13 are dedicated to family ⑤.</p>
+          <p class="footnote" style="margin-top: 12px;">Lectures 12 &amp; 13 are dedicated to family ⑤.</p>
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ IV · Decisions</span><span>14 / 38</span></div>
@@ -914,21 +915,21 @@
         <span class="right">17</span>
       </div>
       <span class="label-tag">Quick — gut response only</span>
-      <h1>Without computing<br>a single number:</h1>
-      <p class="lede" style="font-size: 1.5em; margin-top: 30px;">Which alternative would <em>you</em> recommend — and what is the single biggest factor driving your gut?</p>
+      <h1 style="font-size: 1.8em; margin-bottom: 0.3em;">Without computing a single number:</h1>
+      <p class="lede" style="font-size: 1.05em; margin: 0 0 0.5em;">Which alternative would <em>you</em> recommend — and what single factor is driving your gut?</p>
 
-      <div class="two-col" style="margin-top: 50px;">
-        <div class="card" style="text-align:center; padding: 36px;">
-          <div class="big-stat">A<span class="unit">build</span></div>
-          <p style="margin-top: 18px;">Heavy upfront, light run-time.</p>
+      <div class="two-col" style="margin-top: 18px;">
+        <div class="card" style="text-align:center; padding: 22px;">
+          <div class="big-stat" style="font-size: 3.4em;">A<span class="unit">build</span></div>
+          <p style="margin: 10px 0 0; font-size: 0.92em;">Heavy upfront, light run-time.</p>
         </div>
-        <div class="card" style="text-align:center; padding: 36px;">
-          <div class="big-stat">B<span class="unit">buy</span></div>
-          <p style="margin-top: 18px;">Light upfront, heavy run-time.</p>
+        <div class="card" style="text-align:center; padding: 22px;">
+          <div class="big-stat" style="font-size: 3.4em;">B<span class="unit">buy</span></div>
+          <p style="margin: 10px 0 0; font-size: 0.92em;">Light upfront, heavy run-time.</p>
         </div>
       </div>
 
-      <p class="footnote" style="margin-top: 36px;">We will revisit your gut in Lecture V — with numbers. Try not to flip your vote between now and then.</p>
+      <p class="footnote" style="margin-top: 18px;">We will revisit your gut in Lecture V — with numbers. Try not to flip your vote between now and then.</p>
       <div class="slide-foot"><span class="course">§ V · Worked example</span><span>17 / 38</span></div>
     </section>
 
@@ -1042,31 +1043,31 @@
         <span class="right">21</span>
       </div>
       <span class="label-tag">The capstone — 30% of your grade</span>
-      <h1>A full economic analysis,<br>defended before peers.</h1>
+      <h1 style="font-size: 1.8em; margin-bottom: 0.4em;">A full economic analysis, defended before peers.</h1>
 
-      <div class="two-col">
+      <div class="two-col" style="margin-top: 8px;">
         <div>
-          <h3>Required content</h3>
-          <ol>
-            <li>Project description and scope.</li>
-            <li>Cost estimate (Function Points or COCOMO II), with assumptions.</li>
-            <li>Cash-flow forecast and ≥ 2 alternatives.</li>
-            <li>NPV, IRR, payback, PI for each.</li>
-            <li>Sensitivity or risk analysis.</li>
-            <li><em>Bonus:</em> AI-cost dimension (tokens, productivity).</li>
-            <li>Recommendation with stakeholder rationale.</li>
+          <h3 style="margin-bottom: 8px;">Required content</h3>
+          <ol style="font-size: 0.9em;">
+            <li style="margin-bottom: 0.22em;">Project description and scope.</li>
+            <li style="margin-bottom: 0.22em;">Cost estimate (Function Points or COCOMO II), with assumptions.</li>
+            <li style="margin-bottom: 0.22em;">Cash-flow forecast and ≥ 2 alternatives.</li>
+            <li style="margin-bottom: 0.22em;">NPV, IRR, payback, PI for each.</li>
+            <li style="margin-bottom: 0.22em;">Sensitivity or risk analysis.</li>
+            <li style="margin-bottom: 0.22em;"><em>Bonus:</em> AI-cost dimension (tokens, productivity).</li>
+            <li style="margin-bottom: 0.22em;">Recommendation with stakeholder rationale.</li>
           </ol>
         </div>
         <div>
-          <h3>Logistics</h3>
-          <ul>
-            <li>Teams of 3 – 4.</li>
-            <li>Briefs released <em>Lecture 8 · 10 Jun</em>.</li>
-            <li>Presentations in <em>Lectures 14 &amp; 15</em>.</li>
-            <li>12 min talk · 5 min Q&amp;A · 3 min peer eval.</li>
-            <li>Reports due before the final exam.</li>
+          <h3 style="margin-bottom: 8px;">Logistics</h3>
+          <ul style="font-size: 0.9em;">
+            <li style="margin-bottom: 0.22em;">Teams of 3 – 4.</li>
+            <li style="margin-bottom: 0.22em;">Briefs released <em>Lecture 8 · 10 Jun</em>.</li>
+            <li style="margin-bottom: 0.22em;">Presentations in <em>Lectures 14 &amp; 15</em>.</li>
+            <li style="margin-bottom: 0.22em;">12 min talk · 5 min Q&amp;A · 3 min peer eval.</li>
+            <li style="margin-bottom: 0.22em;">Reports due before the final exam.</li>
           </ul>
-          <div class="callout" style="margin-top: 16px;">Teams self-select after Lecture 5 — choose collaborators carefully.</div>
+          <div class="callout" style="margin-top: 10px; font-size: 0.85em;">Teams self-select after Lecture 5 — choose collaborators carefully.</div>
         </div>
       </div>
       <div class="slide-foot"><span class="course">§ VI · Course</span><span>21 / 38</span></div>
